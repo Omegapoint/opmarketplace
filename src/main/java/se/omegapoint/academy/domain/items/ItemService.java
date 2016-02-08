@@ -1,6 +1,6 @@
 package se.omegapoint.academy.domain.items;
 
-import se.omegapoint.academy.persistance.items.ItemEntity;
+import se.omegapoint.academy.persistance.items.ItemRepositoryDomain;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

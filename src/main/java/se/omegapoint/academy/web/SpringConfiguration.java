@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import se.omegapoint.academy.domain.items.Item;
 import se.omegapoint.academy.domain.items.ItemRepository;
+import se.omegapoint.academy.persistance.items.ItemRepositoryDomain;
 import se.omegapoint.academy.domain.items.ItemService;
 import se.omegapoint.academy.persistance.EntityMarker;
 import se.omegapoint.academy.persistance.JpaRepositoryMarker;
@@ -34,8 +35,8 @@ public class SpringConfiguration {
     }
 
     @Bean
-    public ItemRepository itemRepository(){
-        ItemRepository itemRepository = new ItemRepository(itemJPARepository);
+    public ItemRepositoryDomain itemRepository(){
+        ItemRepositoryDomain itemRepository = new ItemRepositoryDomain(itemJPARepository);
         return itemRepository;
     }
 
