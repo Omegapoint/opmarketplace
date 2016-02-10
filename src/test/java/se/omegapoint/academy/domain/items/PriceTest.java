@@ -71,7 +71,7 @@ public class PriceTest {
     public void should_reject_no_number_right_of_dot(){
         try {
             new Price("1.");
-            fail("1. : No decimal value not rejected.");
+            fail("1.: No decimal value not rejected.");
         }catch (IllegalArgumentException e){
         }
     }
@@ -88,9 +88,13 @@ public class PriceTest {
 
     @Test
     public void should_reject_too_high_precision(){
+        String too_high_precision = "1.";
+        for (int i = 0; i < Price.DECIMAL_POINT_LIMIT+1; i++) {
+            too_high_precision += "0";
+        }
         try {
-            new Price("1.00000");
-            fail("1.00000 : High precision was not rejected.");
+            new Price(too_high_precision);
+            fail(too_high_precision + ": High precision was not rejected.");
         }catch (IllegalArgumentException e){
         }
     }
