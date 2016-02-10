@@ -75,4 +75,23 @@ public class PriceTest {
         }catch (IllegalArgumentException e){
         }
     }
+
+    @Test
+    public void should_reject_too_large_number(){
+        String too_large_number = String.valueOf(Math.round(Math.pow(10, Price.EXPONENT_LIMIT)));
+        try {
+            new Price(too_large_number);
+            fail(too_large_number + ": Large number was not rejected.");
+        }catch (IllegalArgumentException e){
+        }
+    }
+
+    @Test
+    public void should_reject_too_high_precision(){
+        try {
+            new Price("1.00000");
+            fail("1.00000 : High precision was not rejected.");
+        }catch (IllegalArgumentException e){
+        }
+    }
 }

@@ -4,15 +4,23 @@ import java.math.BigDecimal;
 
 public final class Price {
 
-    public static final String ILLEGAL_FORMAT = "Argument can only contain digits and a '.'";
+    protected static final int EXPONENT_LIMIT = 9;
+    protected static final int DECIMAL_POINT_LIMIT = 4;
+
+    public static final String ILLEGAL_FORMAT = "Price can only contain digits and a '.'";
+    public static final String ILLEGAL_SIZE = "Price has to be less than " + String.valueOf(Math.round(Math.pow(10, Price.EXPONENT_LIMIT)));
+    public static final String ILLEGAL_PRECISION = "Price cannot have more than " + DECIMAL_POINT_LIMIT + " decimal places.";
 
     private final BigDecimal amount;
 
     public Price(final String amount) {
-        if (amount.matches("\\d+(\\.\\d+)*"))
-            this.amount = new BigDecimal(amount);
-        else
-            throw new  IllegalArgumentException(ILLEGAL_FORMAT);
+        if (!amount.matches("\\d+(\\.\\d+)*"))
+            throw new IllegalArgumentException(ILLEGAL_FORMAT);
+        if ((amount.contains(".") && amount.indexOf('.') > EXPONENT_LIMIT) || amount.length() > EXPONENT_LIMIT)
+            throw new IllegalArgumentException(ILLEGAL_SIZE);
+        if (amount.contains(".") && amount.length() - amount.indexOf('.') >= DECIMAL_POINT_LIMIT)
+            throw new IllegalArgumentException(ILLEGAL_PRECISION);
+        this.amount = new BigDecimal(amount);
     }
 
     public String amount(){

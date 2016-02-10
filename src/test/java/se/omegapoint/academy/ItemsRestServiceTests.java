@@ -57,7 +57,6 @@ public class ItemsRestServiceTests {
         mockMvc.perform(get("/items?id=" + ids.get(0) + "")
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(print())
                 .andExpect(content().json("{id: " + ids.get(0).toString() + ", title: \"First\", description: \"First item\", price: \"100\"}"));
     }
 
