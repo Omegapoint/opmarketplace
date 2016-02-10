@@ -2,10 +2,11 @@ package se.omegapoint.academy.persistance.items;
 
 import se.omegapoint.academy.domain.items.Item;
 import se.omegapoint.academy.domain.items.ItemRepository;
-import se.omegapoint.academy.persistance.items.ItemEntity;
-import se.omegapoint.academy.persistance.items.ItemJPARepository;
+import se.omegapoint.academy.domain.items.Title;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class ItemRepositoryDomain implements ItemRepository {
 
@@ -17,7 +18,7 @@ public class ItemRepositoryDomain implements ItemRepository {
 
     @Override
     public void addItem(Item item){
-        items.save(new ItemEntity(item.id(), item.title(), item.description(), item.price()));
+        items.save(new ItemEntity(item.id(), item.title().text(), item.description(), item.price()));
     }
 
     @Override
@@ -25,4 +26,11 @@ public class ItemRepositoryDomain implements ItemRepository {
         ItemEntity itemEntity = items.getOne(id);
         return new Item(UUID.fromString(itemEntity.getId()), itemEntity.getTitle(), itemEntity.getDescription(), itemEntity.getPrice(), null);
     }
+
+    @Override
+    public List<Item> findByTitle(Title title) {
+        return items.findByTitle(title.text()).stream().map(itemEntity -> new Item(UUID.fromString(itemEntity.getId()), itemEntity.getTitle(), itemEntity.getDescription(), itemEntity.getPrice(), null))
+                .collect(Collectors.<Item> toList());
+    }
+
 }

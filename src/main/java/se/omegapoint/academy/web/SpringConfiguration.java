@@ -13,10 +13,6 @@ import se.omegapoint.academy.persistance.EntityMarker;
 import se.omegapoint.academy.persistance.JpaRepositoryMarker;
 import se.omegapoint.academy.persistance.items.ItemJPARepository;
 
-import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 @Configuration
 @EntityScan(basePackageClasses = EntityMarker.class)
 @EnableJpaRepositories(basePackageClasses = JpaRepositoryMarker.class)
@@ -38,11 +34,6 @@ public class SpringConfiguration {
     public ItemRepositoryDomain itemRepository(){
         ItemRepositoryDomain itemRepository = new ItemRepositoryDomain(itemJPARepository);
         return itemRepository;
-    }
-
-    @PostConstruct
-    public void createTestData(){
-        itemRepository.addItem(new Item(UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d"), "First", "First item", 100, LocalDateTime.now().plusDays(7)));
     }
 
 

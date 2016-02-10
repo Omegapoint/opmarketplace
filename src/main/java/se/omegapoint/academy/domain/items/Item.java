@@ -6,14 +6,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public final class Item extends IdentifiedDomainObject {
-    private final String title;
+    private final Title title;
     private final String description;
     private final int price;
     private final LocalDateTime expires;
 
     public Item(String title, String description, int price, LocalDateTime expires) {
         super();
-        this.title = title;
+        this.title = new Title(title);
         this.description = description;
         this.price = price;
         this.expires = expires;
@@ -21,13 +21,13 @@ public final class Item extends IdentifiedDomainObject {
 
     public Item(UUID id, String title, String description, int price, LocalDateTime expires) {
         super(id);
-        this.title = title;
+        this.title = new Title(title);
         this.description = description;
         this.price = price;
         this.expires = expires;
     }
 
-    public String title() {
+    public Title title() {
         return title;
     }
 
