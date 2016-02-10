@@ -5,6 +5,7 @@ public final class Title {
     public static final int MAX_LENGTH = 50;
     public static final String ILLEGAL_LENGTH = "Title can only be " + MAX_LENGTH + " characters long.";
     public static final String ILLEGAL_CHARACTERS = "Title can only contain letters, digits and spaces";
+
     private final String text;
 
     public Title(String text) {

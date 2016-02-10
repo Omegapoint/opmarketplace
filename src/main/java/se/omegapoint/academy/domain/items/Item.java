@@ -8,22 +8,22 @@ import java.util.UUID;
 public final class Item extends IdentifiedDomainObject {
     private final Title title;
     private final String description;
-    private final int price;
+    private final Price price;
     private final LocalDateTime expires;
 
-    public Item(String title, String description, int price, LocalDateTime expires) {
+    public Item(String title, String description, String price, LocalDateTime expires) {
         super();
         this.title = new Title(title);
         this.description = description;
-        this.price = price;
+        this.price = new Price(price);
         this.expires = expires;
     }
 
-    public Item(UUID id, String title, String description, int price, LocalDateTime expires) {
+    public Item(UUID id, String title, String description, String price, LocalDateTime expires) {
         super(id);
         this.title = new Title(title);
         this.description = description;
-        this.price = price;
+        this.price = new Price(price);
         this.expires = expires;
     }
 
@@ -35,7 +35,7 @@ public final class Item extends IdentifiedDomainObject {
         return description;
     }
 
-    public int price() {
+    public Price price() {
         return price;
     }
 

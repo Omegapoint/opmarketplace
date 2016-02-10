@@ -10,11 +10,11 @@ public class ItemEntity {
     private String id;
     private String title;
     private String description;
-    private int price;
+    private String price;
 
     protected ItemEntity(){}
 
-    public ItemEntity(final String id, final String title, final String description, final int price) {
+    public ItemEntity(final String id, final String title, final String description, final String price) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -33,7 +33,7 @@ public class ItemEntity {
         return description;
     }
 
-    public int getPrice() {
+    public String getPrice() {
         return price;
     }
 }

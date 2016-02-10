@@ -22,6 +22,7 @@ import java.util.UUID;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -44,11 +45,11 @@ public class ItemsRestServiceTests {
     @Before
     public void setUp() throws Exception{
         mockMvc = webAppContextSetup(wac).build();
-        ids = new ArrayList<>(5);
-        for (int i = 0; i < 5; i++) {
+        ids = new ArrayList<>(1);
+        for (int i = 0; i < 1; i++) {
             ids.add(UUID.randomUUID());
         }
-        itemRepository.addItem(new Item(ids.get(0), "First", "First item", 100, LocalDateTime.now().plusDays(7)));
+        itemRepository.addItem(new Item(ids.get(0), "First", "First item", "100", LocalDateTime.now().plusDays(7)));
     }
 
     @Test
@@ -56,7 +57,8 @@ public class ItemsRestServiceTests {
         mockMvc.perform(get("/items?id=" + ids.get(0) + "")
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{id: " + ids.get(0) + ", title: First, description: First item, price: 100}"));
+                .andDo(print())
+                .andExpect(content().json("{id: " + ids.get(0).toString() + ", title: \"First\", description: \"First item\", price: \"100\"}"));
     }
 
     @Test

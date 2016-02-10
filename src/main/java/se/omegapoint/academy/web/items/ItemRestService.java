@@ -29,14 +29,14 @@ public class ItemRestService {
     public ResponseEntity<ItemModel> item(@RequestParam("id") final String id) {
         try {
             Item item = itemService.getItemFromId(id);
-            return ResponseEntity.ok(new ItemModel(item.id(), item.title().text(), item.description(), item.price()));
+            return ResponseEntity.ok(new ItemModel(item.id(), item.title().text(), item.description(), item.price().amount()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
     @RequestMapping(method = POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity item(@RequestParam("title") final String title, @RequestParam("description") final String description, @RequestParam("price") final Integer price) {
+    public ResponseEntity item(@RequestParam("title") final String title, @RequestParam("description") final String description, @RequestParam("price") final String price) {
         try {
             itemService.addItem(title, description, price);
             return ResponseEntity.status(HttpStatus.CREATED).build();

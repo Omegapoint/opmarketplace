@@ -4,9 +4,9 @@ public class ItemModel {
     private final String id;
     private final String title;
     private final String description;
-    private final int price;
+    private final String price;
 
-    public ItemModel(String id, String title, String description, int price) {
+    public ItemModel(String id, String title, String description, String price) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -25,7 +25,7 @@ public class ItemModel {
         return description;
     }
 
-    public int getPrice() {
+    public String getPrice() {
         return price;
     }
 }

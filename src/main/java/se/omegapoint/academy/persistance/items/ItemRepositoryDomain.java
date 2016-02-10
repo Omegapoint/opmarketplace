@@ -18,7 +18,7 @@ public class ItemRepositoryDomain implements ItemRepository {
 
     @Override
     public void addItem(Item item){
-        items.save(new ItemEntity(item.id(), item.title().text(), item.description(), item.price()));
+        items.save(new ItemEntity(item.id(), item.title().text(), item.description(), item.price().amount()));
     }
 
     @Override
