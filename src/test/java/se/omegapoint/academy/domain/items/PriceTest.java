@@ -2,6 +2,7 @@ package se.omegapoint.academy.domain.items;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
@@ -9,34 +10,21 @@ public class PriceTest {
 
     @Test
     public void valid(){
-        try {
-            new Price("1");
-        }catch (IllegalArgumentException e){
-            fail("1: " + e.getMessage());
-        }
+        validInput("1.00", "1");
+        validInput("0.10", "0.1");
+        validInput("0.01", "0.01");
+        validInput("10.00", "10");
+        validInput("100.00", "100");
+        validInput("0.00", "0.00");
+        validInput("1.10", "1.1");
+        validInput("11.11", "11.11");
+    }
 
+    private void validInput(String expected, String input){
         try {
-            new Price("10");
+            assertEquals(expected, new Price(input).amount());
         }catch (IllegalArgumentException e){
-            fail("10: " + e.getMessage());
-        }
-
-        try {
-            new Price("0");
-        }catch (IllegalArgumentException e){
-            fail("0: " + e.getMessage());
-        }
-
-        try {
-            new Price("1.1");
-        }catch (IllegalArgumentException e){
-            fail("1.1: " + e.getMessage());
-        }
-
-        try {
-            new Price("11.11");
-        }catch (IllegalArgumentException e){
-            fail("11.11: " + e.getMessage());
+            fail(input+": " + e.getMessage());
         }
     }
 
@@ -89,7 +77,7 @@ public class PriceTest {
     @Test
     public void should_reject_too_high_precision(){
         String too_high_precision = "1.";
-        for (int i = 0; i < Price.DECIMAL_POINT_LIMIT+1; i++) {
+        for (int i = 0; i < 3; i++) {
             too_high_precision += "0";
         }
         try {

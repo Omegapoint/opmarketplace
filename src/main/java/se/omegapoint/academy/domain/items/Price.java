@@ -1,30 +1,33 @@
 package se.omegapoint.academy.domain.items;
 
-import java.math.BigDecimal;
-
 public final class Price {
 
     protected static final int EXPONENT_LIMIT = 9;
-    protected static final int DECIMAL_POINT_LIMIT = 4;
 
-    public static final String ILLEGAL_FORMAT = "Price can only contain digits and a '.'";
-    public static final String ILLEGAL_SIZE = "Price has to be less than " + String.valueOf(Math.round(Math.pow(10, Price.EXPONENT_LIMIT)));
-    public static final String ILLEGAL_PRECISION = "Price cannot have more than " + DECIMAL_POINT_LIMIT + " decimal places.";
+    protected static final String ILLEGAL_FORMAT = "Price can only contain digits and one '.'. It can be no larger than 1 000 000 000 and have no more than 2 decimal places.";
 
-    private final BigDecimal amount;
+    private final long amount;
 
-    public Price(final String amount) {
-        if (!amount.matches("\\d+(\\.\\d+)*"))
+    public Price(String amount) {
+        if (!amount.matches("\\d{1," + EXPONENT_LIMIT + "}(\\.\\d{1,2})?"))
             throw new IllegalArgumentException(ILLEGAL_FORMAT);
-        if ((amount.contains(".") && amount.indexOf('.') > EXPONENT_LIMIT) || amount.length() > EXPONENT_LIMIT)
-            throw new IllegalArgumentException(ILLEGAL_SIZE);
-        if (amount.contains(".") && amount.length() - amount.indexOf('.') >= DECIMAL_POINT_LIMIT)
-            throw new IllegalArgumentException(ILLEGAL_PRECISION);
-        this.amount = new BigDecimal(amount);
+
+        if (amount.matches(".*\\.\\d")) {
+            amount += "0";
+        } else if (!amount.contains(".")) {
+            amount += "00";
+        }
+
+        amount = amount.replace(".", "");
+        this.amount = Long.parseLong(amount);
     }
 
     public String amount(){
-        return amount.toPlainString();
+        String amountString = Long.toString(amount);
+        if (amount < 10)
+            amountString = "0" + amountString;
+
+        return amount / 100 + "." + amountString.substring(amountString.length() - 2);
     }
 
     @Override
@@ -34,12 +37,12 @@ public final class Price {
 
         Price price = (Price) o;
 
-        return amount != null ? amount.equals(price.amount) : price.amount == null;
+        return amount == price.amount;
 
     }
 
     @Override
     public int hashCode() {
-        return amount != null ? amount.hashCode() : 0;
+        return (int) (amount ^ (amount >>> 32));
     }
 }
