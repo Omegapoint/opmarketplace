@@ -18,7 +18,7 @@ public class DescriptionTest {
 
     @Test
     public void should_reject_invalid_characters(){
-        String error_message = "Invalid characters were not rejected";
+        String error_message = "Invalid characters were not rejected.";
         inValidInput("<", error_message);
         inValidInput("invalid<invalid", error_message);
         inValidInput(">", error_message);
