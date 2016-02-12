@@ -18,12 +18,22 @@ public class DescriptionTest {
 
     @Test
     public void should_reject_invalid_characters(){
-        inValidInput("<");
-        inValidInput("invalid<invalid");
-        inValidInput(">");
-        inValidInput("$");
-        inValidInput("-");
-        inValidInput("}");
+        String error_message = "Invalid characters were not rejected";
+        inValidInput("<", error_message);
+        inValidInput("invalid<invalid", error_message);
+        inValidInput(">", error_message);
+        inValidInput("$", error_message);
+        inValidInput("-", error_message);
+        inValidInput("}", error_message);
+    }
+
+    @Test
+    public void should_reject_invalid_length(){
+        StringBuilder long_sb = new StringBuilder();
+        for (int i = 0; i < 5001; i++) {
+            long_sb.append('a');
+        }
+        inValidInput(long_sb.toString(), "Long description was not rejected.");
     }
 
     private void validInput(String expected, String input){
@@ -34,10 +44,10 @@ public class DescriptionTest {
         }
     }
 
-    private void inValidInput(String input){
+    private void inValidInput(String input, String message){
         try {
             new Description(input);
-            fail(input+": contains invalid characters.");
+            fail(input + ": " + message);
         }catch (Exception e){
         }
     }

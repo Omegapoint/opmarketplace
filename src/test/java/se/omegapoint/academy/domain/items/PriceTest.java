@@ -50,8 +50,7 @@ public class PriceTest {
 
     @Test
     public void should_reject_too_large_number(){
-        String too_large_number = String.valueOf(Math.round(Math.pow(10, Price.EXPONENT_LIMIT)));
-        invalidInput(too_large_number, "Large number was not rejected.");
+        invalidInput("1000000000", "Large number was not rejected.");
     }
 
     @Test
