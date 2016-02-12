@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -65,9 +66,9 @@ public class ItemsRestServiceTests {
         mockMvc.perform(post("/items?title=Second&description=Second item&price=200")
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isCreated());
-        assert(1 == itemRepository.findByTitle(new Title("Second")).size());
+        assertEquals(1, itemRepository.findByTitle(new Title("Second")).size());
         Item addedItem = itemRepository.findByTitle(new Title("Second")).get(0);
-        assert("Second item".equals(addedItem.description()));
+        assertEquals("Second item", addedItem.description().text());
     }
 
     @Test

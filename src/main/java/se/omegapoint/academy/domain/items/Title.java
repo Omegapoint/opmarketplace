@@ -1,5 +1,8 @@
 package se.omegapoint.academy.domain.items;
 
+import static se.sawano.java.commons.lang.validate.Validate.isTrue;
+import static se.sawano.java.commons.lang.validate.Validate.notBlank;
+
 public final class Title {
 
     public static final int MAX_LENGTH = 50;
@@ -9,10 +12,9 @@ public final class Title {
     private final String text;
 
     public Title(String text) {
-        if (text.length() > MAX_LENGTH || text.length() < 0)
-            throw new IllegalArgumentException(ILLEGAL_LENGTH);
-        else if (!text.matches("(\\w+\\s*)+"))
-            throw new IllegalArgumentException(ILLEGAL_CHARACTERS);
+        notBlank(text);
+        isTrue(text.length() <= MAX_LENGTH, ILLEGAL_LENGTH);
+        isTrue(text.matches("(\\w+\\s*\\.*)+"), ILLEGAL_CHARACTERS);
         this.text = text;
     }
 

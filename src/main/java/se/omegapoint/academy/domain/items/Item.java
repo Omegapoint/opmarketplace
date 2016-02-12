@@ -7,14 +7,14 @@ import java.util.UUID;
 
 public final class Item extends IdentifiedDomainObject {
     private final Title title;
-    private final String description;
+    private final Description description;
     private final Price price;
     private final LocalDateTime expires;
 
     public Item(String title, String description, String price, LocalDateTime expires) {
         super();
         this.title = new Title(title);
-        this.description = description;
+        this.description = new Description(description);
         this.price = new Price(price);
         this.expires = expires;
     }
@@ -22,7 +22,7 @@ public final class Item extends IdentifiedDomainObject {
     public Item(UUID id, String title, String description, String price, LocalDateTime expires) {
         super(id);
         this.title = new Title(title);
-        this.description = description;
+        this.description = new Description(description);
         this.price = new Price(price);
         this.expires = expires;
     }
@@ -31,7 +31,7 @@ public final class Item extends IdentifiedDomainObject {
         return title;
     }
 
-    public String description() {
+    public Description description() {
         return description;
     }
 

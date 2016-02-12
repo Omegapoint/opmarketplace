@@ -1,5 +1,8 @@
 package se.omegapoint.academy.domain.items;
 
+import static se.sawano.java.commons.lang.validate.Validate.isTrue;
+import static se.sawano.java.commons.lang.validate.Validate.notBlank;
+
 public final class Price {
 
     protected static final int EXPONENT_LIMIT = 9;
@@ -9,8 +12,8 @@ public final class Price {
     private final long amount;
 
     public Price(String amount) {
-        if (!amount.matches("\\d{1," + EXPONENT_LIMIT + "}(\\.\\d{1,2})?"))
-            throw new IllegalArgumentException(ILLEGAL_FORMAT);
+        notBlank(amount);
+        isTrue(amount.length() <= EXPONENT_LIMIT +3 && amount.matches("\\d{1," + EXPONENT_LIMIT + "}(\\.\\d{1,2})?"), ILLEGAL_FORMAT);
 
         if (amount.matches(".*\\.\\d")) {
             amount += "0";

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import se.omegapoint.academy.domain.items.Item;
 import se.omegapoint.academy.domain.items.ItemService;
+import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -29,8 +30,8 @@ public class ItemRestService {
     public ResponseEntity<ItemModel> item(@RequestParam("id") final String id) {
         try {
             Item item = itemService.getItemFromId(id);
-            return ResponseEntity.ok(new ItemModel(item.id(), item.title().text(), item.description(), item.price().amount()));
-        } catch (IllegalArgumentException e) {
+            return ResponseEntity.ok(new ItemModel(item.id(), item.title().text(), item.description().text(), item.price().amount()));
+        } catch (IllegalArgumentException |  IllegalArgumentValidationException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
@@ -40,7 +41,7 @@ public class ItemRestService {
         try {
             itemService.addItem(title, description, price);
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException |  IllegalArgumentValidationException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
     }

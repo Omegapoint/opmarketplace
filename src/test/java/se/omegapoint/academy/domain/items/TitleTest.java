@@ -8,39 +8,35 @@ public class TitleTest {
 
     @Test
     public void valid(){
-        String title = "";
-        for (int i = 0; i < Title.MAX_LENGTH; i++) {
-            title+= "a";
-        }
-        try{
-            new Title(title);
-        }catch (IllegalArgumentException e){
-            fail(e.getMessage());
-        }
+        validInput("valid", "valid");
+        validInput("validvalidvalidvalidvalidvalidvalidvalidvalidvalid", "validvalidvalidvalidvalidvalidvalidvalidvalidvalid");
+        validInput("valid.", "valid.");
+        validInput("valid1", "valid1");
     }
 
     @Test
     public void too_long(){
-        String title = "";
-        for (int i = 0; i < Title.MAX_LENGTH + 1; i++) {
-            title+= "a";
-        }
-        try{
-            new Title(title);
-            fail("Illegal length should be rejected.");
-        }catch (IllegalArgumentException e){
-            assertEquals(Title.ILLEGAL_LENGTH, e.getMessage());
-        }
+        invalidInput("validvalidvalidvalidvalidvalidvalidvalidvalidvalidv", "Illegal length should be rejected.");
     }
 
     @Test
     public void invalid_characters(){
-        String title = "<";
-        try{
-            new Title(title);
-            fail("Illegal characters should be rejected.");
-        }catch (IllegalArgumentException e){
-            assertEquals(Title.ILLEGAL_CHARACTERS, e.getMessage());
+        invalidInput("<", "Illegal characters should be rejected");
+    }
+
+    private void validInput(String expected, String input){
+        try {
+            assertEquals(expected, new Title(input).text());
+        }catch (Exception e){
+            fail(input+": " + e.getMessage());
+        }
+    }
+
+    private void invalidInput(String input, String message){
+        try {
+            new Title(input);
+            fail(input+": " + message);
+        }catch (Exception e){
         }
     }
 

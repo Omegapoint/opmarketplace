@@ -30,48 +30,28 @@ public class PriceTest {
 
     @Test
     public void should_reject_multiple_dots(){
-        try {
-            new Price("1.1.1");
-            fail("1.1.1: Multiple dots not rejected.");
-        }catch (IllegalArgumentException e){
-        }
+        invalidInput("1.1.1", "Multiple dots not rejected.");
     }
 
     @Test
     public void should_reject_letters(){
-        try {
-            new Price("a");
-            fail("a: Letters not rejected.");
-        }catch (IllegalArgumentException e){
-        }
+        invalidInput("a", "Letters not rejected.");
     }
 
     @Test
     public void should_reject_negative(){
-        try {
-            new Price("-1");
-            fail("-1: Negative values not rejected.");
-        }catch (IllegalArgumentException e){
-        }
+        invalidInput("-1", "Negative values not rejected.");
     }
 
     @Test
     public void should_reject_no_number_right_of_dot(){
-        try {
-            new Price("1.");
-            fail("1.: No decimal value not rejected.");
-        }catch (IllegalArgumentException e){
-        }
+        invalidInput("1.", "No decimal value not rejected.");
     }
 
     @Test
     public void should_reject_too_large_number(){
         String too_large_number = String.valueOf(Math.round(Math.pow(10, Price.EXPONENT_LIMIT)));
-        try {
-            new Price(too_large_number);
-            fail(too_large_number + ": Large number was not rejected.");
-        }catch (IllegalArgumentException e){
-        }
+        invalidInput(too_large_number, "Large number was not rejected.");
     }
 
     @Test
@@ -80,10 +60,14 @@ public class PriceTest {
         for (int i = 0; i < 3; i++) {
             too_high_precision += "0";
         }
+        invalidInput(too_high_precision, "High precision was not rejected.");
+    }
+
+    private void invalidInput(String input, String message){
         try {
-            new Price(too_high_precision);
-            fail(too_high_precision + ": High precision was not rejected.");
-        }catch (IllegalArgumentException e){
+            new Price(input);
+            fail(input + ": " + message);
+        }catch (Exception e){
         }
     }
 }
