@@ -14,6 +14,7 @@ import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
 @RequestMapping("/items")
@@ -41,6 +42,16 @@ public class ItemRestService {
         try {
             itemService.addItem(title, description, price);
             return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (IllegalArgumentException |  IllegalArgumentValidationException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
+    }
+
+    @RequestMapping(method = PUT, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity item(@RequestParam("id") final String id, @RequestParam("title") final String title) {
+        try {
+            itemService.changeTitle(id, title);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } catch (IllegalArgumentException |  IllegalArgumentValidationException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }

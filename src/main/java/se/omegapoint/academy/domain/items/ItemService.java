@@ -1,14 +1,10 @@
 package se.omegapoint.academy.domain.items;
 
-import se.omegapoint.academy.persistance.items.ItemRepositoryDomain;
-
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class ItemService {
 
     private final ItemRepository itemRepository;
-
 
     public ItemService(ItemRepository itemRepository){
         this.itemRepository = itemRepository;
@@ -23,8 +19,14 @@ public class ItemService {
         itemRepository.addItem(newItem);
     }
 
-    public void addItem(UUID id, String title, String description, String price){
+    public void addItem(String id, String title, String description, String price){
         Item newItem = new Item(id, title, description, price, LocalDateTime.now().plusDays(7));
         itemRepository.addItem(newItem);
+    }
+
+    public void changeTitle(String id, String title){
+        Item item = getItemFromId(id);
+        item = item.withNewTitle(title);
+        itemRepository.updateItem(item);
     }
 }

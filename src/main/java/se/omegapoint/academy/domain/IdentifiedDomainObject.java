@@ -10,6 +10,10 @@ public abstract class IdentifiedDomainObject {
         this.id = UUID.randomUUID();
     }
 
+    protected IdentifiedDomainObject(String id){
+        this.id = UUID.fromString(id);
+    }
+
     protected IdentifiedDomainObject(UUID id){
         this.id = id;
     }

@@ -21,6 +21,22 @@ public class ItemEntity {
         this.price = price;
     }
 
+    protected void setId(String id) {
+        this.id = id;
+    }
+
+    protected void setPrice(String price) {
+        this.price = price;
+    }
+
+    protected void setDescription(String description) {
+        this.description = description;
+    }
+
+    protected void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getId() {
         return id;
     }

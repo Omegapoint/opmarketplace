@@ -19,7 +19,15 @@ public final class Item extends IdentifiedDomainObject {
         this.expires = expires;
     }
 
-    public Item(UUID id, String title, String description, String price, LocalDateTime expires) {
+    private Item(UUID id, Title title, Description description, Price price, LocalDateTime expires) {
+        super(id);
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.expires = expires;
+    }
+
+    public Item(String id, String title, String description, String price, LocalDateTime expires) {
         super(id);
         this.title = new Title(title);
         this.description = new Description(description);
@@ -37,6 +45,11 @@ public final class Item extends IdentifiedDomainObject {
 
     public Price price() {
         return price;
+    }
+
+    public Item withNewTitle(String title){
+        Item withNewTitle = new Item(UUID.fromString(this.id()), new Title(title), this.description, this.price, this.expires);
+        return withNewTitle;
     }
 
     protected LocalDateTime getExpires() {
