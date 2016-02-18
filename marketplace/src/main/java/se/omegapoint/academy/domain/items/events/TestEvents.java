@@ -8,7 +8,7 @@ public class TestEvents {
         ArrayList<Event> events = new ArrayList<>();
         events.add(new Event<>(new TitleUpdated("hej")));
         events.add(new Event<>(new DescriptionUpdated("hej pa dig")));
-
+        //Serialize
         ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("C:\\Users\\Jonas\\Documents\\events.txt"));
         os.writeObject(events);
 
