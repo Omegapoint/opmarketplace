@@ -33,7 +33,7 @@ public class UserTest {
     }
 
     @Test
-    public void should_not_accept_illegal_local_part_length(){
+    public void should_not_accept_illegal_characters(){
         String legalFirstname = "valid", legalLastName = "valid";
         String illegalFirstName = "&^", illegalLastName = "&^";
         invalidInput(illegalFirstName, legalLastName, illegalFirstName + ": Should be rejected for Illegal characters.");
