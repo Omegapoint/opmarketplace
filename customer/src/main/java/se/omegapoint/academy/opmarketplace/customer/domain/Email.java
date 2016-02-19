@@ -14,12 +14,8 @@ public class Email {
     public Email(String address) {
         notBlank(address);
         isTrue(address.length() <= MAX_LENGTH, ILLEGAL_LENGTH);
-        isTrue(address.matches("[\\w\\-!#$%&'*+/=?^_`{|}~]{1,64}@[\\w\\-\\[\\]:.]+"), ILLEGAL_FORMAT);
+        isTrue(address.matches("[\\w\\-.!#$%&'*+/=?^_`{|}~]{1,64}@[\\w\\-\\[\\]:.]+"), ILLEGAL_FORMAT);
         this.address = address;
-    }
-
-    public String id(){
-        return address;
     }
 
     public String address(){
