@@ -17,4 +17,9 @@ public class SpringConfiguration {
     EventAnalyzer createEventAnalyzer(EventBus eventBus) {
         return new EventAnalyzer(eventBus);
     }
+
+    @Bean
+    EventPublisher createEventPublisher(EventBus eventBus) {
+        return new EventPublisher(eventBus);
+    }
 }
