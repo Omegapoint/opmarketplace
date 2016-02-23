@@ -45,8 +45,8 @@ public class Account {
         return email.address();
     }
 
-    public String email(){
-        return email.address();
+    public Email email(){
+        return email;
     }
 
     public User user(){

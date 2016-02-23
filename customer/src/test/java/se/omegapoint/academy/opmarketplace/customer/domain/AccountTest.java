@@ -30,7 +30,7 @@ public class AccountTest {
         String firstName = "createFirst";
         String lastName = "createLast";
         Account account = new Account(email, firstName, lastName, new AccountEventPublisherService(eventBus));
-        assertEquals(email, account.email());
+        assertEquals(email, account.email().address());
         assertEquals(email, account.id());
         assertEquals(firstName, account.user().firstName());
         assertEquals(lastName, account.user().lastName());

@@ -1,5 +1,6 @@
 package se.omegapoint.academy.opmarketplace.customer.application;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +12,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import reactor.bus.Event;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
+import se.omegapoint.academy.opmarketplace.customer.application.json_representations.AccountModel;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
+import se.omegapoint.academy.opmarketplace.customer.domain.Email;
+import se.omegapoint.academy.opmarketplace.customer.domain.User;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisherService;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.AccountEventStore;
@@ -21,6 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -79,5 +85,18 @@ public class AccountRestServiceTest {
         mockMvc.perform(put("/accounts?email=" + email + "&last-name=" + newLastName)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isAccepted());
+    }
+
+    @Test
+    public void should_retrieve_account() throws Exception {
+        String email = "retrieve@retrieve.com";
+        String firstName = "retrieve";
+        String lastName = "retrieve";
+
+        accountEventStore.accept(Event.wrap(new DomainEvent(email, Account.class, new AccountCreated(email, firstName, lastName))));
+        mockMvc.perform(get("/accounts?email=" + email)
+                .accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(new ObjectMapper().writeValueAsString(new AccountModel(new Email(email), new User(firstName, lastName)))));
     }
 }

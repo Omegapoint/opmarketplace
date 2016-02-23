@@ -1,5 +1,6 @@
 package se.omegapoint.academy.opmarketplace.customer.application;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.bus.EventBus;
+import se.omegapoint.academy.opmarketplace.customer.application.json_representations.AccountModel;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisherService;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.AccountEventStore;
@@ -15,6 +17,7 @@ import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 import java.io.IOException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
@@ -51,6 +54,19 @@ public class AccountRestService {
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
+    }
+
+    @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<AccountModel> changeFirstName(@RequestParam("email") final String email) {
+        try {
+            Account account = accountEventStore.account(email);
+            AccountModel accountModel = new AccountModel(account.email(), account.user());
+            String json = new ObjectMapper().writeValueAsString(accountModel);
+            return ResponseEntity.ok(accountModel);
+
+        } catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 }
