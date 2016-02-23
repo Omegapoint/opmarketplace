@@ -28,7 +28,9 @@ public class AccountRestService {
     AccountEventStore accountEventStore;
 
     @RequestMapping(method = POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity createAccount(@RequestParam("email") final String email, @RequestParam("first-eventType") final String firstName, @RequestParam("last-eventType") final String lastName) {
+    public ResponseEntity createAccount(@RequestParam("email") final String email,
+                                        @RequestParam("first-name") final String firstName,
+                                        @RequestParam("last-name") final String lastName) {
         try {
             new Account(email, firstName, lastName, new AccountEventPublisherService(eventBus));
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -38,9 +40,14 @@ public class AccountRestService {
     }
 
     @RequestMapping(method = PUT, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity changeFirstname(@RequestParam("email") final String email, @RequestParam("first-eventType") final String firstName) {
+    public ResponseEntity changeFirstName(@RequestParam("email") final String email,
+                                          @RequestParam(value="first-name", required = false) final String firstName,
+                                          @RequestParam(value="last-name", required = false) final String lastName) {
         try {
-            accountEventStore.account(email).changeFirstName(firstName);
+            if (firstName != null)
+                accountEventStore.account(email).changeFirstName(firstName);
+            if (lastName != null)
+                accountEventStore.account(email).changeLastName(lastName);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();

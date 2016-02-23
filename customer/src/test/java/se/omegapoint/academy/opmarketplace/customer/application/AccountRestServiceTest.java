@@ -48,7 +48,7 @@ public class AccountRestServiceTest {
         String email = "test@test.com";
         String firstName = "testFirst";
         String lastName = "testLast";
-        mockMvc.perform(post("/accounts?email=" + email + "&first-eventType=" + firstName + "&last-eventType=" + lastName)
+        mockMvc.perform(post("/accounts?email=" + email + "&first-name=" + firstName + "&last-name=" + lastName)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
@@ -62,10 +62,22 @@ public class AccountRestServiceTest {
         String newFirstName = "changed";
 
         accountEventStore.accept(Event.wrap(new DomainEvent(email, Account.class, new AccountCreated(email, firstName, lastName))));
-        mockMvc.perform(put("/accounts?email=" + email + "&first-eventType=" + newFirstName)
+        mockMvc.perform(put("/accounts?email=" + email + "&first-name=" + newFirstName)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isAccepted());
-        Thread.sleep(2000);
-        assertEquals(newFirstName, accountEventStore.account(email).user().firstName());
+    }
+
+    @Test
+    public void should_change_last_name() throws Exception {
+        String email = "initial@initial.com";
+        String firstName = "initial";
+        String lastName = "initial";
+
+        String newLastName = "changed";
+
+        accountEventStore.accept(Event.wrap(new DomainEvent(email, Account.class, new AccountCreated(email, firstName, lastName))));
+        mockMvc.perform(put("/accounts?email=" + email + "&last-name=" + newLastName)
+                .accept(APPLICATION_JSON))
+                .andExpect(status().isAccepted());
     }
 }
