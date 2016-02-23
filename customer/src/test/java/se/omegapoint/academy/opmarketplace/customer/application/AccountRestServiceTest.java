@@ -13,6 +13,7 @@ import org.springframework.web.context.WebApplicationContext;
 import reactor.bus.Event;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.AccountModel;
+import se.omegapoint.academy.opmarketplace.customer.application.json_representations.DomainEventModel;
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.EmailModel;
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.UserModel;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
@@ -89,7 +90,8 @@ public class AccountRestServiceTest {
         String firstName = "retrieve";
         String lastName = "retrieve";
 
-        accountEventStore.accept(Event.wrap(new DomainEvent(email, Account.class, new AccountCreated(email, firstName, lastName))));
+        DomainEvent createAccountEvent = new DomainEvent(email, Account.class, new AccountCreated(email, firstName, lastName));
+        accountEventStore.accept(Event.wrap(createAccountEvent));
         mockMvc.perform(get("/accounts?email=" + email)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
