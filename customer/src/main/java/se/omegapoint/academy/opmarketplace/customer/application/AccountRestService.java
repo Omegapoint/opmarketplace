@@ -27,7 +27,7 @@ public class AccountRestService {
     @Autowired
     AccountEventStore accountEventStore;
 
-    @RequestMapping(method = POST, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = POST)
     public ResponseEntity createAccount(@RequestParam("email") final String email,
                                         @RequestParam("first-name") final String firstName,
                                         @RequestParam("last-name") final String lastName) {
@@ -39,7 +39,7 @@ public class AccountRestService {
         }
     }
 
-    @RequestMapping(method = PUT, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = PUT)
     public ResponseEntity changeFirstName(@RequestParam("email") final String email,
                                           @RequestParam(value="first-name", required = false) final String firstName,
                                           @RequestParam(value="last-name", required = false) final String lastName) {
