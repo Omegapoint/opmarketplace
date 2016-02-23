@@ -1,4 +1,4 @@
-package se.omegapoint.accademy.opmarketplace;
+package se.omegapoint.accademy.opmarketplace.messageservice;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
