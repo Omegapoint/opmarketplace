@@ -45,6 +45,10 @@ public class Account {
         return email.address();
     }
 
+    public String email(){
+        return email.address();
+    }
+
     public User user(){
         return user;
     }
