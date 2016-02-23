@@ -7,8 +7,8 @@ public class User {
     private final int FIRSTNAME_LENGTH = 25;
     private final int LASTNAME_LENGTH = 25;
 
-    private final String FIRSTNAME_ILLEGAL_FORMAT = "First name cannot be longer than " + FIRSTNAME_LENGTH + "characters and can only contain letters and '-'";
-    private final String LASTNAME_ILLEGAL_FORMAT = "Last name cannot be longer than " + LASTNAME_LENGTH + "characters and can only contain letters and '-'";
+    private final String FIRSTNAME_ILLEGAL_FORMAT = "First eventType cannot be longer than " + FIRSTNAME_LENGTH + "characters and can only contain letters and '-'";
+    private final String LASTNAME_ILLEGAL_FORMAT = "Last eventType cannot be longer than " + LASTNAME_LENGTH + "characters and can only contain letters and '-'";
 
     private final String firstName;
     private final String lastName;
