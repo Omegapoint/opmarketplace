@@ -27,11 +27,4 @@ public class AccountModel {
         return user;
     }
 
-    public void setEmail(EmailModel email) {
-        this.email = email;
-    }
-
-    public void setUser(UserModel user) {
-        this.user = user;
-    }
 }

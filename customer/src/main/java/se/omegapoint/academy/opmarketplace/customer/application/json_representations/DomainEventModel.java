@@ -1,15 +1,9 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance;
+package se.omegapoint.academy.opmarketplace.customer.application.json_representations;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
-@Entity
-public class DomainEventEntity {
+public class DomainEventModel {
 
-    @Id
-    @GeneratedValue
-    private Long id;
     private String aggregateId;
     private String aggregateName;
     private String eventType;
@@ -17,9 +11,9 @@ public class DomainEventEntity {
     private Timestamp time;
 
 
-    public DomainEventEntity(){}
+    public DomainEventModel(){}
 
-    public DomainEventEntity(String aggregateId, String aggregateName, String eventType, String eventData, Timestamp time) {
+    public DomainEventModel(String aggregateId, String aggregateName, String eventType, String eventData, Timestamp time) {
         this.aggregateId = aggregateId;
         this.aggregateName = aggregateName;
         this.eventType = eventType;

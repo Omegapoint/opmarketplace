@@ -13,7 +13,6 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persist
 @Configuration
 @EntityScan(basePackageClasses = DomainEventEntity.class)
 @EnableJpaRepositories(basePackageClasses = AccountEventJPARepository.class)
-
 public class CustomerConfiguration {
 
     @Bean

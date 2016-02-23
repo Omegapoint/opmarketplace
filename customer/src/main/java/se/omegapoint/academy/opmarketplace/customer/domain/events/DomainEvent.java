@@ -4,16 +4,17 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_ob
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.EventData;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.DomainEventEntity;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class DomainEvent implements Comparable<DomainEvent>{
     private AggregateIdentity identity;
     private EventData data;
-    private LocalDateTime time;
+    private Timestamp time;
 
     public DomainEvent(String aggregateRootId, Class aggregateName, DataObject data) {
         identity = new AggregateIdentity(aggregateRootId, aggregateName.getSimpleName());
-        time = LocalDateTime.now();
+        time = Timestamp.valueOf(LocalDateTime.now());
         this.data = new EventData(data);
     }
 
@@ -26,7 +27,7 @@ public class DomainEvent implements Comparable<DomainEvent>{
         this.time = eventEntity.getTime();
     }
 
-    public LocalDateTime time(){
+    public Timestamp time(){
         return time;
     }
 
@@ -48,9 +49,9 @@ public class DomainEvent implements Comparable<DomainEvent>{
 
     @Override
     public int compareTo(DomainEvent other) {
-        if (this.time().isAfter(other.time()))
+        if (this.time().toLocalDateTime().isAfter(other.time().toLocalDateTime()))
             return 1;
-        else if (this.time().isBefore(other.time()))
+        else if (this.time().toLocalDateTime().isBefore(other.time().toLocalDateTime()))
             return -1;
         return 0;
     }
