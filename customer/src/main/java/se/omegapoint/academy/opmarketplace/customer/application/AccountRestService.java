@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.bus.EventBus;
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.AccountModel;
+import se.omegapoint.academy.opmarketplace.customer.application.json_representations.UserModel;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisherService;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.AccountEventStore;
@@ -31,11 +33,9 @@ public class AccountRestService {
     AccountEventStore accountEventStore;
 
     @RequestMapping(method = POST)
-    public ResponseEntity createAccount(@RequestParam("email") final String email,
-                                        @RequestParam("first-name") final String firstName,
-                                        @RequestParam("last-name") final String lastName) {
+    public ResponseEntity createAccount(@RequestBody final AccountModel newAccount) {
         try {
-            new Account(email, firstName, lastName, new AccountEventPublisherService(eventBus));
+            new Account(newAccount.getEmail().getAddress(), newAccount.getUser().getFirstName(), newAccount.getUser().getLastName(), new AccountEventPublisherService(eventBus));
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IllegalArgumentException | IllegalArgumentValidationException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
@@ -43,14 +43,9 @@ public class AccountRestService {
     }
 
     @RequestMapping(method = PUT)
-    public ResponseEntity changeFirstName(@RequestParam("email") final String email,
-                                          @RequestParam(value="first-name", required = false) final String firstName,
-                                          @RequestParam(value="last-name", required = false) final String lastName) {
+    public ResponseEntity changeUser(@RequestParam("email") final String email, @RequestBody UserModel userModel) {
         try {
-            if (firstName != null)
-                accountEventStore.account(email).changeFirstName(firstName);
-            if (lastName != null)
-                accountEventStore.account(email).changeLastName(lastName);
+            accountEventStore.account(email).changeUser(userModel.getFirstName(), userModel.getLastName());
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
@@ -58,11 +53,10 @@ public class AccountRestService {
     }
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountModel> changeFirstName(@RequestParam("email") final String email) {
+    public ResponseEntity<AccountModel> account(@RequestParam("email") final String email) {
         try {
             Account account = accountEventStore.account(email);
             AccountModel accountModel = new AccountModel(account.email(), account.user());
-            String json = new ObjectMapper().writeValueAsString(accountModel);
             return ResponseEntity.ok(accountModel);
 
         } catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {

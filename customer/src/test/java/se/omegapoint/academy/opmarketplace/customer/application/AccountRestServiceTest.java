@@ -13,6 +13,8 @@ import org.springframework.web.context.WebApplicationContext;
 import reactor.bus.Event;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.AccountModel;
+import se.omegapoint.academy.opmarketplace.customer.application.json_representations.EmailModel;
+import se.omegapoint.academy.opmarketplace.customer.application.json_representations.UserModel;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
@@ -54,35 +56,29 @@ public class AccountRestServiceTest {
         String email = "test@test.com";
         String firstName = "testFirst";
         String lastName = "testLast";
-        mockMvc.perform(post("/accounts?email=" + email + "&first-name=" + firstName + "&last-name=" + lastName)
+        String content = new ObjectMapper().writeValueAsString(new AccountModel(new EmailModel(email), new UserModel(firstName, lastName)));
+        mockMvc.perform(post("/accounts")
+                .contentType(APPLICATION_JSON)
+                .content(content)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
     @Test
-    public void should_change_first_name() throws Exception {
+    public void should_change_user() throws Exception {
         String email = "initial@initial.com";
         String firstName = "initial";
         String lastName = "initial";
 
         String newFirstName = "changed";
-
-        accountEventStore.accept(Event.wrap(new DomainEvent(email, Account.class, new AccountCreated(email, firstName, lastName))));
-        mockMvc.perform(put("/accounts?email=" + email + "&first-name=" + newFirstName)
-                .accept(APPLICATION_JSON))
-                .andExpect(status().isAccepted());
-    }
-
-    @Test
-    public void should_change_last_name() throws Exception {
-        String email = "initial@initial.com";
-        String firstName = "initial";
-        String lastName = "initial";
-
         String newLastName = "changed";
 
+        String newUser = new ObjectMapper().writeValueAsString(new UserModel(newFirstName, newLastName));
+
         accountEventStore.accept(Event.wrap(new DomainEvent(email, Account.class, new AccountCreated(email, firstName, lastName))));
-        mockMvc.perform(put("/accounts?email=" + email + "&last-name=" + newLastName)
+        mockMvc.perform(put("/accounts?email=" + email)
+                .contentType(APPLICATION_JSON)
+                .content(newUser)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isAccepted());
     }

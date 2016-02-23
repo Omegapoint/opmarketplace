@@ -12,6 +12,13 @@ public class AccountModel {
         this.user = new UserModel(user);
     }
 
+    public AccountModel(EmailModel email, UserModel user) {
+        this.email = email;
+        this.user = user;
+    }
+
+    public AccountModel(){}
+
     public EmailModel getEmail() {
         return email;
     }

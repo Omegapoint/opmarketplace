@@ -10,6 +10,12 @@ public class EmailModel {
         this.address = email.address();
     }
 
+    public EmailModel(String address) {
+        this.address = address;
+    }
+
+    public EmailModel(){}
+
     public String getAddress() {
         return address;
     }

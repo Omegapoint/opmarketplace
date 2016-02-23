@@ -12,6 +12,13 @@ public class UserModel {
         lastName = user.lastName();
     }
 
+    public UserModel(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public UserModel(){}
+
     public String getFirstName() {
         return firstName;
     }

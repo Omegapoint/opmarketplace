@@ -42,7 +42,7 @@ public class AccountTest {
         String lastName = "initial";
         Account account = new Account(email, firstName, lastName, new AccountEventPublisherService(eventBus));
         for (char c = 'a'; c <= 'z'; c++) {
-            account.changeLastName(c+"");
+            account.changeUser("initial", c+"");
         }
         account = eventStore.account(email);
         assertEquals("z", account.user().lastName());

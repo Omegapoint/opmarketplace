@@ -53,13 +53,9 @@ public class Account {
         return user;
     }
 
-    public void changeFirstName(String firstName){
-        user = new User(firstName, user.lastName());
-        publisher.publishAccountChanged(id(), user());
-    }
-
-    public void changeLastName(String lastName){
-        user = new User(user.firstName(), lastName);
+    public void changeUser(String firstName, String lastName){
+        user = user.changeFirstName(firstName);
+        user = user.changeLastName(lastName);
         publisher.publishAccountChanged(id(), user());
     }
 

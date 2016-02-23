@@ -22,6 +22,14 @@ public class User {
         this.lastName = lastName;
     }
 
+    public User changeFirstName(String firstName){
+        return new User(firstName, lastName());
+    }
+
+    public User changeLastName(String lastName){
+        return new User(firstName(), lastName);
+    }
+
     public String firstName(){
         return firstName;
     }
