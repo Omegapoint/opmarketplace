@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.bus.EventBus;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing.AccountEventPublisherService;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.AccountEventStore;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
 
 import java.io.IOException;
 

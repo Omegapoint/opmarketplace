@@ -1,5 +1,4 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure;
-import org.springframework.beans.factory.annotation.Autowired;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;

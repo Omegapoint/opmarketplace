@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import reactor.bus.EventBus;
-import se.omegapoint.academy.opmarketplace.customer.application.EventRemotePublisherService;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing.EventRemotePublisherService;
 
 @Configuration
 @Profile("dev")

@@ -11,7 +11,7 @@ import se.omegapoint.academy.opmarketplace.customer.application.json_representat
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.UserModel;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing.AccountEventPublisherService;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.AccountEventStore;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.io.IOException;

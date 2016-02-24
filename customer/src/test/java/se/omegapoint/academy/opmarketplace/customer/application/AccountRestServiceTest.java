@@ -21,7 +21,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.AccountEventStore;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

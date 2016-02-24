@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import reactor.Environment;
 import reactor.bus.EventBus;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.AccountEventStore;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountEventJPARepository;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.DomainEventEntity;
 
