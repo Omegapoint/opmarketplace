@@ -1,4 +1,4 @@
-package se.omegapoint.accademy.opmarketplace.messageservice;
+package se.omegapoint.accademy.opmarketplace.messageservice.services;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,6 +11,7 @@ import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
+import se.omegapoint.accademy.opmarketplace.messageservice.models.DomainEventModel;
 
 import java.io.UnsupportedEncodingException;
 

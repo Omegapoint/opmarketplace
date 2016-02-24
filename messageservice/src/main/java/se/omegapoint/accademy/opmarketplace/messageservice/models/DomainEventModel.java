@@ -1,4 +1,4 @@
-package se.omegapoint.accademy.opmarketplace.messageservice;
+package se.omegapoint.accademy.opmarketplace.messageservice.models;
 
 import java.sql.Timestamp;
 
