@@ -13,18 +13,15 @@ import org.springframework.web.context.WebApplicationContext;
 import reactor.bus.Event;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.AccountModel;
-import se.omegapoint.academy.opmarketplace.customer.application.json_representations.DomainEventModel;
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.EmailModel;
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.UserModel;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
-import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisherService;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.AccountEventStore;
 
-import static org.junit.Assert.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

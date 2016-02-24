@@ -5,7 +5,7 @@ import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
-import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisherService;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing.AccountEventPublisherService;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountEventJPARepository;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.DomainEventEntity;
 

@@ -1,7 +1,7 @@
 package se.omegapoint.academy.opmarketplace.customer.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisherService;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
@@ -13,9 +13,9 @@ public class Account {
     private Email email;
     private User user;
 
-    private AccountEventPublisherService publisher;
+    private AccountEventPublisher publisher;
 
-    public Account(Email email, User user, AccountEventPublisherService publisher) {
+    public Account(Email email, User user, AccountEventPublisher publisher) {
         this.publisher = publisher;
         this.email = email;
         this.user = user;
@@ -23,14 +23,14 @@ public class Account {
     }
 
 
-    public Account(String email, String firstName, String lastName, AccountEventPublisherService publisher) {
+    public Account(String email, String firstName, String lastName, AccountEventPublisher publisher) {
         this.publisher = publisher;
         this.user = new User(firstName, lastName);
         this.email = new Email(email);
         publisher.publishAccountCreated(this.email, this.user);
     }
 
-    public Account(List<DomainEvent> events, AccountEventPublisherService publisher) throws IOException {
+    public Account(List<DomainEvent> events, AccountEventPublisher publisher) throws IOException {
         this.publisher = publisher;
         ObjectMapper fromJson = new ObjectMapper();
         for (DomainEvent e: events) {
@@ -56,7 +56,7 @@ public class Account {
     public void changeUser(String firstName, String lastName){
         user = user.changeFirstName(firstName);
         user = user.changeLastName(lastName);
-        publisher.publishAccountChanged(id(), user());
+        publisher.publishAccountUserChanged(id(), user());
     }
 
     private void applyCreated(AccountCreated accountCreated){
