@@ -17,10 +17,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 
-public class EventPublisherService implements Consumer<Event<DomainEvent>> {
+public class EventRemotePublisherService implements Consumer<Event<DomainEvent>> {
     CloseableHttpClient httpclient;
 
-    public EventPublisherService(EventBus eventBus){
+    public EventRemotePublisherService(EventBus eventBus){
         httpclient = HttpClients.createDefault();
         eventBus.on(Selectors.regex("\\w+"), this);
     }

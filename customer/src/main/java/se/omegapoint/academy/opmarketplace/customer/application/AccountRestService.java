@@ -33,7 +33,10 @@ public class AccountRestService {
     @RequestMapping(method = POST)
     public ResponseEntity createAccount(@RequestBody final AccountModel newAccount) {
         try {
-            new Account(newAccount.getEmail().getAddress(), newAccount.getUser().getFirstName(), newAccount.getUser().getLastName(), new AccountEventPublisherService(eventBus));
+            if (!accountEventStore.accountInExistence(newAccount.getEmail().getAddress()))
+                new Account(newAccount.getEmail().getAddress(), newAccount.getUser().getFirstName(), newAccount.getUser().getLastName(), new AccountEventPublisherService(eventBus));
+            else
+                throw new IllegalArgumentException("Account already in existence.");
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IllegalArgumentException | IllegalArgumentValidationException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();

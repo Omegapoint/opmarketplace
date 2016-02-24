@@ -17,7 +17,7 @@ public class DomainEvent implements Comparable<DomainEvent>{
 
     public DomainEvent(String aggregateRootId, Class aggregateName, DataObject data) {
         identity = new AggregateIdentity(aggregateRootId, aggregateName.getSimpleName());
-        time = Timestamp.valueOf(LocalDateTime.now());
+        time = new Timestamp(System.currentTimeMillis());
         this.data = new EventData(data);
     }
 

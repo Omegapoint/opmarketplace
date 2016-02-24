@@ -9,6 +9,9 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import java.io.IOException;
 import java.util.List;
 
+import static se.sawano.java.commons.lang.validate.Validate.notEmpty;
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 public class Account {
     private Email email;
     private User user;
@@ -16,6 +19,9 @@ public class Account {
     private AccountEventPublisher publisher;
 
     public Account(Email email, User user, AccountEventPublisher publisher) {
+        notNull(email);
+        notNull(user);
+        notNull(publisher);
         this.publisher = publisher;
         this.email = email;
         this.user = user;
@@ -24,6 +30,7 @@ public class Account {
 
 
     public Account(String email, String firstName, String lastName, AccountEventPublisher publisher) {
+        notNull(publisher);
         this.publisher = publisher;
         this.user = new User(firstName, lastName);
         this.email = new Email(email);
@@ -31,6 +38,8 @@ public class Account {
     }
 
     public Account(List<DomainEvent> events, AccountEventPublisher publisher) throws IOException {
+        notEmpty(events);
+        notNull(publisher);
         this.publisher = publisher;
         ObjectMapper fromJson = new ObjectMapper();
         for (DomainEvent e: events) {

@@ -1,5 +1,6 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
@@ -11,6 +12,7 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_ob
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountUserChanged;
 
 public class AccountEventPublisherService implements AccountEventPublisher {
+
     private final EventBus eventBus;
 
     public AccountEventPublisherService(EventBus eventBus) {
