@@ -5,21 +5,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClients;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class EventPublisher implements Consumer<Event<DomainEventModel>> {
-    CloseableHttpClient httpclient;
+    CloseableHttpAsyncClient httpclient;
 
     public EventPublisher(EventBus eventBus){
-        httpclient = HttpClients.createDefault();
+        httpclient = HttpAsyncClients.createDefault();
         eventBus.on(Selectors.regex("\\w+"), this);
     }
 
@@ -41,10 +40,7 @@ public class EventPublisher implements Consumer<Event<DomainEventModel>> {
         httpPost.addHeader("Content-Type", "application/json");
         httpPost.setEntity(eventJson);
 
-        try {
-            httpclient.execute(httpPost);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        httpclient.start();
+        httpclient.execute(httpPost, null);
     }
 }
