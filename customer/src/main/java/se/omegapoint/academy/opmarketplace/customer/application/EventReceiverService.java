@@ -15,7 +15,7 @@ import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 @RestController
 @RequestMapping("/event")
-public class EventReceiverRestService {
+public class EventReceiverService {
 
     @Autowired
     EventBus eventBus;
@@ -24,7 +24,8 @@ public class EventReceiverRestService {
     public ResponseEntity eventInput(@RequestBody DomainEventModel event) {
         try {
             DomainEvent domainEvent = new DomainEvent(event);
-            eventBus.notify("event_posted", Event.wrap(domainEvent));
+            System.out.println(domainEvent.eventData());
+            eventBus.notify("circle", Event.wrap(domainEvent));
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (IllegalArgumentException | IllegalArgumentValidationException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();

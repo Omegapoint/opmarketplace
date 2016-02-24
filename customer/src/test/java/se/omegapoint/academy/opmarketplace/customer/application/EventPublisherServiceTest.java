@@ -1,6 +1,5 @@
 package se.omegapoint.academy.opmarketplace.customer.application;
 
-import org.apache.tomcat.jni.Thread;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,8 @@ import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountCreated;
+
+import java.util.concurrent.CountDownLatch;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CustomerApplication.class)
@@ -27,6 +28,13 @@ public class EventPublisherServiceTest {
         String firstName = "initial";
         String lastName = "initial";
         eventBus.notify("publish", Event.wrap(new DomainEvent(email, Account.class, new AccountCreated(email, firstName, lastName))));
+
+        CountDownLatch latch = new CountDownLatch(1);
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
