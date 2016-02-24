@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import reactor.bus.EventBus;
 import se.omegapoint.accademy.opmarketplace.messageservice.analyzer.EventAnalyzer;
 import se.omegapoint.accademy.opmarketplace.messageservice.services.EventPublisher;
+import se.omegapoint.accademy.opmarketplace.messageservice.services.RuleEngine;
 
 @Configuration
 public class SpringConfiguration {
@@ -24,4 +25,10 @@ public class SpringConfiguration {
     EventPublisher createEventPublisher(EventBus eventBus) {
         return new EventPublisher(eventBus);
     }
+
+//    //TODO prova ta bort
+//    @Bean
+//    RuleEngine createRuleEnging(EventBus eventBus) {
+//        return new RuleEngine(eventBus);
+//    }
 }

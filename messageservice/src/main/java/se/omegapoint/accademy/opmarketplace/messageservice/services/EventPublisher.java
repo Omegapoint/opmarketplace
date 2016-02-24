@@ -17,16 +17,20 @@ import java.io.UnsupportedEncodingException;
 
 public class EventPublisher implements Consumer<Event<DomainEventModel>> {
     CloseableHttpAsyncClient httpclient;
+    RuleEngine ruleEngine;
 
     public EventPublisher(EventBus eventBus){
         httpclient = HttpAsyncClients.createDefault();
+        ruleEngine = new RuleEngine(eventBus);
         eventBus.on(Selectors.regex("\\w+"), this);
     }
 
     @Override
     public void accept(Event<DomainEventModel> event) {
         DomainEventModel domainEvent = event.getData();
-        publish(domainEvent);
+        if (ruleEngine.allow(domainEvent)) {
+            publish(domainEvent);
+        }
     }
 
     private void publish(DomainEventModel domainEvent) {
