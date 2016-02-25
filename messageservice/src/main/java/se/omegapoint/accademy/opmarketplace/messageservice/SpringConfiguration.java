@@ -22,13 +22,12 @@ public class SpringConfiguration {
     }
 
     @Bean
-    EventPublisher createEventPublisher(EventBus eventBus) {
-        return new EventPublisher(eventBus);
+    EventPublisher createEventPublisher(EventBus eventBus, RuleEngine ruleEngine) {
+        return new EventPublisher(eventBus, ruleEngine);
     }
 
-//    //TODO prova ta bort
-//    @Bean
-//    RuleEngine createRuleEnging(EventBus eventBus) {
-//        return new RuleEngine(eventBus);
-//    }
+    @Bean
+    RuleEngine createRuleEngine(EventBus eventBus) {
+        return new RuleEngine(eventBus);
+    }
 }

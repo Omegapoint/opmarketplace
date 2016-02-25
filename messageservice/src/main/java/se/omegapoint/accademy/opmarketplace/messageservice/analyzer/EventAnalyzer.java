@@ -18,7 +18,6 @@ public class EventAnalyzer implements Consumer<Event<DomainEventModel>> {
         this.eventBus = eventBus;
         eventBus.on(Selectors.object("event_posted"), this);
         counter = new AtomicInteger(0);
-
     }
 
     @Override

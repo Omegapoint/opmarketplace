@@ -16,12 +16,12 @@ import se.omegapoint.accademy.opmarketplace.messageservice.models.DomainEventMod
 import java.io.UnsupportedEncodingException;
 
 public class EventPublisher implements Consumer<Event<DomainEventModel>> {
-    CloseableHttpAsyncClient httpclient;
     RuleEngine ruleEngine;
+    CloseableHttpAsyncClient httpclient;
 
-    public EventPublisher(EventBus eventBus){
+    public EventPublisher(EventBus eventBus, RuleEngine ruleEngine){
+        this.ruleEngine = ruleEngine;
         httpclient = HttpAsyncClients.createDefault();
-        ruleEngine = new RuleEngine(eventBus);
         eventBus.on(Selectors.regex("\\w+"), this);
     }
 
