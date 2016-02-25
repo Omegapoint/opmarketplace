@@ -105,6 +105,8 @@ public class AccountRestServiceTest {
         String firstName = "retrieve";
         String lastName = "retrieve";
 
+        System.out.println(new ObjectMapper().writeValueAsString(new AccountModel(new Email(email), new User(firstName, lastName))));
+
         DomainEvent createAccountEvent = new DomainEvent(email, Account.class, new AccountCreated(email, firstName, lastName));
         accountEventStore.accept(Event.wrap(createAccountEvent));
         mockMvc.perform(get("/accounts?email=" + email)

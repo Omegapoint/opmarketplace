@@ -9,6 +9,9 @@ import reactor.bus.EventBus;
 import se.omegapoint.accademy.opmarketplace.messageservice.models.Channels;
 import se.omegapoint.accademy.opmarketplace.messageservice.models.DomainEventModel;
 
+import static org.springframework.http.MediaType.*;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+
 import java.sql.Timestamp;
 
 @RestController
@@ -18,21 +21,21 @@ public class EventReceiver {
     @Autowired
     EventBus eventBus;
 
-    @RequestMapping
-    public ResponseEntity<DomainEventModel> get() {
+    @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<DomainEventModel> getExampleEvent() {
         DomainEventModel data = new DomainEventModel(
                 "12345",
                 "Exempelaggregat",
                 "Testevent",
                 "Data 123",
-                new Timestamp(System.currentTimeMillis()));
+                new Timestamp(1337));
 
-        return new ResponseEntity<>(data, HttpStatus.OK);
+        return ResponseEntity.ok(data);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<DomainEventModel> eventInput(@RequestBody DomainEventModel data) {
+    @RequestMapping(method = POST, consumes = APPLICATION_JSON_VALUE)
+    public ResponseEntity<DomainEventModel> receiveEvent(@RequestBody DomainEventModel data) {
         eventBus.notify(Channels.EVENTS, Event.wrap(data));
-        return new ResponseEntity<>(data, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
 }
