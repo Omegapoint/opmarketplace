@@ -36,17 +36,18 @@ public class EventPublisher implements Consumer<Event<DomainEventModel>> {
     }
 
     private void publish(DomainEventModel domainEvent) {
-        StringEntity eventJson = null;
         try {
+            StringEntity eventJson;
             eventJson = new StringEntity(new ObjectMapper().writeValueAsString(domainEvent));
-        } catch (UnsupportedEncodingException | JsonProcessingException e) {
+
+            HttpPost httpPost = new HttpPost("http://localhost:8001/event");
+            httpPost.addHeader("Content-Type", "application/json");
+            httpPost.setEntity(eventJson);
+
+            httpclient.execute(httpPost, null);
+
+        } catch (UnsupportedEncodingException | JsonProcessingException e) { // TODO: Var detta ok?
             e.printStackTrace();
         }
-
-        HttpPost httpPost = new HttpPost("http://localhost:8001/event");
-        httpPost.addHeader("Content-Type", "application/json");
-        httpPost.setEntity(eventJson);
-
-        httpclient.execute(httpPost, null);
     }
 }
