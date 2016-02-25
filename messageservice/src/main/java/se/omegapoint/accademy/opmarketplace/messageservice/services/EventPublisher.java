@@ -23,6 +23,7 @@ public class EventPublisher implements Consumer<Event<DomainEventModel>> {
     public EventPublisher(EventBus eventBus, RuleEngine ruleEngine){
         this.ruleEngine = ruleEngine;
         httpclient = HttpAsyncClients.createDefault();
+        httpclient.start();
         eventBus.on(Selectors.regex(Channels.ALL_CHANNELS_REGEX), this);
     }
 
@@ -46,7 +47,6 @@ public class EventPublisher implements Consumer<Event<DomainEventModel>> {
         httpPost.addHeader("Content-Type", "application/json");
         httpPost.setEntity(eventJson);
 
-        httpclient.start();
         httpclient.execute(httpPost, null);
     }
 }

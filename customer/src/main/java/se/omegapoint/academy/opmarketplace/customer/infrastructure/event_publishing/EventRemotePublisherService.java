@@ -20,6 +20,7 @@ public class EventRemotePublisherService implements Consumer<Event<DomainEvent>>
 
     public EventRemotePublisherService(EventBus eventBus){
         httpclient = HttpAsyncClients.createDefault();
+        httpclient.start();
         eventBus.on(Selectors.regex("\\w+"), this);
     }
 
@@ -41,7 +42,6 @@ public class EventRemotePublisherService implements Consumer<Event<DomainEvent>>
         httpPost.addHeader("Content-Type", "application/json");
         httpPost.setEntity(eventJson);
 
-        httpclient.start();
         httpclient.execute(httpPost, null);
     }
 }
