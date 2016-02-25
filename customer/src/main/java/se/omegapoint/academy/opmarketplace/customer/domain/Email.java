@@ -4,7 +4,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notBlank;
-
+//TODO final
 public class Email {
 
     protected static final int MAX_LENGTH = 254;
@@ -15,6 +15,7 @@ public class Email {
 
     public Email(String address) {
         notBlank(address);
+//        TODO trimma
         isTrue(address.length() <= MAX_LENGTH, ILLEGAL_LENGTH);
         isTrue(EmailValidator.getInstance().isValid(address), ILLEGAL_FORMAT);
         this.address = address;

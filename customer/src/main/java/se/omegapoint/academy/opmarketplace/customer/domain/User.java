@@ -16,6 +16,7 @@ public class User {
     public User(String firstName, String lastName) {
         notBlank(firstName);
         notBlank(lastName);
+//        TODO: trimma
         isTrue(firstName.length() <= FIRSTNAME_LENGTH && firstName.matches("[\\w\\-]+"), FIRSTNAME_ILLEGAL_FORMAT);
         isTrue(lastName.length() <= LASTNAME_LENGTH && lastName.matches("[\\w\\-]+"), LASTNAME_ILLEGAL_FORMAT);
         this.firstName = firstName;
