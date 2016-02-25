@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
+import se.omegapoint.accademy.opmarketplace.messageservice.models.Channels;
 import se.omegapoint.accademy.opmarketplace.messageservice.models.DomainEventModel;
 
 import java.sql.Timestamp;
@@ -31,7 +32,7 @@ public class EventReceiver {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<DomainEventModel> eventInput(@RequestBody DomainEventModel data) {
-        eventBus.notify("event_posted", Event.wrap(data));
+        eventBus.notify(Channels.EVENTS, Event.wrap(data));
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 }

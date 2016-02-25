@@ -11,6 +11,7 @@ import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
+import se.omegapoint.accademy.opmarketplace.messageservice.models.Channels;
 import se.omegapoint.accademy.opmarketplace.messageservice.models.DomainEventModel;
 
 import java.io.UnsupportedEncodingException;
@@ -22,7 +23,7 @@ public class EventPublisher implements Consumer<Event<DomainEventModel>> {
     public EventPublisher(EventBus eventBus, RuleEngine ruleEngine){
         this.ruleEngine = ruleEngine;
         httpclient = HttpAsyncClients.createDefault();
-        eventBus.on(Selectors.regex("\\w+"), this);
+        eventBus.on(Selectors.regex(Channels.ALL_CHANNELS_REGEX), this);
     }
 
     @Override
