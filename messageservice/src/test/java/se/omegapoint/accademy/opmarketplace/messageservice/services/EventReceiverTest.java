@@ -12,7 +12,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import se.omegapoint.accademy.opmarketplace.messageservice.Application;
-import se.omegapoint.accademy.opmarketplace.messageservice.models.DomainEventModel;
+import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.DomainEventModel;
 
 import java.sql.Timestamp;
 
@@ -20,9 +20,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
-
-import static org.junit.Assert.*;
-
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -64,6 +61,7 @@ public class EventReceiverTest {
 
     private DomainEventModel getExampleDomainEvent() {
         return new DomainEventModel(
+                "1",
                 "12345",
                 "Exempelaggregat",
                 "Testevent",

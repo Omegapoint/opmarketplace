@@ -1,9 +1,10 @@
-package se.omegapoint.accademy.opmarketplace.messageservice.models;
+package se.omegapoint.accademy.opmarketplace.messageservice.domain.models;
 
 import java.sql.Timestamp;
 
 public class DomainEventModel {
 
+    private String channel;
     private String aggregateId;
     private String aggregateName;
     private String eventType;
@@ -12,12 +13,17 @@ public class DomainEventModel {
 
     public DomainEventModel(){}
 
-    public DomainEventModel(String aggregateId, String aggregateName, String eventType, String eventData, Timestamp time) {
+    public DomainEventModel(String channel, String aggregateId, String aggregateName, String eventType, String eventData, Timestamp time) {
+        this.channel = channel;
         this.aggregateId = aggregateId;
         this.aggregateName = aggregateName;
         this.eventType = eventType;
         this.eventData = eventData;
         this.time = time;
+    }
+
+    public String getChannel() {
+        return channel;
     }
 
     public String getAggregateId() {

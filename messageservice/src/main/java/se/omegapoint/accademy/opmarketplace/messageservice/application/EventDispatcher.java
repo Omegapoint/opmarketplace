@@ -1,5 +1,4 @@
-package se.omegapoint.accademy.opmarketplace.messageservice.services;
-
+package se.omegapoint.accademy.opmarketplace.messageservice.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,23 +7,23 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import reactor.bus.Event;
-import reactor.bus.EventBus;
-import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
-import se.omegapoint.accademy.opmarketplace.messageservice.models.Channels;
-import se.omegapoint.accademy.opmarketplace.messageservice.models.DomainEventModel;
+import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.DomainEventModel;
+import se.omegapoint.accademy.opmarketplace.messageservice.domain.RuleEngine;
 
 import java.io.UnsupportedEncodingException;
 
-public class EventPublisher implements Consumer<Event<DomainEventModel>> {
-    RuleEngine ruleEngine;
-    CloseableHttpAsyncClient httpclient;
+public class EventDispatcher implements Consumer<Event<DomainEventModel>> {
 
-    public EventPublisher(EventBus eventBus, RuleEngine ruleEngine){
+    private final CloseableHttpAsyncClient httpAsyncClient;
+    private final RuleEngine ruleEngine;
+    private final String endpoint;
+
+    public EventDispatcher(RuleEngine ruleEngine, String endpoint) {
+        httpAsyncClient = HttpAsyncClients.createDefault();
+        httpAsyncClient.start();
         this.ruleEngine = ruleEngine;
-        httpclient = HttpAsyncClients.createDefault();
-        httpclient.start();
-        eventBus.on(Selectors.regex(Channels.ALL_CHANNELS_REGEX), this);
+        this.endpoint = endpoint;
     }
 
     @Override
@@ -33,18 +32,20 @@ public class EventPublisher implements Consumer<Event<DomainEventModel>> {
         if (ruleEngine.allow(domainEvent)) {
             publish(domainEvent);
         }
+
+        System.out.printf("Event dispatched from channel %s with type %s to endpoint %s%n",
+                event.getKey(), domainEvent.getEventType(), endpoint);
     }
 
     private void publish(DomainEventModel domainEvent) {
         try {
-            StringEntity eventJson;
-            eventJson = new StringEntity(new ObjectMapper().writeValueAsString(domainEvent));
+            StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(domainEvent));
 
-            HttpPost httpPost = new HttpPost("http://localhost:8001/event");
+            HttpPost httpPost = new HttpPost(endpoint);
             httpPost.addHeader("Content-Type", "application/json");
             httpPost.setEntity(eventJson);
 
-            httpclient.execute(httpPost, null);
+            httpAsyncClient.execute(httpPost, null);
 
         } catch (UnsupportedEncodingException | JsonProcessingException e) { // TODO: Var detta ok?
             e.printStackTrace();
