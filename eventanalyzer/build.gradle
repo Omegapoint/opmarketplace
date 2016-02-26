@@ -1,6 +1,8 @@
 buildscript {
 	ext {
 		springBootVersion = '1.3.2.RELEASE'
+		reactorVersion = '2.0.7.RELEASE'
+		apacheHttpAsyncClientVersion = '4.1.1'
 	}
 	repositories {
 		mavenCentral()
@@ -28,7 +30,11 @@ repositories {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
-	testCompile('org.springframework.boot:spring-boot-starter-test') 
+	compile "io.projectreactor:reactor-core:${reactorVersion}"
+	compile "io.projectreactor:reactor-bus:${reactorVersion}"
+	compile "org.apache.httpcomponents:httpasyncclient:${apacheHttpAsyncClientVersion}"
+
+	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 
