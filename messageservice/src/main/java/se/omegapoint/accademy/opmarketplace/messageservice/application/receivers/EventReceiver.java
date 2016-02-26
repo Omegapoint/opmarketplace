@@ -34,9 +34,12 @@ public class EventReceiver {
     }
 
     @RequestMapping(method = POST, consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<DomainEventModel> receiveEvent(@RequestBody DomainEventModel data) {
-        System.out.println("Event received");
-        eventBus.notify(data.getChannel(), Event.wrap(data));
+    public ResponseEntity<DomainEventModel> receiveEvent(
+            @RequestParam("channel") String channel,
+            @RequestBody DomainEventModel data) {
+
+        System.out.print("Event received ---> ");
+        eventBus.notify(channel, Event.wrap(data));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
 }

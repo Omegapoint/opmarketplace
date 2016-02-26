@@ -2,19 +2,16 @@ package se.omegapoint.accademy.opmarketplace.messageservice.domain.models;
 
 public class RuleCommand {
 
-    private final String eventType;
-    private final boolean allow;
+    private String eventType;
+    private boolean allow;
 
-    public RuleCommand(String eventType, boolean allow) {
-        this.eventType = eventType;
-        this.allow = allow;
-    }
+    public RuleCommand() {}
 
-    public String eventType() {
+    public String getEventType() {
         return eventType;
     }
 
-    public boolean allow() {
+    public boolean isAllow() {
         return allow;
     }
 }

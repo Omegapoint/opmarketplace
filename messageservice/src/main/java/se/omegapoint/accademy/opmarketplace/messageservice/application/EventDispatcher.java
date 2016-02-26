@@ -31,10 +31,13 @@ public class EventDispatcher implements Consumer<Event<DomainEventModel>> {
         DomainEventModel domainEvent = event.getData();
         if (ruleEngine.allow(domainEvent)) {
             publish(domainEvent);
+
+            System.out.printf("Event dispatched from channel %s with type %s to endpoint %s%n",
+                    event.getKey(), domainEvent.getEventType(), endpoint);
+        } else {
+            System.out.printf("Event with type %s was not allowed...%n", domainEvent.getEventType());
         }
 
-        System.out.printf("Event dispatched from channel %s with type %s to endpoint %s%n",
-                event.getKey(), domainEvent.getEventType(), endpoint);
     }
 
     private void publish(DomainEventModel domainEvent) {

@@ -26,12 +26,12 @@ public class RuleEngine implements Consumer<Event<RuleCommand>> {
     @Override
     public void accept(Event<RuleCommand> commandEvent) {
         RuleCommand command = commandEvent.getData();
-        if (command.allow()) {
-            prohibitedEvents.remove(command.eventType());
-        } else if (!command.allow()) {
-            prohibitedEvents.add(command.eventType());
+        if (command.isAllow()) {
+            prohibitedEvents.remove(command.getEventType());
+        } else if (!command.isAllow()) {
+            prohibitedEvents.add(command.getEventType());
         }
 
-        System.out.printf("Event %s is now allowed: %b%n", command.eventType(), command.allow());
+        System.out.printf("Event %s is now allowed: %b%n", command.getEventType(), command.isAllow());
     }
 }
