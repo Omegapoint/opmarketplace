@@ -42,6 +42,7 @@ public class SubscriptionReceiver {
             @RequestParam("endpoint") String endpoint,
             @RequestParam("token") String token) {
 
+        //TODO: maybe improve security
         if (!token.equals("kebabpizza")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         } else {

@@ -21,6 +21,7 @@ public class CommandReceiver {
             @RequestParam("token") String token,
             @RequestBody CommandEvent commandEvent) {
 
+        //TODO: maybe improve security
         if (!token.equals("kebabpizza"))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
