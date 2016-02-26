@@ -1,11 +1,11 @@
 package se.omegapoint.accademy.opmarketplace.messageservice.domain.models;
 
-public class RuleCommand {
+public class CommandEvent {
 
     private String eventType;
     private boolean allow;
 
-    public RuleCommand() {}
+    public CommandEvent() {}
 
     public String getEventType() {
         return eventType;

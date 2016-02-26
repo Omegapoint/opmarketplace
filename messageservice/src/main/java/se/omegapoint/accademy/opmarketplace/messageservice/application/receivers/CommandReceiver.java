@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
-import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.RuleCommand;
+import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.CommandEvent;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -19,13 +19,13 @@ public class CommandReceiver {
     @RequestMapping(value = "/command", method = POST)
     public ResponseEntity<Void> receiveCommand(
             @RequestParam("token") String token,
-            @RequestBody RuleCommand ruleCommand) {
+            @RequestBody CommandEvent commandEvent) {
 
         if (!token.equals("kebabpizza"))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
         System.out.println("Rule command received ---> ");
-        eventBus.notify("command", Event.wrap(ruleCommand));
+        eventBus.notify("command", Event.wrap(commandEvent));
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
