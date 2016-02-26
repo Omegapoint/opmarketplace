@@ -1,10 +1,11 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.services;
 
+import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
 
 public interface AccountEventPublisher {
-    void publishAccountCreated(Email email, User user);
+    void publishAccountCreated(Account account);
 
-    void publishAccountUserChanged(String id, User user);
+    void publishAccountUserChanged(Email id, User user);
 }

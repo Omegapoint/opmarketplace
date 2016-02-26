@@ -1,10 +1,10 @@
 package se.omegapoint.academy.opmarketplace.customer.domain;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisher;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountUserChanged;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateModification;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisher;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +25,7 @@ public class Account {
         this.publisher = publisher;
         this.email = email;
         this.user = user;
-        publisher.publishAccountCreated(this.email, this.user);
+        publisher.publishAccountCreated(this);
     }
 
 
@@ -34,19 +34,18 @@ public class Account {
         this.publisher = publisher;
         this.user = new User(firstName, lastName);
         this.email = new Email(email);
-        publisher.publishAccountCreated(this.email, this.user);
+        publisher.publishAccountCreated(this);
     }
 
     public Account(List<DomainEvent> events, AccountEventPublisher publisher) throws IOException {
         notEmpty(events);
         notNull(publisher);
         this.publisher = publisher;
-        ObjectMapper fromJson = new ObjectMapper();
         for (DomainEvent e: events) {
-            if (e.eventType().equals(AccountCreated.class.getSimpleName()))
-                applyCreated(fromJson.readValue(e.eventData(), AccountCreated.class));
-            else if (e.eventType().equals(AccountUserChanged.class.getSimpleName()))
-                applyUserChanged(fromJson.readValue(e.eventData(), AccountUserChanged.class));
+            if (e instanceof AccountCreated)
+                applyCreated((AccountCreated)e);
+            else if (e instanceof AccountUserChanged)
+                applyUserChanged((AccountUserChanged)e);
         }
     }
 
@@ -65,15 +64,15 @@ public class Account {
     public void changeUser(String firstName, String lastName){
         user = user.changeFirstName(firstName);
         user = user.changeLastName(lastName);
-        publisher.publishAccountUserChanged(id(), user());
+        publisher.publishAccountUserChanged(email(), user());
     }
 
     private void applyCreated(AccountCreated accountCreated){
-        this.email = new Email(accountCreated.getEmail());
-        this.user = new User(accountCreated.getFirstName(), accountCreated.getLastName());
+        this.email = accountCreated.email();
+        this.user = accountCreated.user();
     }
 
     private void applyUserChanged(AccountUserChanged userChanged){
-        this.user = new User(userChanged.getFirstName(), userChanged.getLastName());
+        this.user = userChanged.user();
     }
 }

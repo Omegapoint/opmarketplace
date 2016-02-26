@@ -27,21 +27,21 @@ public class EventRemotePublisherService implements Consumer<Event<DomainEvent>>
     @Override
     public void accept(Event<DomainEvent> event) {
         DomainEvent domainEvent = event.getData();
-        publish(domainEvent);
+//        publish(domainEventOLD);
     }
 
-    private void publish(DomainEvent domainEvent) {
-        DomainEventModel eventModel = new DomainEventModel(domainEvent.aggregateId(), domainEvent.aggregateName(), domainEvent.eventType(), domainEvent.eventData(), domainEvent.time());
-        StringEntity eventJson = null;
-        try {
-            eventJson = new StringEntity(new ObjectMapper().writeValueAsString(eventModel));
-        } catch (UnsupportedEncodingException | JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        HttpPost httpPost = new HttpPost("http://localhost:8000/event");
-        httpPost.addHeader("Content-Type", "application/json");
-        httpPost.setEntity(eventJson);
-
-        httpclient.execute(httpPost, null);
-    }
+//    private void publish(DomainEventOLD domainEventOLD) {
+//        DomainEventModel eventModel = new DomainEventModel(domainEventOLD.aggregateId(), domainEventOLD.aggregateName(), domainEventOLD.eventType(), domainEventOLD.eventData(), domainEventOLD.time());
+//        StringEntity eventJson = null;
+//        try {
+//            eventJson = new StringEntity(new ObjectMapper().writeValueAsString(eventModel));
+//        } catch (UnsupportedEncodingException | JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//        HttpPost httpPost = new HttpPost("http://localhost:8000/event");
+//        httpPost.addHeader("Content-Type", "application/json");
+//        httpPost.setEntity(eventJson);
+//
+//        httpclient.execute(httpPost, null);
+//    }
 }

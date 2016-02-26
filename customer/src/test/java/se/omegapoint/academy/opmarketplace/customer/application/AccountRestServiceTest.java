@@ -16,17 +16,13 @@ import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.AccountModel;
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.EmailModel;
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.UserModel;
-import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -70,7 +66,7 @@ public class AccountRestServiceTest {
         String firstName = "blockFirst";
         String lastName = "blockLast";
 
-        accountEventStore.accept(Event.wrap(new DomainEvent(email, Account.class, new AccountCreated(email, firstName, lastName))));
+        accountEventStore.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
 
         String content = new ObjectMapper().writeValueAsString(new AccountModel(new EmailModel(email), new UserModel(firstName, lastName)));
         mockMvc.perform(post("/accounts")
@@ -91,7 +87,7 @@ public class AccountRestServiceTest {
 
         String newUser = new ObjectMapper().writeValueAsString(new UserModel(newFirstName, newLastName));
 
-        accountEventStore.accept(Event.wrap(new DomainEvent(email, Account.class, new AccountCreated(email, firstName, lastName))));
+        accountEventStore.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
         mockMvc.perform(put("/accounts?email=" + email)
                 .contentType(APPLICATION_JSON)
                 .content(newUser)
@@ -107,8 +103,7 @@ public class AccountRestServiceTest {
 
         System.out.println(new ObjectMapper().writeValueAsString(new AccountModel(new Email(email), new User(firstName, lastName))));
 
-        DomainEvent createAccountEvent = new DomainEvent(email, Account.class, new AccountCreated(email, firstName, lastName));
-        accountEventStore.accept(Event.wrap(createAccountEvent));
+        accountEventStore.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
         mockMvc.perform(get("/accounts?email=" + email)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())

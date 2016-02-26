@@ -37,6 +37,21 @@ public class AccountTest {
         assertEquals(firstName, account.user().firstName());
         assertEquals(lastName, account.user().lastName());
     }
+
+    @Test
+    public void should_save_account() throws IOException, InterruptedException {
+        String email = "create@create.com";
+        String firstName = "createFirst";
+        String lastName = "createLast";
+        new Account(email, firstName, lastName, new AccountEventPublisherService(eventBus));
+        Thread.sleep(10);
+        Account account = eventStore.account(email);
+        assertEquals(email, account.email().address());
+        assertEquals(email, account.id());
+        assertEquals(firstName, account.user().firstName());
+        assertEquals(lastName, account.user().lastName());
+    }
+
     @Test
     public void should_change_last_name_to_z() throws IOException, InterruptedException {
         String email = "change@change.com";
@@ -47,7 +62,7 @@ public class AccountTest {
             account.changeUser("initial", c+"");
         }
         // Wait to make sure all events are received by eventStore.
-        Thread.sleep(20);
+        Thread.sleep(30);
         account = eventStore.account(email);
         assertEquals("z", account.user().lastName());
     }
