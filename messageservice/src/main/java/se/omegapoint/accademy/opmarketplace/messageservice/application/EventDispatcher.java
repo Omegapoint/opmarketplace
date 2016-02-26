@@ -3,6 +3,7 @@ package se.omegapoint.accademy.opmarketplace.messageservice.application;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
@@ -12,6 +13,7 @@ import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.DomainE
 import se.omegapoint.accademy.opmarketplace.messageservice.domain.RuleEngine;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 
 public class EventDispatcher implements Consumer<Event<DomainEventModel>> {
 
@@ -30,27 +32,31 @@ public class EventDispatcher implements Consumer<Event<DomainEventModel>> {
     public void accept(Event<DomainEventModel> event) {
         DomainEventModel domainEvent = event.getData();
         if (ruleEngine.allow(domainEvent)) {
-            publish(domainEvent);
-
-            System.out.printf("Event dispatched from channel %s with type %s to endpoint %s%n",
-                    event.getKey(), domainEvent.getEventType(), endpoint);
+            publish(domainEvent, event.getKey().toString());
         } else {
             System.out.printf("Event with type %s was not allowed...%n", domainEvent.getEventType());
         }
 
     }
 
-    private void publish(DomainEventModel domainEvent) {
+    private void publish(DomainEventModel domainEvent, String channel) {
         try {
             StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(domainEvent));
 
-            HttpPost httpPost = new HttpPost(endpoint);
+            URIBuilder uriBuilder = new URIBuilder(endpoint).addParameter("channel", channel);
+            HttpPost httpPost = new HttpPost(uriBuilder.build());
+
             httpPost.addHeader("Content-Type", "application/json");
             httpPost.setEntity(eventJson);
 
             httpAsyncClient.execute(httpPost, null);
 
-        } catch (UnsupportedEncodingException | JsonProcessingException e) { // TODO: Var detta ok?
+            System.out.printf("Event dispatched from channel %s with type %s to URI %s%n",
+                    channel, domainEvent.getEventType(), uriBuilder.build());
+
+
+        } catch (URISyntaxException | UnsupportedEncodingException | JsonProcessingException e) {
+            // TODO: Var detta ok?
             e.printStackTrace();
         }
     }
