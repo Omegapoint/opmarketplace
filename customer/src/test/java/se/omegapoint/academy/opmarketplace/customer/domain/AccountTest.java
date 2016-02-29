@@ -60,9 +60,10 @@ public class AccountTest {
         Account account = new Account(email, firstName, lastName, new AccountEventPublisherService(eventBus));
         for (char c = 'a'; c <= 'z'; c++) {
             account.changeUser("initial", c+"");
+            Thread.sleep(1);
         }
         // Wait to make sure all events are received by eventStore.
-        Thread.sleep(30);
+        Thread.sleep(20);
         account = eventStore.account(email);
         assertEquals("z", account.user().lastName());
     }

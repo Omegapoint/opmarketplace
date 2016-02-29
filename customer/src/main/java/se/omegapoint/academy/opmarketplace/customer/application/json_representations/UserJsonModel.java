@@ -2,22 +2,17 @@ package se.omegapoint.academy.opmarketplace.customer.application.json_representa
 
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
 
-public class UserModel {
+public class UserJsonModel {
 
     private String firstName;
     private String lastName;
 
-    public UserModel(User user){
+    public UserJsonModel(User user){
         firstName = user.firstName();
         lastName = user.lastName();
     }
 
-    public UserModel(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    public UserModel(){}
+    public UserJsonModel(){}
 
     public String getFirstName() {
         return firstName;

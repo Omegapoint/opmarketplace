@@ -6,27 +6,24 @@ import se.omegapoint.academy.opmarketplace.customer.domain.User;
 
 import java.sql.Timestamp;
 
-public final class AccountCreated extends DomainEvent implements AggregateModification {
+public class AccountRequested extends DomainEvent{
 
     public static final String CHANNEL = "Account";
-    public static final String NAME = "AccountCreated";
+    public static final String NAME = "AccountRequested";
 
     private Email email;
     private User user;
-    private AggregateIdentity aggregate;
     private Timestamp time;
 
-    public AccountCreated(Email email, User user){
+    public AccountRequested(Email email, User user){
         this.email = email;
         this.user = user;
-        this.aggregate = new AggregateIdentity(email.address(), Account.class.getSimpleName());
         this.time = new Timestamp(System.currentTimeMillis());
     }
 
-    public AccountCreated(Email email, User user, Timestamp time){
+    public AccountRequested(Email email, User user, Timestamp time){
         this.email = email;
         this.user = user;
-        this.aggregate = new AggregateIdentity(email.address(), Account.class.getSimpleName());
         this.time = time;
     }
 
@@ -41,15 +38,5 @@ public final class AccountCreated extends DomainEvent implements AggregateModifi
     @Override
     public Timestamp time() {
         return time;
-    }
-
-    @Override
-    public String aggregateMemberId() {
-        return aggregate.id();
-    }
-
-    @Override
-    public String aggregateName() {
-        return aggregate.aggregateName();
     }
 }

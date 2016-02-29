@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 public class AccountUserChanged extends DomainEvent implements AggregateModification {
 
     public static final String CHANNEL = "Account";
+    public static final String NAME = "AccountUserChanged";
 
     private AggregateIdentity identity;
     private User user;
