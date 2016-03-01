@@ -10,6 +10,10 @@ public class EmailJsonModel {
         this.address = email.address();
     }
 
+    private EmailJsonModel(String email){
+        this.address = email;
+    }
+
     public EmailJsonModel(){}
 
     public String getAddress() {
