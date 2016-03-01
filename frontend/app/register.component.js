@@ -8,7 +8,7 @@ System.register(['angular2/core', "angular2/core", "angular2/common", 'rxjs/add/
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, core_2, common_1, common_2, account_service_1;
+    var core_1, core_2, common_1, common_2, account_service_1, account_service_2, account_service_3;
     var RegisterComponent;
     return {
         setters:[
@@ -25,6 +25,8 @@ System.register(['angular2/core', "angular2/core", "angular2/common", 'rxjs/add/
             function (_1) {},
             function (account_service_1_1) {
                 account_service_1 = account_service_1_1;
+                account_service_2 = account_service_1_1;
+                account_service_3 = account_service_1_1;
             }],
         execute: function() {
             RegisterComponent = (function () {
@@ -39,13 +41,7 @@ System.register(['angular2/core', "angular2/core", "angular2/common", 'rxjs/add/
                 }
                 RegisterComponent.prototype.registerAccount = function (event) {
                     event.preventDefault();
-                    var newAccount = {
-                        email: this.registerForm.value.email,
-                        user: {
-                            firstName: this.registerForm.value.firstName,
-                            lastName: this.registerForm.value.lastName,
-                        }
-                    };
+                    var newAccount = new account_service_2.Account(this.registerForm.value.email, new account_service_3.User(this.registerForm.value.firstName, this.registerForm.value.lastName));
                     this._accountService.registerAccount(newAccount);
                 };
                 RegisterComponent = __decorate([

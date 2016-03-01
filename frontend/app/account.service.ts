@@ -2,34 +2,37 @@ import {Injectable} from 'angular2/core';
 import {HTTP_PROVIDERS, Http, Response, Headers} from "angular2/http";
 import {Component} from "angular2/core";
 
-export interface Account{
-    email: string;
-    user:{
-        firstName: string;
-        lastName: string;
-    };
+export class User{
+    public firstName: string;
+    public lastName: string;
+
+    constructor(firstName:string, lastName:string) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+}
+
+export class Account{
+    public email: string;
+    public user: User;
+
+    constructor(email:string, user: User) {
+        this.email = email;
+        this.user = user;
+    }
 }
 
 @Injectable()
 export class AccountService {
-    private account: Account = {
-        email: "hej",
-        user:{
-            firstName: "",
-            lastName: ""
-        }
+    private account: Account;
+
+
+    constructor(private _http: Http) {
+        this.account = new Account("hej", new User("hej", "hej"));
     }
 
-    constructor(private _http: Http) { }
-
     public currentActiveAccount() : Account {
-        return {
-            email: this.account.email,
-            user:{
-                firstName: this.account.user.firstName,
-                lastName: this.account.user.lastName
-            },
-        }
+        return new Account(this.account.email, this.account.user);
     }
 
     public registerAccount(newAccount: Account){

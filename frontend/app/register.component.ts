@@ -7,6 +7,8 @@ import {ControlGroup} from "angular2/common";
 import 'rxjs/add/operator/map';
 import {Router} from 'angular2/router';
 import {AccountService} from "./account.service";
+import {Account} from "./account.service";
+import {User} from "./account.service";
 
 @Component({
     selector: 'register',
@@ -30,13 +32,7 @@ export class RegisterComponent {
 
     public registerAccount(event) {
         event.preventDefault();
-        var newAccount = {
-            email: this.registerForm.value.email,
-            user: {
-                firstName: this.registerForm.value.firstName,
-                lastName: this.registerForm.value.lastName,
-            }
-        };
+        var newAccount = new Account(this.registerForm.value.email, new User(this.registerForm.value.firstName, this.registerForm.value.lastName));
         this._accountService.registerAccount(newAccount)
     }
 

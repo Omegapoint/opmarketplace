@@ -9,7 +9,7 @@ System.register(['angular2/core', "angular2/http"], function(exports_1) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, http_1;
-    var AccountService;
+    var User, Account, AccountService;
     return {
         setters:[
             function (core_1_1) {
@@ -19,25 +19,29 @@ System.register(['angular2/core', "angular2/http"], function(exports_1) {
                 http_1 = http_1_1;
             }],
         execute: function() {
+            User = (function () {
+                function User(firstName, lastName) {
+                    this.firstName = firstName;
+                    this.lastName = lastName;
+                }
+                return User;
+            })();
+            exports_1("User", User);
+            Account = (function () {
+                function Account(email, user) {
+                    this.email = email;
+                    this.user = user;
+                }
+                return Account;
+            })();
+            exports_1("Account", Account);
             AccountService = (function () {
                 function AccountService(_http) {
                     this._http = _http;
-                    this.account = {
-                        email: "hej",
-                        user: {
-                            firstName: "",
-                            lastName: ""
-                        }
-                    };
+                    this.account = new Account("hej", new User("hej", "hej"));
                 }
                 AccountService.prototype.currentActiveAccount = function () {
-                    return {
-                        email: this.account.email,
-                        user: {
-                            firstName: this.account.user.firstName,
-                            lastName: this.account.user.lastName
-                        },
-                    };
+                    return new Account(this.account.email, this.account.user);
                 };
                 AccountService.prototype.registerAccount = function (newAccount) {
                     var _this = this;
