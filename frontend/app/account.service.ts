@@ -39,13 +39,28 @@ export class AccountService {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
         this._http.post("http://localhost:8001/accounts", JSON.stringify(newAccount), {headers:headers})
-            .subscribe(response => this.handleResponse(response, newAccount));
+            .subscribe(response => this.handleRegistrationResponse(response, newAccount));
     }
 
-    private handleResponse(response: Response, account: Account){
+    private handleRegistrationResponse(response: Response, account: Account){
         console.log(response);
         if (response.status == 201){
             this.account = account;
+            console.log("ok");
+        }
+    }
+
+    public login(email: string, password: string){
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        this._http.get("http://localhost:8001/accounts?email=" + email, {headers:headers})
+            .subscribe(response => this.handleGetAccountResponse(response));
+    }
+
+    private handleGetAccountResponse(response: Response){
+        console.log(response);
+        if (response.status == 200){
+            this.account = new Account(response.json().email.address, response.json().user);
             console.log("ok");
         }
     }

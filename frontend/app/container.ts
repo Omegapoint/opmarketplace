@@ -4,6 +4,7 @@ import {HTTP_PROVIDERS, Http, Response, Headers} from "angular2/http";
 import {RegisterComponent} from "./register.component";
 import {AccountComponent} from "./account.component";
 import {AccountService} from './account.service';
+import {LoginComponent} from "./login.component";
 
 @Component({
     selector: 'container',
@@ -22,6 +23,11 @@ import {AccountService} from './account.service';
         path: '/account',
         name: 'AccountComponent',
         component: AccountComponent
+    },
+    {
+        path: '/login',
+        name: 'LoginComponent',
+        component: LoginComponent
     }
 ])
 export class Container {

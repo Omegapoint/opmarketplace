@@ -48,12 +48,26 @@ System.register(['angular2/core', "angular2/http"], function(exports_1) {
                     var headers = new http_1.Headers();
                     headers.append('Content-Type', 'application/json');
                     this._http.post("http://localhost:8001/accounts", JSON.stringify(newAccount), { headers: headers })
-                        .subscribe(function (response) { return _this.handleResponse(response, newAccount); });
+                        .subscribe(function (response) { return _this.handleRegistrationResponse(response, newAccount); });
                 };
-                AccountService.prototype.handleResponse = function (response, account) {
+                AccountService.prototype.handleRegistrationResponse = function (response, account) {
                     console.log(response);
                     if (response.status == 201) {
                         this.account = account;
+                        console.log("ok");
+                    }
+                };
+                AccountService.prototype.login = function (email, password) {
+                    var _this = this;
+                    var headers = new http_1.Headers();
+                    headers.append('Content-Type', 'application/json');
+                    this._http.get("http://localhost:8001/accounts?email=" + email, { headers: headers })
+                        .subscribe(function (response) { return _this.handleGetAccountResponse(response); });
+                };
+                AccountService.prototype.handleGetAccountResponse = function (response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        this.account = new Account(response.json().email.address, response.json().user);
                         console.log("ok");
                     }
                 };
