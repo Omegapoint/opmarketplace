@@ -1,14 +1,10 @@
-import {Component} from 'angular2/core';
-import {View} from "angular2/core";
-import {FormBuilder} from "angular2/common";
-import {Validators} from "angular2/common";
-import {Form} from "angular2/common";
-import {ControlGroup} from "angular2/common";
+import {Component, View} from 'angular2/core';
 import 'rxjs/add/operator/map';
-import {Router} from 'angular2/router';
-import {AccountService} from "./account.service";
-import {Account} from "./account.service";
-import {User} from "./account.service";
+import {AccountService, Account, User} from "./account.service";
+import {Json} from "angular2/src/facade/lang";
+import {Validators, ControlGroup, FormBuilder} from "angular2/common";
+import {Response} from "angular2/http";
+import {Router} from "angular2/router";
 
 @Component({
     selector: 'register',
@@ -17,11 +13,11 @@ import {User} from "./account.service";
 @View({
     templateUrl: 'app/register.html',
 })
-export class RegisterComponent {
 
+export class RegisterComponent {
     private registerForm: ControlGroup;
 
-    constructor(fb: FormBuilder, private _accountService: AccountService) {
+    constructor(fb: FormBuilder, private _accountService: AccountService, private _router: Router) {
         this.registerForm = fb.group({
             firstName: ["", Validators.required],
             lastName:["", Validators.required],
@@ -33,8 +29,13 @@ export class RegisterComponent {
     public registerAccount(event) {
         event.preventDefault();
         var newAccount = new Account(this.registerForm.value.email, new User(this.registerForm.value.firstName, this.registerForm.value.lastName));
-        this._accountService.registerAccount(newAccount)
+        this._accountService.registerAccount(newAccount).subscribe(response => this.handleRegistration(response));
     }
 
-
+    private handleRegistration(response: Response){
+        if (response.status == 201){
+            console.log("registration success");
+            this._router.navigateByUrl("/app/account");
+        }
+    }
 }

@@ -1,0 +1,18 @@
+<div class="container">
+    <div class="row">
+        <h2 class="center">OP Marketplace</h2>
+    </div>
+    <div class="row">
+        <div class="col s6 offset-s3">
+            <div class="row">
+                <ul class="tabs">
+                    <a class="tab col s6" [routerLink]="['LoginComponent']">Login</a>
+                    <a class="tab col s6" [routerLink]="['RegisterComponent']">Register</a>
+                </ul>
+            </div>
+            <div class="row">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>

@@ -25,6 +25,6 @@ export class AccountComponent implements OnInit{
     constructor(private _accountService: AccountService) {}
 
     ngOnInit(){
-        this.account = this._accountService.currentActiveAccount();
+        this._accountService.currentActiveAccount().then(account => this.account = account);
     }
 }

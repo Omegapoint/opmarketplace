@@ -1,7 +1,6 @@
 import {Component} from 'angular2/core';
 import { RouteConfig, ROUTER_DIRECTIVES } from 'angular2/router';
 import {HTTP_PROVIDERS, Http, Response, Headers} from "angular2/http";
-import {RegisterComponent} from "./register.component";
 import {AccountComponent} from "./account.component";
 import {MarketplaceComponent} from "./marketplace.component";
 
@@ -12,11 +11,6 @@ import {MarketplaceComponent} from "./marketplace.component";
 })
 
 @RouteConfig([
-    {
-        path: '/register',
-        name: 'RegisterComponent',
-        component: RegisterComponent
-    },
     {
         path: '/account',
         name: 'AccountComponent',

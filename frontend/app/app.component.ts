@@ -2,9 +2,9 @@
 import {Component} from 'angular2/core';
 import { RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS } from 'angular2/router';
 import {HTTP_PROVIDERS, Http, Response, Headers} from "angular2/http";
-import {AccountService} from './account.service';
-import {LoginComponent} from "./login.component";
+import {AccountService} from "./account.service";
 import {ContainerComponent} from "./container.component";
+import {StartComponent} from "./start.component";
 
 @Component({
     selector: 'app',
@@ -21,9 +21,9 @@ import {ContainerComponent} from "./container.component";
         useAsDefault: true
     },
     {
-        path: '/login',
-        name: 'LoginComponent',
-        component: LoginComponent
+        path: '/start/...',
+        name: 'StartComponent',
+        component: StartComponent
     }
 ])
 export class AppComponent {
