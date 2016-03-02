@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.bus.EventBus;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing.AccountEventPublisherService;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountRepository;
 
 import java.io.IOException;
 
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 public class AccountTest {
 
     @Autowired
-    private AccountEventStore eventStore;
+    private AccountRepository eventStore;
 
     @Autowired
     private EventBus eventBus;

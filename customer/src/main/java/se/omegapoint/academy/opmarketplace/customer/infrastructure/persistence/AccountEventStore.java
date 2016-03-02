@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AccountEventStore implements Consumer<Event<AggregateModification>> {
+public class AccountEventStore implements AccountRepository {
 
     private AccountCreatedJPA createAccountRepository;
     private AccountUserChangedJPA userChangedRepository;
@@ -36,6 +36,7 @@ public class AccountEventStore implements Consumer<Event<AggregateModification>>
         eventBus.on(Selectors.regex("Account\\w*"), this);
     }
 
+    @Override
     public Account account(String email) throws IOException {
         List<DomainEvent> domainEvents = new ArrayList<>();
         domainEvents.addAll(createAccountRepository.findByAggregateMemberIdOrderByTime(email).stream()
@@ -60,6 +61,7 @@ public class AccountEventStore implements Consumer<Event<AggregateModification>>
         }
     }
 
+    @Override
     public boolean accountInExistence(String email) {
         return createAccountRepository.findByAggregateMemberIdOrderByTime(email).size() > 0;
     }

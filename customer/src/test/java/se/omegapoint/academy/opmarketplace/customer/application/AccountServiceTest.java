@@ -18,8 +18,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountRepository;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -32,13 +31,13 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringApplicationConfiguration(classes = CustomerApplication.class)
 @WebAppConfiguration
 @ActiveProfiles("test")
-public class AccountRestServiceTest {
+public class AccountServiceTest {
 
     @Autowired
     WebApplicationContext wac;
 
     @Autowired
-    AccountEventStore accountEventStore;
+    AccountRepository accountRepository;
 
     MockMvc mockMvc;
 
@@ -66,7 +65,7 @@ public class AccountRestServiceTest {
         String firstName = "blockFirst";
         String lastName = "blockLast";
 
-        accountEventStore.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
+        accountRepository.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
 
         String content = new ObjectMapper().writeValueAsString(new AccountRequestedJsonModel(new AccountRequested(new Email(email), new User(firstName, lastName))));
         mockMvc.perform(post("/accounts")
@@ -87,7 +86,7 @@ public class AccountRestServiceTest {
 
         String newUser = new ObjectMapper().writeValueAsString(new UserJsonModel(new User(newFirstName, newLastName)));
 
-        accountEventStore.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
+        accountRepository.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
         mockMvc.perform(put("/accounts?email=" + email)
                 .contentType(APPLICATION_JSON)
                 .content(newUser)
@@ -101,7 +100,7 @@ public class AccountRestServiceTest {
         String firstName = "retrieve";
         String lastName = "retrieve";
 
-        accountEventStore.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
+        accountRepository.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
         mockMvc.perform(get("/accounts?email=" + email)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())

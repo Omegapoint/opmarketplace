@@ -12,7 +12,7 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persist
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountUserChangedJPA;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing.AccountEventPublisherService;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.DomainEventEntity;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountRepository;
 
 @Configuration
 @EntityScan(basePackageClasses = EntityMarker.class)
@@ -36,7 +36,7 @@ public class CustomerConfiguration {
     }
 
     @Bean
-    AccountEventStore createAccountEventStore(EventBus eventBus, AccountEventPublisher publisher, AccountCreatedJPA accountCreatedRepository, AccountUserChangedJPA accountUserChangedRepository){
+    AccountRepository createAccountEventStore(EventBus eventBus, AccountEventPublisher publisher, AccountCreatedJPA accountCreatedRepository, AccountUserChangedJPA accountUserChangedRepository){
         return new AccountEventStore(eventBus, publisher, accountCreatedRepository, accountUserChangedRepository);
     }
 }
