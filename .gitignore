@@ -29,7 +29,8 @@ build/Release
 # TypeScript
 typings
 target
-app/*.js
+frontend/app/*.js
+frontend/app/*.map
 
 # Dependency directories
 node_modules
