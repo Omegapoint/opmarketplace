@@ -8,6 +8,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateModification;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountCreatedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountUserChangedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountUserChangedJPA;
@@ -26,14 +27,13 @@ public class AccountEventStore implements Consumer<Event<AggregateModification>>
 
     private AccountCreatedJPA createAccountRepository;
     private AccountUserChangedJPA userChangedRepository;
+    private AccountEventPublisher accountEventPublisher;
 
-    private EventBus eventBus;
-
-    public AccountEventStore(EventBus eventBus, AccountCreatedJPA createAccountRepository, AccountUserChangedJPA userChangedRepository){
+    public AccountEventStore(EventBus eventBus, AccountEventPublisher accountEventPublisher, AccountCreatedJPA createAccountRepository, AccountUserChangedJPA userChangedRepository){
+        this.accountEventPublisher = accountEventPublisher;
         this.createAccountRepository = createAccountRepository;
         this.userChangedRepository = userChangedRepository;
-        this.eventBus = eventBus;
-        this.eventBus.on(Selectors.regex("Account\\w*"), this);
+        eventBus.on(Selectors.regex("Account\\w*"), this);
     }
 
     public Account account(String email) throws IOException {
@@ -45,7 +45,7 @@ public class AccountEventStore implements Consumer<Event<AggregateModification>>
                 .map(AccountUserChangedModel::domainEvent)
                 .collect(Collectors.toList()));
         Collections.sort(domainEvents);
-        return new Account(domainEvents, new AccountEventPublisherService(eventBus));
+        return new Account(domainEvents, accountEventPublisher);
     }
 
 
@@ -62,29 +62,5 @@ public class AccountEventStore implements Consumer<Event<AggregateModification>>
 
     public boolean accountInExistence(String email) {
         return createAccountRepository.findByAggregateMemberIdOrderByTime(email).size() > 0;
-    }
-
-    private List<DomainEvent> mergeDomainEvents(List<List<DomainEvent>> lists){
-        ArrayList<DomainEvent> result = new ArrayList<>();
-        Timestamp min = new Timestamp(System.currentTimeMillis());
-        int listNr = 0;
-        int[] index = new int[lists.size()];
-        Arrays.fill(index, 0);
-        boolean changed = true;
-
-        while(changed) {
-            changed = false;
-            for (int i = 0; i < lists.size(); i++) {
-                if (index[i] < lists.get(i).size() && lists.get(i).get(index[i]).time().before(min)) {
-                    listNr = i;
-                    min = lists.get(i).get(index[i]).time();
-                    changed = true;
-                }
-            }
-            if (changed)
-                result.add(lists.get(listNr).get(index[listNr]++));
-            min = new Timestamp(System.currentTimeMillis());
-        }
-        return result;
     }
 }
