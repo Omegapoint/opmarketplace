@@ -45,7 +45,7 @@ public class AccountTest {
         String lastName = "createLast";
         new Account(email, firstName, lastName, new AccountEventPublisherService(eventBus));
         Thread.sleep(10);
-        Account account = eventStore.account(email);
+        Account account = eventStore.account(new Email(email)).value();
         assertEquals(email, account.email().address());
         assertEquals(email, account.id());
         assertEquals(firstName, account.user().firstName());
@@ -64,7 +64,7 @@ public class AccountTest {
         }
         // Wait to make sure all events are received by eventStore.
         Thread.sleep(20);
-        account = eventStore.account(email);
+        account = eventStore.account(new Email(email)).value();
         assertEquals("z", account.user().lastName());
     }
 }

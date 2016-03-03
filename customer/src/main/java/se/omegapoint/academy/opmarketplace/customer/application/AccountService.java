@@ -15,9 +15,8 @@ import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing.AccountEventPublisherService;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.RepositoryResponse;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
-
-import java.io.IOException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -35,36 +34,33 @@ public class AccountService {
 
     @RequestMapping(method = POST)
     public ResponseEntity createAccount(@RequestBody final AccountRequestedModel newAccount) {
-        try {
-            if (!accountRepository.accountInExistence(newAccount.getEmail().getAddress()))
-                new Account(newAccount.getEmail().getAddress(), newAccount.getUser().getFirstName(), newAccount.getUser().getLastName(), new AccountEventPublisherService(eventBus));
-            else
-                throw new IllegalArgumentException("Account already in existence.");
+        RepositoryResponse<Boolean> accountInExistenceResponse = accountRepository.accountInExistence(new Email(newAccount.getEmail().getAddress()));
+        if (accountInExistenceResponse.isSuccess() && !accountInExistenceResponse.value()) {
+            new Account(newAccount.getEmail().getAddress(), newAccount.getUser().getFirstName(), newAccount.getUser().getLastName(), new AccountEventPublisherService(eventBus));
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (IllegalArgumentException | IllegalArgumentValidationException e) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
     }
 
     @RequestMapping(method = PUT)
-    public ResponseEntity changeUser(@RequestParam("email") final String email, @RequestBody UserModel userModel) {
-        try {
-            accountRepository.account(email).changeUser(userModel.getFirstName(), userModel.getLastName());
+    public ResponseEntity changeUser(@RequestParam("email") final Email email, @RequestBody UserModel userModel) {
+        RepositoryResponse<Account> response = accountRepository.account(email);
+        if (response.isSuccess()){
+            Account account = response.value();
+            account.changeUser(userModel.getFirstName(), userModel.getLastName());
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        } catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
     }
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountModel> account(@RequestParam("email") final Email email) {
-        try {
-            Account account = accountRepository.account(email.address());
+        RepositoryResponse<Account> response = accountRepository.account(email);
+        if (response.isSuccess()){
+            Account account = response.value();
             AccountModel accountModel = new AccountModel(account.email(), account.user());
             return ResponseEntity.status(HttpStatus.OK).cacheControl(CacheControl.noCache()).body(accountModel);
-
-        } catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }

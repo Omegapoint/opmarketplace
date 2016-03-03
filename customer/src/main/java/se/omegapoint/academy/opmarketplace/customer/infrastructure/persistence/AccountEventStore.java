@@ -4,6 +4,7 @@ import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
+import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateModification;
@@ -35,16 +36,23 @@ public class AccountEventStore implements AccountRepository, Consumer<Event<Aggr
     }
 
     @Override
-    public Account account(String email) throws IOException {
+    public RepositoryResponse<Account> account(Email email){
         List<DomainEvent> domainEvents = new ArrayList<>();
-        domainEvents.addAll(createAccountRepository.findByAggregateMemberIdOrderByTime(email).stream()
+        domainEvents.addAll(createAccountRepository.findByAggregateMemberIdOrderByTime(email.address()).stream()
                 .map(AccountCreatedModel::domainEvent)
                 .collect(Collectors.toList()));
-        domainEvents.addAll(userChangedRepository.findByAggregateMemberIdOrderByTime(email).stream()
+        if (domainEvents.isEmpty())
+            return RepositoryResponse.error("No account for email: " + email.address());
+        domainEvents.addAll(userChangedRepository.findByAggregateMemberIdOrderByTime(email.address()).stream()
                 .map(AccountUserChangedModel::domainEvent)
                 .collect(Collectors.toList()));
         Collections.sort(domainEvents);
-        return new Account(domainEvents, accountEventPublisher);
+        try {
+            return RepositoryResponse.success(new Account(domainEvents, accountEventPublisher));
+        }
+        catch (IOException e){
+            return RepositoryResponse.error("Technical Failure");
+        }
     }
 
 
@@ -60,7 +68,7 @@ public class AccountEventStore implements AccountRepository, Consumer<Event<Aggr
     }
 
     @Override
-    public boolean accountInExistence(String email) {
-        return createAccountRepository.findByAggregateMemberIdOrderByTime(email).size() > 0;
+    public RepositoryResponse<Boolean> accountInExistence(Email email) {
+        return RepositoryResponse.success(!createAccountRepository.findByAggregateMemberIdOrderByTime(email.address()).isEmpty());
     }
 }

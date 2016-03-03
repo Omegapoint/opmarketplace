@@ -1,12 +1,12 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.services;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
-
-import java.io.IOException;
+import se.omegapoint.academy.opmarketplace.customer.domain.Email;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.RepositoryResponse;
 
 public interface AccountRepository  {
 
-    Account account(String email) throws IOException;
+    RepositoryResponse<Account> account(Email email);
 
-    boolean accountInExistence(String email);
+    RepositoryResponse<Boolean> accountInExistence(Email email);
 }
