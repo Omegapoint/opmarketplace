@@ -9,9 +9,9 @@ import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
-import se.omegapoint.academy.opmarketplace.customer.application.json_representations.AccountCreatedJsonModel;
-import se.omegapoint.academy.opmarketplace.customer.application.json_representations.AccountUserChangedJsonModel;
-import se.omegapoint.academy.opmarketplace.customer.application.json_representations.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreatedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountUserChangedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.RemoteEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
@@ -32,9 +32,9 @@ public class EventRemotePublisherService implements Consumer<Event<DomainEvent>>
     public void accept(Event<DomainEvent> event) {
         DomainEvent domainEvent = event.getData();
         if (domainEvent instanceof AccountCreated)
-            publish(new RemoteEvent(new AccountCreatedJsonModel((AccountCreated)domainEvent), AccountCreated.NAME));
+            publish(new RemoteEvent(new AccountCreatedModel((AccountCreated)domainEvent), AccountCreated.NAME));
         else if (domainEvent instanceof AccountUserChanged)
-            publish(new RemoteEvent(new AccountUserChangedJsonModel((AccountUserChanged)domainEvent), AccountUserChanged.NAME));
+            publish(new RemoteEvent(new AccountUserChangedModel((AccountUserChanged)domainEvent), AccountUserChanged.NAME));
     }
 
     private void publish(RemoteEvent remoteEvent) {

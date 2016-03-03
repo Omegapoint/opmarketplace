@@ -1,20 +1,20 @@
-package se.omegapoint.academy.opmarketplace.customer.application.json_representations;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 
-public class EmailJsonModel {
+public class EmailModel {
 
     private String address;
 
-    public EmailJsonModel(Email email){
+    public EmailModel(Email email){
         this.address = email.address();
     }
 
-    private EmailJsonModel(String email){
+    private EmailModel(String email){
         this.address = email;
     }
 
-    public EmailJsonModel(){}
+    public EmailModel(){}
 
     public String getAddress() {
         return address;

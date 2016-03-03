@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.bus.EventBus;
-import se.omegapoint.academy.opmarketplace.customer.application.json_representations.AccountJsonModel;
-import se.omegapoint.academy.opmarketplace.customer.application.json_representations.AccountRequestedJsonModel;
-import se.omegapoint.academy.opmarketplace.customer.application.json_representations.UserJsonModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.UserModel;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing.AccountEventPublisherService;
@@ -34,7 +34,7 @@ public class AccountService {
     AccountRepository accountRepository;
 
     @RequestMapping(method = POST)
-    public ResponseEntity createAccount(@RequestBody final AccountRequestedJsonModel newAccount) {
+    public ResponseEntity createAccount(@RequestBody final AccountRequestedModel newAccount) {
         try {
             if (!accountRepository.accountInExistence(newAccount.getEmail().getAddress()))
                 new Account(newAccount.getEmail().getAddress(), newAccount.getUser().getFirstName(), newAccount.getUser().getLastName(), new AccountEventPublisherService(eventBus));
@@ -47,9 +47,9 @@ public class AccountService {
     }
 
     @RequestMapping(method = PUT)
-    public ResponseEntity changeUser(@RequestParam("email") final String email, @RequestBody UserJsonModel userJsonModel) {
+    public ResponseEntity changeUser(@RequestParam("email") final String email, @RequestBody UserModel userModel) {
         try {
-            accountRepository.account(email).changeUser(userJsonModel.getFirstName(), userJsonModel.getLastName());
+            accountRepository.account(email).changeUser(userModel.getFirstName(), userModel.getLastName());
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         } catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
@@ -57,11 +57,11 @@ public class AccountService {
     }
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountJsonModel> account(@RequestParam("email") final Email email) {
+    public ResponseEntity<AccountModel> account(@RequestParam("email") final Email email) {
         try {
             Account account = accountRepository.account(email.address());
-            AccountJsonModel accountJsonModel = new AccountJsonModel(account.email(), account.user());
-            return ResponseEntity.status(HttpStatus.OK).cacheControl(CacheControl.noCache()).body(accountJsonModel);
+            AccountModel accountModel = new AccountModel(account.email(), account.user());
+            return ResponseEntity.status(HttpStatus.OK).cacheControl(CacheControl.noCache()).body(accountModel);
 
         } catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.customer.application.json_representations;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
@@ -6,25 +6,25 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequest
 
 import java.sql.Timestamp;
 
-public class AccountRequestedJsonModel {
-    private EmailJsonModel email;
-    private UserJsonModel user;
+public class AccountRequestedModel {
+    private EmailModel email;
+    private UserModel user;
     private Timestamp time;
 
 
-    public AccountRequestedJsonModel(){}
+    public AccountRequestedModel(){}
 
-    public AccountRequestedJsonModel(AccountRequested accountRequested) {
-        this.email = new EmailJsonModel(accountRequested.email());
-        this.user = new UserJsonModel(accountRequested.user());
+    public AccountRequestedModel(AccountRequested accountRequested) {
+        this.email = new EmailModel(accountRequested.email());
+        this.user = new UserModel(accountRequested.user());
         this.time = accountRequested.time();
     }
 
-    public EmailJsonModel getEmail() {
+    public EmailModel getEmail() {
         return email;
     }
 
-    public UserJsonModel getUser() {
+    public UserModel getUser() {
         return user;
     }
 

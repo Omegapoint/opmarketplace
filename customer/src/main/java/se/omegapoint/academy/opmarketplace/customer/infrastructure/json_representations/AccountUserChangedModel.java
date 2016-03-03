@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.customer.application.json_representations;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
@@ -7,24 +7,24 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateIdent
 
 import java.sql.Timestamp;
 
-public class AccountUserChangedJsonModel implements JsonModel{
-    private AggregateIdentityJsonModel aggregateIdentity;
-    private UserJsonModel user;
+public class AccountUserChangedModel implements JsonModel{
+    private AggregateIdentityModel aggregateIdentity;
+    private UserModel user;
     private Timestamp time;
 
-    public AccountUserChangedJsonModel(){}
+    public AccountUserChangedModel(){}
 
-    public AccountUserChangedJsonModel(AccountUserChanged accountUserChanged) {
-        this.aggregateIdentity = new AggregateIdentityJsonModel(new AggregateIdentity(accountUserChanged.aggregateMemberId(), accountUserChanged.aggregateName()));
-        this.user = new UserJsonModel(accountUserChanged.user());
+    public AccountUserChangedModel(AccountUserChanged accountUserChanged) {
+        this.aggregateIdentity = new AggregateIdentityModel(new AggregateIdentity(accountUserChanged.aggregateMemberId(), accountUserChanged.aggregateName()));
+        this.user = new UserModel(accountUserChanged.user());
         this.time = accountUserChanged.time();
     }
 
-    public AggregateIdentityJsonModel getAggregateIdentity() {
+    public AggregateIdentityModel getAggregateIdentity() {
         return aggregateIdentity;
     }
 
-    public UserJsonModel getUser() {
+    public UserModel getUser() {
         return user;
     }
 
