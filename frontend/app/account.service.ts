@@ -61,6 +61,14 @@ export class AccountService {
     private handleGetAccountResponse(response: Response){
         if (response.status == 200){
             this.account = new Account(response.json().email.address, response.json().user);
+            console.log(JSON.stringify(response.json()));
         }
+    }
+
+    public changeUser(email: string, user: User) : Observable<Response>{
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        var subscription = this._http.put("http://localhost:8001/accounts?email=" + email, JSON.stringify(user), {headers:headers});
+        return subscription;
     }
 }

@@ -1,7 +1,7 @@
 <div class="row card">
     <div class="card-content">
         <span class="card-title">Registration</span>
-        <form class="col s12" [ngFormModel]="registerForm" (submit)="registerAccount($event)">
+        <form class="col s12" [ngFormModel]="registerForm">
             <div class="row">
                 <div class="input-field col s6">
                     <input ngControl="firstName" id="first_name" type="text">
@@ -26,7 +26,7 @@
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <button class="btn waves-effect waves-light" type="submit" name="action">Register</button>
+                    <button class="btn waves-effect waves-light" type="button" name="register" (click)="registerAccount($event)">Register</button>
                 </div>
             </div>
         </form>
