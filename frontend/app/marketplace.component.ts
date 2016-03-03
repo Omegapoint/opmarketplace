@@ -7,8 +7,9 @@ import 'rxjs/add/operator/map';
 })
 
 @View({
-    template: '<h1>Marketplace</h1>',
+    templateUrl: '/app/marketplace.html',
 })
 
 export class MarketplaceComponent {
+    private query: string;
 }

@@ -1,0 +1,13 @@
+.cleanInput{
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+.small-padding-top{
+    padding-top: 15px;
+}
+
+.small-padding-sides{
+    padding-left: 15px;
+    padding-right: 15px;
+}
