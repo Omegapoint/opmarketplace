@@ -5,6 +5,10 @@
             <li><a [routerLink]="['MarketplaceComponent']">Marketplace</a></li>
             <li><a [routerLink]="['AccountComponent']">Account</a></li>
         </ul>
+        <ul id="right-links" class="right hide-on-med-and-down">
+            <li><a (click)="logout($event)">Logout</a></li>
+        </ul>
+
     </div>
 </nav>
 <div class="container">

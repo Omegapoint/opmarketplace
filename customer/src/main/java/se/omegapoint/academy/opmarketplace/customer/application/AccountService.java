@@ -1,5 +1,6 @@
 package se.omegapoint.academy.opmarketplace.customer.application;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,8 +12,9 @@ import se.omegapoint.academy.opmarketplace.customer.application.json_representat
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.AccountRequestedJsonModel;
 import se.omegapoint.academy.opmarketplace.customer.application.json_representations.UserJsonModel;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
+import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing.AccountEventPublisherService;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountRepository;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.io.IOException;
@@ -55,11 +57,11 @@ public class AccountService {
     }
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountJsonModel> account(@RequestParam("email") final String email) {
+    public ResponseEntity<AccountJsonModel> account(@RequestParam("email") final Email email) {
         try {
-            Account account = accountRepository.account(email);
+            Account account = accountRepository.account(email.address());
             AccountJsonModel accountJsonModel = new AccountJsonModel(account.email(), account.user());
-            return ResponseEntity.ok(accountJsonModel);
+            return ResponseEntity.status(HttpStatus.OK).cacheControl(CacheControl.noCache()).body(accountJsonModel);
 
         } catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

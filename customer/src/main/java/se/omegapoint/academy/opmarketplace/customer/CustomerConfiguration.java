@@ -12,7 +12,7 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persist
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountUserChangedJPA;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing.AccountEventPublisherService;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountRepository;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 
 @Configuration
 @EntityScan(basePackageClasses = EntityMarker.class)

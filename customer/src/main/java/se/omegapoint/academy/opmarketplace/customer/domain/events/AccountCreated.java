@@ -15,12 +15,14 @@ public final class AccountCreated extends DomainEvent implements AggregateModifi
     private User user;
     private AggregateIdentity aggregate;
     private Timestamp time;
+    // TODO: 3/3/2016 Immutability
 
     public AccountCreated(Email email, User user){
         this.email = email;
         this.user = user;
         this.aggregate = new AggregateIdentity(email.address(), Account.class.getSimpleName());
         this.time = new Timestamp(System.currentTimeMillis());
+        // TODO: 3/3/2016 Fixa konstruktor
     }
 
     public AccountCreated(Email email, User user, Timestamp time){

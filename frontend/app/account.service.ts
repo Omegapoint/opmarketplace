@@ -71,4 +71,8 @@ export class AccountService {
         var subscription = this._http.put("http://localhost:8001/accounts?email=" + email, JSON.stringify(user), {headers:headers});
         return subscription;
     }
+
+    public logout(){
+        this.account = new Account("", new User("", ""));
+    }
 }
