@@ -1,10 +1,11 @@
 .cleanInput{
     border-bottom: none !important;
     box-shadow: none !important;
+    margin: auto !important;
 }
 
-.small-padding-top{
-    padding-top: 15px;
+.display-flex{
+    display: flex;
 }
 
 .small-padding-sides{
