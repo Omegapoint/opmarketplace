@@ -6,6 +6,9 @@ import se.omegapoint.academy.opmarketplace.customer.domain.User;
 
 import java.sql.Timestamp;
 
+import static se.sawano.java.commons.lang.validate.Validate.isTrue;
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 public class AccountUserChanged extends DomainEvent implements AggregateModification {
 
     public static final String CHANNEL = "Account";
@@ -16,12 +19,14 @@ public class AccountUserChanged extends DomainEvent implements AggregateModifica
     private Timestamp time;
 
     public AccountUserChanged(Email id, User user) {
-        this.user = user;
-        this.identity = new AggregateIdentity(id.address(), Account.class.getSimpleName());
-        this.time = new Timestamp(System.currentTimeMillis());
+        this(id, user, new Timestamp(System.currentTimeMillis()));
     }
 
     public AccountUserChanged(Email id, User user, Timestamp time) {
+        notNull(id);
+        notNull(user);
+        notNull(time);
+        isTrue(time.before(new Timestamp(System.currentTimeMillis())));
         this.user = user;
         this.identity = new AggregateIdentity(id.address(), Account.class.getSimpleName());
         this.time = time;

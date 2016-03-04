@@ -6,6 +6,9 @@ import se.omegapoint.academy.opmarketplace.customer.domain.User;
 
 import java.sql.Timestamp;
 
+import static se.sawano.java.commons.lang.validate.Validate.isTrue;
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 public class AccountRequested extends DomainEvent{
 
     public static final String CHANNEL = "Account";
@@ -16,12 +19,14 @@ public class AccountRequested extends DomainEvent{
     private Timestamp time;
 
     public AccountRequested(Email email, User user){
-        this.email = email;
-        this.user = user;
-        this.time = new Timestamp(System.currentTimeMillis());
+        this(email, user, new Timestamp(System.currentTimeMillis()));
     }
 
     public AccountRequested(Email email, User user, Timestamp time){
+        notNull(email);
+        notNull(user);
+        notNull(time);
+        isTrue(time.before(new Timestamp(System.currentTimeMillis())));
         this.email = email;
         this.user = user;
         this.time = time;

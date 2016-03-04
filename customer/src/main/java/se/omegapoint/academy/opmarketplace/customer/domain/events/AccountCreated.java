@@ -6,26 +6,28 @@ import se.omegapoint.academy.opmarketplace.customer.domain.User;
 
 import java.sql.Timestamp;
 
+import static se.sawano.java.commons.lang.validate.Validate.isTrue;
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 public final class AccountCreated extends DomainEvent implements AggregateModification {
 
     public static final String CHANNEL = "Account";
     public static final String NAME = "AccountCreated";
 
-    private Email email;
-    private User user;
-    private AggregateIdentity aggregate;
-    private Timestamp time;
-    // TODO: 3/3/2016 Immutability
+    private final Email email;
+    private final User user;
+    private final AggregateIdentity aggregate;
+    private final Timestamp time;
 
     public AccountCreated(Email email, User user){
-        this.email = email;
-        this.user = user;
-        this.aggregate = new AggregateIdentity(email.address(), Account.class.getSimpleName());
-        this.time = new Timestamp(System.currentTimeMillis());
-        // TODO: 3/3/2016 Fixa konstruktor
+        this(email, user, new Timestamp(System.currentTimeMillis()));
     }
 
     public AccountCreated(Email email, User user, Timestamp time){
+        notNull(email);
+        notNull(user);
+        notNull(time);
+        isTrue(time.before(new Timestamp(System.currentTimeMillis())));
         this.email = email;
         this.user = user;
         this.aggregate = new AggregateIdentity(email.address(), Account.class.getSimpleName());

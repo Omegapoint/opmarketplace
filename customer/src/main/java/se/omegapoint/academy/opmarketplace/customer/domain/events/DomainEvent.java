@@ -3,6 +3,7 @@ package se.omegapoint.academy.opmarketplace.customer.domain.events;
 import java.sql.Timestamp;
 
 public abstract class DomainEvent implements Comparable<DomainEvent> {
+
     public abstract Timestamp time();
 
     @Override
