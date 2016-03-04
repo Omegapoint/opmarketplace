@@ -11,6 +11,8 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserCha
 
 public class AccountEventPublisherService implements AccountEventPublisher {
 
+    public static final String CHANNEL = "Account";
+
     private final EventBus eventBus;
 
     public AccountEventPublisherService(EventBus eventBus) {
@@ -19,11 +21,11 @@ public class AccountEventPublisherService implements AccountEventPublisher {
 
     @Override
     public void publishAccountCreated(Account account) {
-        eventBus.notify(AccountCreated.CHANNEL, Event.wrap(new AccountCreated(account.email(), account.user())));
+        eventBus.notify(CHANNEL, Event.wrap(new AccountCreated(account.email(), account.user())));
     }
 
     @Override
     public void publishAccountUserChanged(Email id, User user){
-        eventBus.notify(AccountUserChanged.CHANNEL, Event.wrap(new AccountUserChanged(id, user)));
+        eventBus.notify(CHANNEL, Event.wrap(new AccountUserChanged(id, user)));
     }
 }

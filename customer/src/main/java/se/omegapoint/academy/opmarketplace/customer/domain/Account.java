@@ -28,15 +28,6 @@ public class Account {
         publisher.publishAccountCreated(this);
     }
 
-
-    public Account(String email, String firstName, String lastName, AccountEventPublisher publisher) {
-        notNull(publisher);
-        this.publisher = publisher;
-        this.user = new User(firstName, lastName);
-        this.email = new Email(email);
-        publisher.publishAccountCreated(this);
-    }
-
     public Account(List<DomainEvent> events, AccountEventPublisher publisher) throws IOException {
         notEmpty(events);
         notNull(publisher);

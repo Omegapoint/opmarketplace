@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.bus.EventBus;
+import se.omegapoint.academy.opmarketplace.customer.domain.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountRequestedModel;
@@ -29,22 +30,24 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @RequestMapping("/accounts")
 public class AccountService {
     @Autowired
-    AccountEventPublisher accountEventPublisher;
+    private AccountEventPublisher accountEventPublisher;
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @RequestMapping(method = POST)
     public ResponseEntity createAccount(@RequestBody final AccountModel newAccount) {
         try {
             new Email(newAccount.getEmail().getAddress());
+            new User(newAccount.getUser().getFirstName(), newAccount.getUser().getLastName());
         } catch (IllegalArgumentValidationException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
         Email emailId = new Email(newAccount.getEmail().getAddress());
+        User user = new User(newAccount.getUser().getFirstName(), newAccount.getUser().getLastName());
         RepositoryResponse<Boolean> accountInExistenceResponse = accountRepository.accountInExistence(emailId);
         if (accountInExistenceResponse.isSuccess() && !accountInExistenceResponse.value()) {
-            new Account(newAccount.getEmail().getAddress(), newAccount.getUser().getFirstName(), newAccount.getUser().getLastName(), accountEventPublisher);
+            new Account(emailId, user, accountEventPublisher);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();

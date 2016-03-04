@@ -11,7 +11,6 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public final class AccountCreated extends DomainEvent implements AggregateModification {
 
-    public static final String CHANNEL = "Account";
     public static final String NAME = "AccountCreated";
 
     private final Email email;
@@ -27,7 +26,7 @@ public final class AccountCreated extends DomainEvent implements AggregateModifi
         notNull(email);
         notNull(user);
         notNull(time);
-        isTrue(time.before(new Timestamp(System.currentTimeMillis())));
+        isTrue(time.before(new Timestamp(System.currentTimeMillis() + 1)));
         this.email = email;
         this.user = user;
         this.aggregate = new AggregateIdentity(email.address(), Account.class.getSimpleName());

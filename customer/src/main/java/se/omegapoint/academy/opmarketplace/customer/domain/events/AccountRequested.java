@@ -1,6 +1,5 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.events;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
 
@@ -11,7 +10,6 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountRequested extends DomainEvent{
 
-    public static final String CHANNEL = "Account";
     public static final String NAME = "AccountRequested";
 
     private Email email;
@@ -26,7 +24,7 @@ public class AccountRequested extends DomainEvent{
         notNull(email);
         notNull(user);
         notNull(time);
-        isTrue(time.before(new Timestamp(System.currentTimeMillis())));
+        isTrue(time.before(new Timestamp(System.currentTimeMillis() + 1)));
         this.email = email;
         this.user = user;
         this.time = time;
