@@ -62,7 +62,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void should_not_add_account() throws Exception {
+    public void should_not_add_account_due_to_duplicate() throws Exception {
         String email = "block@block.com";
         String firstName = "blockFirst";
         String lastName = "blockLast";
@@ -70,6 +70,17 @@ public class AccountServiceTest {
         accountRepository.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
 
         String content = new ObjectMapper().writeValueAsString(new AccountRequestedModel(new AccountRequested(new Email(email), new User(firstName, lastName))));
+        mockMvc.perform(post("/accounts")
+                .contentType(APPLICATION_JSON)
+                .content(content)
+                .accept(APPLICATION_JSON))
+                .andExpect(status().isNotAcceptable());
+    }
+
+    @Test
+    public void should_not_add_account_due_to_ill_formed_email() throws Exception {
+
+        String content = "{\"email\":{\"address\":\"@broken.email\"},\"user\":{\"firstName\":\"mock\", \"lastName\":\"mock\"}}";
         mockMvc.perform(post("/accounts")
                 .contentType(APPLICATION_JSON)
                 .content(content)
@@ -107,5 +118,16 @@ public class AccountServiceTest {
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(new ObjectMapper().writeValueAsString(new AccountModel(new Email(email), new User(firstName, lastName)))));
+    }
+
+    @Test
+    public void should_not_retrieve_account_due_to_ill_formed_email() throws Exception {
+        String email = "@noRetrieve.com";
+        String firstName = "mock";
+        String lastName = "mock";
+
+        mockMvc.perform(get("/accounts?email=" + email)
+                .accept(APPLICATION_JSON))
+                .andExpect(status().isNotAcceptable());
     }
 }

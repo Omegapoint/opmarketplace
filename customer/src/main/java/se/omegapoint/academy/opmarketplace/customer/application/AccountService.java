@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.bus.EventBus;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.EmailModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.UserModel;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
@@ -27,26 +29,38 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @RequestMapping("/accounts")
 public class AccountService {
     @Autowired
-    EventBus eventBus;
+    AccountEventPublisher accountEventPublisher;
 
     @Autowired
     AccountRepository accountRepository;
 
     @RequestMapping(method = POST)
-    public ResponseEntity createAccount(@RequestBody final AccountRequestedModel newAccount) {
-        RepositoryResponse<Boolean> accountInExistenceResponse = accountRepository.accountInExistence(new Email(newAccount.getEmail().getAddress()));
+    public ResponseEntity createAccount(@RequestBody final AccountModel newAccount) {
+        try {
+            new Email(newAccount.getEmail().getAddress());
+        } catch (IllegalArgumentValidationException e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
+        Email emailId = new Email(newAccount.getEmail().getAddress());
+        RepositoryResponse<Boolean> accountInExistenceResponse = accountRepository.accountInExistence(emailId);
         if (accountInExistenceResponse.isSuccess() && !accountInExistenceResponse.value()) {
-            new Account(newAccount.getEmail().getAddress(), newAccount.getUser().getFirstName(), newAccount.getUser().getLastName(), new AccountEventPublisherService(eventBus));
+            new Account(newAccount.getEmail().getAddress(), newAccount.getUser().getFirstName(), newAccount.getUser().getLastName(), accountEventPublisher);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
     }
 
     @RequestMapping(method = PUT)
-    public ResponseEntity changeUser(@RequestParam("email") final Email email, @RequestBody UserModel userModel) {
-        RepositoryResponse<Account> response = accountRepository.account(email);
-        if (response.isSuccess()){
-            Account account = response.value();
+    public ResponseEntity changeUser(@RequestParam("email") final String email, @RequestBody UserModel userModel) {
+        try {
+            new Email(email);
+        } catch (IllegalArgumentValidationException e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
+        Email emailId = new Email(email);
+        RepositoryResponse<Account> userChangeResponse = accountRepository.account(emailId);
+        if (userChangeResponse.isSuccess()){
+            Account account = userChangeResponse.value();
             account.changeUser(userModel.getFirstName(), userModel.getLastName());
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }
@@ -54,8 +68,14 @@ public class AccountService {
     }
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountModel> account(@RequestParam("email") final Email email) {
-        RepositoryResponse<Account> response = accountRepository.account(email);
+    public ResponseEntity<AccountModel> account(@RequestParam("email") final String email) {
+        try {
+            new Email(email);
+        } catch (IllegalArgumentValidationException e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(null);
+        }
+        Email emailId = new Email(email);
+        RepositoryResponse<Account> response = accountRepository.account(emailId);
         if (response.isSuccess()){
             Account account = response.value();
             AccountModel accountModel = new AccountModel(account.email(), account.user());

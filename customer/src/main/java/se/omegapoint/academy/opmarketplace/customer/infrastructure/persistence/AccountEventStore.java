@@ -15,6 +15,7 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_ob
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountUserChangedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountUserChangedJPA;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountCreatedJPA;
+import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,6 +53,9 @@ public class AccountEventStore implements AccountRepository, Consumer<Event<Aggr
         }
         catch (IOException e){
             return RepositoryResponse.error("Technical Failure");
+        }
+        catch (IllegalArgumentValidationException e){
+            return RepositoryResponse.error(e.getMessage());
         }
     }
 
