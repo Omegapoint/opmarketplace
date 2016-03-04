@@ -7,7 +7,9 @@
     </div>
 </div>
 <div class="row">
-    <div class="col s4 offset-s4">
-        <p>{{query}}</p>
+    <div>
+        <div class="col s6" *ngFor="#item of items">
+            <item [item]="item"></item>
+        </div>
     </div>
 </div>
