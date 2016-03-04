@@ -1,6 +1,5 @@
 package se.omegapoint.academy.opmarketplace.customer.domain;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateModification;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
@@ -28,6 +27,7 @@ public class Account {
         publisher.publishAccountCreated(this);
     }
 
+    // TODO: 3/4/2016 Kan återskapandet av ett account ske här? Känns som infra men jag måste ju ha åtkomst till privata metoder.
     public Account(List<DomainEvent> events, AccountEventPublisher publisher) throws IOException {
         notEmpty(events);
         notNull(publisher);
@@ -63,7 +63,7 @@ public class Account {
         this.user = accountCreated.user();
     }
 
-    private void applyUserChanged(AccountUserChanged userChanged){
+    private void applyUserChanged(AccountUserChanged userChanged) {
         this.user = userChanged.user();
     }
 }
