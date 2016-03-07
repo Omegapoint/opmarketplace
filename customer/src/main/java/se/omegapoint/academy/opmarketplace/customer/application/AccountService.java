@@ -36,7 +36,7 @@ public class AccountService {
     private AccountRepository accountRepository;
 
     @RequestMapping(method = POST)
-    public ResponseEntity createAccount(@RequestBody final AccountModel newAccount) {
+    public ResponseEntity createAccount(@RequestBody final AccountRequestedModel newAccount) {
         try {
             new Email(newAccount.getEmail().getAddress());
             new User(newAccount.getUser().getFirstName(), newAccount.getUser().getLastName());
