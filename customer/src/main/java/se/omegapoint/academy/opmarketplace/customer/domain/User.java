@@ -3,7 +3,7 @@ package se.omegapoint.academy.opmarketplace.customer.domain;
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notBlank;
 
-public class User {
+public final class User {
     private final int FIRSTNAME_LENGTH = 25;
     private final int LASTNAME_LENGTH = 25;
 
@@ -16,7 +16,8 @@ public class User {
     public User(String firstName, String lastName) {
         notBlank(firstName);
         notBlank(lastName);
-//        TODO: trimma
+        firstName = firstName.trim();
+        lastName = lastName.trim();
         isTrue(firstName.length() <= FIRSTNAME_LENGTH && firstName.matches("[\\w\\-]+"), FIRSTNAME_ILLEGAL_FORMAT);
         isTrue(lastName.length() <= LASTNAME_LENGTH && lastName.matches("[\\w\\-]+"), LASTNAME_ILLEGAL_FORMAT);
         this.firstName = firstName;
