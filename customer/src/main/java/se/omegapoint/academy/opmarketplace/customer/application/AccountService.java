@@ -61,9 +61,9 @@ public class AccountService {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
         Email emailId = new Email(email);
-        RepositoryResponse<Account> userChangeResponse = accountRepository.account(emailId);
-        if (userChangeResponse.isSuccess()){
-            Account account = userChangeResponse.value();
+        RepositoryResponse<Account> accountToChangeResponse = accountRepository.account(emailId);
+        if (accountToChangeResponse.isSuccess()){
+            Account account = accountToChangeResponse.value();
             account.changeUser(userModel.getFirstName(), userModel.getLastName());
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }
