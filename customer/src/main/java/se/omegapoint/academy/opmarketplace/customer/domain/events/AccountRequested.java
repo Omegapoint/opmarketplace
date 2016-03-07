@@ -12,9 +12,9 @@ public class AccountRequested extends DomainEvent{
 
     public static final String NAME = "AccountRequested";
 
-    private Email email;
-    private User user;
-    private Timestamp time;
+    private final Email email;
+    private final User user;
+    private final Timestamp time;
 
     public AccountRequested(Email email, User user){
         this(email, user, new Timestamp(System.currentTimeMillis()));

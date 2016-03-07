@@ -13,9 +13,9 @@ public class AccountUserChanged extends DomainEvent implements AggregateModifica
 
     public static final String NAME = "AccountUserChanged";
 
-    private AggregateIdentity identity;
-    private User user;
-    private Timestamp time;
+    private final AggregateIdentity identity;
+    private final User user;
+    private final Timestamp time;
 
     public AccountUserChanged(Email id, User user) {
         this(id, user, new Timestamp(System.currentTimeMillis()));
