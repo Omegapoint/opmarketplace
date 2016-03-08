@@ -64,6 +64,8 @@ public class SubscriptionReceiver {
             subscriptions.get(endpoint).add(selector.getObject().toString());
             eventBus.on(selector, subscribedEndpoints.get(endpoint));
             System.out.printf("Subscribed endpoint %s to channel %s%n", endpoint, selector.getObject().toString());
+        } else {
+            System.out.printf("Endpoint %s is already subscribed to channel %s%n", endpoint, selector.getObject().toString());
         }
     }
 }
