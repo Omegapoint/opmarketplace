@@ -53,4 +53,25 @@ public class AccountUserChanged extends DomainEvent implements AggregateModifica
     public Timestamp time() {
         return time;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AccountUserChanged that = (AccountUserChanged) o;
+
+        if (identity != null ? !identity.equals(that.identity) : that.identity != null) return false;
+        if (user != null ? !user.equals(that.user) : that.user != null) return false;
+        return time != null ? time.equals(that.time) : that.time == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = identity != null ? identity.hashCode() : 0;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (time != null ? time.hashCode() : 0);
+        return result;
+    }
 }

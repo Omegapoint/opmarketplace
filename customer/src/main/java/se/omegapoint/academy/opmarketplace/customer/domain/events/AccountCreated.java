@@ -55,4 +55,27 @@ public final class AccountCreated extends DomainEvent implements AggregateModifi
     public String aggregateName() {
         return aggregate.aggregateName();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AccountCreated that = (AccountCreated) o;
+
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
+        if (user != null ? !user.equals(that.user) : that.user != null) return false;
+        if (aggregate != null ? !aggregate.equals(that.aggregate) : that.aggregate != null) return false;
+        return time != null ? time.equals(that.time) : that.time == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = email != null ? email.hashCode() : 0;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (aggregate != null ? aggregate.hashCode() : 0);
+        result = 31 * result + (time != null ? time.hashCode() : 0);
+        return result;
+    }
 }

@@ -42,4 +42,25 @@ public class AccountRequested extends DomainEvent{
     public Timestamp time() {
         return time;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AccountRequested that = (AccountRequested) o;
+
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
+        if (user != null ? !user.equals(that.user) : that.user != null) return false;
+        return time != null ? time.equals(that.time) : that.time == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = email != null ? email.hashCode() : 0;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (time != null ? time.hashCode() : 0);
+        return result;
+    }
 }
