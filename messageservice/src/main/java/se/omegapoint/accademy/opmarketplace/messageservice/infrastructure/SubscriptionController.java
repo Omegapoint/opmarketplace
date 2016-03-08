@@ -20,7 +20,7 @@ public class SubscriptionController {
         this.ruleEngine = ruleEngine;
     }
 
-    public void subscribeEndpoint(String endpoint, Selector selector) {
+    public boolean subscribeEndpoint(String endpoint, Selector selector) {
         if (!subscribedEndpoints.containsKey(endpoint)) {
             subscribedEndpoints.put(endpoint, new EventDispatcher(ruleEngine, endpoint));
         }
@@ -33,8 +33,10 @@ public class SubscriptionController {
             subscriptions.get(endpoint).add(selector.getObject().toString());
             eventBus.on(selector, subscribedEndpoints.get(endpoint));
             System.out.printf("Subscribed endpoint %s to channel %s%n", endpoint, selector.getObject().toString());
+            return true;
         } else {
             System.out.printf("Endpoint %s is already subscribed to channel %s%n", endpoint, selector.getObject().toString());
+            return false;
         }
     }
 }
