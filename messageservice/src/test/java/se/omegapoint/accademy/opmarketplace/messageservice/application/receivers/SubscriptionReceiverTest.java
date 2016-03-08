@@ -42,6 +42,16 @@ public class SubscriptionReceiverTest {
     }
 
     @Test
+    public void testMalformattedURLIsRejected() throws Exception {
+        mockMvc.perform(post("/subscribe")
+                .param("channel", "one")
+                .param("endpoint", "//test.com")
+        )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""));
+    }
+
+    @Test
     public void testSubscribeAllIsAccepted() throws Exception {
         mockMvc.perform(post("/subscribe_all")
                 .param("endpoint", "http://test.com")
