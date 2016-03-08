@@ -36,8 +36,6 @@ dependencies {
 	compile "io.projectreactor:reactor-bus:${reactorVersion}"
 	compile "io.projectreactor:reactor-core:${reactorVersion}"
 	compile "org.apache.httpcomponents:httpasyncclient:${apacheHttpAsyncClientVersion}"
-	compile "org.springframework.security:spring-security-web:4.0.4.RELEASE"
-	compile "org.springframework.security:spring-security-config:4.0.4.RELEASE"
 
 	compile "commons-validator:commons-validator:1.5.0"
 	compile "se.sawano.java:commons:1.3"
