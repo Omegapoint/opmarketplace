@@ -4,15 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.bus.EventBus;
-import reactor.bus.selector.Selector;
 import reactor.bus.selector.Selectors;
-import se.omegapoint.accademy.opmarketplace.messageservice.application.EventDispatcher;
-import se.omegapoint.accademy.opmarketplace.messageservice.domain.RuleEngine;
+import se.omegapoint.accademy.opmarketplace.messageservice.infrastructure.SubscriptionController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.HashSet;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -20,20 +14,15 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class SubscriptionReceiver {
 
     @Autowired
-    private EventBus eventBus;
+    private SubscriptionController subscriptionController;
 
-    @Autowired
-    private RuleEngine ruleEngine;
-
-    private HashMap<String, EventDispatcher> subscribedEndpoints = new HashMap<>();
-    private HashMap<String, HashSet<String>> subscriptions = new HashMap<>();
 
     @RequestMapping(value = "/subscribe", method = POST)
     public ResponseEntity<Void> subscribe(
             @RequestParam("channel") String channel,
             @RequestParam("endpoint") String endpoint) {
 
-        subscribeEndpoint(endpoint, Selectors.object(channel));
+        subscriptionController.subscribeEndpoint(endpoint, Selectors.object(channel));
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
@@ -47,26 +36,8 @@ public class SubscriptionReceiver {
         if (!token.equals("kebabpizza")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         } else {
-            subscribeEndpoint(endpoint, Selectors.regex("\\w+"));
+            subscriptionController.subscribeEndpoint(endpoint, Selectors.regex("\\w+"));
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
-        }
-    }
-
-    private void subscribeEndpoint(String endpoint, Selector selector) {
-        if (!subscribedEndpoints.containsKey(endpoint)) {
-            subscribedEndpoints.put(endpoint, new EventDispatcher(ruleEngine, endpoint));
-        }
-
-        if (subscriptions.get(endpoint) == null)
-            subscriptions.put(endpoint, new HashSet<>());
-
-        // Check if the endpoint is already subscribed to the channel
-        if (!subscriptions.get(endpoint).contains(selector.getObject().toString())) {
-            subscriptions.get(endpoint).add(selector.getObject().toString());
-            eventBus.on(selector, subscribedEndpoints.get(endpoint));
-            System.out.printf("Subscribed endpoint %s to channel %s%n", endpoint, selector.getObject().toString());
-        } else {
-            System.out.printf("Endpoint %s is already subscribed to channel %s%n", endpoint, selector.getObject().toString());
         }
     }
 }
