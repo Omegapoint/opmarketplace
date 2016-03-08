@@ -1,4 +1,4 @@
-package se.omegapoint.accademy.opmarketplace.messageservice.services;
+package se.omegapoint.accademy.opmarketplace.messageservice.application.receivers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
