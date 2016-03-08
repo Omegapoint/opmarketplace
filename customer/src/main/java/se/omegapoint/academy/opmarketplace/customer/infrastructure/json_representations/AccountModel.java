@@ -2,6 +2,8 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_represe
 
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.Result;
+import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 public class AccountModel {
     private EmailModel email;

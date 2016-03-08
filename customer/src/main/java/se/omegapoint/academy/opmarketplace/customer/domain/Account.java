@@ -1,7 +1,7 @@
 package se.omegapoint.academy.opmarketplace.customer.domain;
 
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
-import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountEventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 
@@ -15,28 +15,14 @@ public class Account {
     private Email email;
     private User user;
 
-    private AccountEventPublisher publisher;
-
-    public Account(Email email, User user, AccountEventPublisher publisher) {
-        notNull(email);
-        notNull(user);
-        notNull(publisher);
-        this.publisher = publisher;
-        this.email = email;
-        this.user = user;
-        publisher.publishAccountCreated(this);
-    }
-
-    // TODO: 3/4/2016 Kan återskapandet av ett account ske här? Känns som infra men jag måste ju ha åtkomst till privata metoder.
-    public Account(List<DomainEvent> events, AccountEventPublisher publisher) throws IOException {
+    public Account(List<DomainEvent> events) throws IOException {
         notEmpty(events);
-        notNull(publisher);
-        this.publisher = publisher;
         for (DomainEvent e: events) {
+            notNull(e);
             if (e instanceof AccountCreated)
-                applyCreated((AccountCreated)e);
+                mutate((AccountCreated)e);
             else if (e instanceof AccountUserChanged)
-                applyUserChanged((AccountUserChanged)e);
+                mutate((AccountUserChanged)e);
         }
     }
 
@@ -52,18 +38,22 @@ public class Account {
         return user;
     }
 
-    public void changeUser(String firstName, String lastName){
-        user = user.changeFirstName(firstName);
-        user = user.changeLastName(lastName);
-        publisher.publishAccountUserChanged(email(), user());
+    public AccountUserChanged changeUser(String firstName, String lastName){
+        AccountUserChanged accountUserChanged = new AccountUserChanged(this.email(), new User(firstName, lastName));
+        mutate(accountUserChanged);
+        return accountUserChanged;
     }
 
-    private void applyCreated(AccountCreated accountCreated){
+    private void mutate(AccountCreated accountCreated){
         this.email = accountCreated.email();
         this.user = accountCreated.user();
     }
 
-    private void applyUserChanged(AccountUserChanged userChanged) {
+    private void mutate(AccountUserChanged userChanged) {
         this.user = userChanged.user();
+    }
+
+    public static AccountCreated requestAccount(AccountRequested request){
+        return new AccountCreated(request.email(), request.user());
     }
 }

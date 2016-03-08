@@ -22,12 +22,16 @@ public class AccountUserChanged extends DomainEvent implements AggregateModifica
     }
 
     public AccountUserChanged(Email id, User user, Timestamp time) {
-        notNull(id);
+        this(new AggregateIdentity(id.address(), Account.class.getSimpleName()), user, time);
+    }
+
+    public AccountUserChanged(AggregateIdentity identity, User user, Timestamp time){
+        notNull(identity);
         notNull(user);
         notNull(time);
         isTrue(time.before(new Timestamp(System.currentTimeMillis() + 1)));
         this.user = user;
-        this.identity = new AggregateIdentity(id.address(), Account.class.getSimpleName());
+        this.identity = identity;
         this.time = time;
     }
 

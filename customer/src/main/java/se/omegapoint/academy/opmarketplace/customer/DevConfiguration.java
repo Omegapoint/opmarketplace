@@ -19,9 +19,4 @@ public class DevConfiguration {
     EventRemotePublisherService createEventRemotePublisherService(EventBus eventBus){
         return new EventRemotePublisherService(eventBus);
     }
-
-    @Bean
-    AccountRepository createAccountRepository(EventBus eventBus, AccountEventPublisher publisher, AccountCreatedJPA accountCreatedRepository, AccountUserChangedJPA accountUserChangedRepository){
-        return new AccountEventStore(eventBus, publisher, accountCreatedRepository, accountUserChangedRepository);
-    }
 }

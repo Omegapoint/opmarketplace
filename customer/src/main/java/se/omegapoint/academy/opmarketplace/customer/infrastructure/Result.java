@@ -1,18 +1,18 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure;
 
 import java.util.Optional;
 
-public class RepositoryResponse<T> {
+public class Result<T> {
 
     private Optional<T> value;
     private Optional<String> errorMessage;
 
-    private RepositoryResponse(T value){
+    private Result(T value){
         this.value = Optional.of(value);
         this.errorMessage = Optional.empty();
     }
 
-    private RepositoryResponse(String errorMessage){
+    private Result(String errorMessage){
         this.errorMessage = Optional.of(errorMessage);
         this.value = Optional.empty();
     }
@@ -29,12 +29,12 @@ public class RepositoryResponse<T> {
         return this.errorMessage.get();
     }
 
-    public static <T> RepositoryResponse<T> success(T value){
-        return new RepositoryResponse<>(value);
+    public static <T> Result<T> success(T value){
+        return new Result<>(value);
     }
 
-    public static <T> RepositoryResponse<T> error(String errorMessage){
-        return new RepositoryResponse<>(errorMessage);
+    public static <T> Result<T> error(String errorMessage){
+        return new Result<>(errorMessage);
     }
 
 }

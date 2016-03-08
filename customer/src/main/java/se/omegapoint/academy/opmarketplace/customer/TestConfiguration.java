@@ -13,8 +13,5 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.A
 @Profile("test")
 public class TestConfiguration {
 
-    @Bean
-    AccountEventStore createAccountEventStore(EventBus eventBus, AccountEventPublisher publisher, AccountCreatedJPA accountCreatedRepository, AccountUserChangedJPA accountUserChangedRepository){
-        return new AccountEventStore(eventBus, publisher, accountCreatedRepository, accountUserChangedRepository);
-    }
+
 }

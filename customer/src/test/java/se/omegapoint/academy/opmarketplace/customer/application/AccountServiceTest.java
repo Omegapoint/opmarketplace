@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import reactor.bus.Event;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
+import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
@@ -50,10 +51,10 @@ public class AccountServiceTest {
 
     @Test
     public void should_add_account() throws Exception {
-        String email = "test@test.com";
-        String firstName = "testFirst";
-        String lastName = "testLast";
-        String content = new ObjectMapper().writeValueAsString(new AccountRequestedModel(new AccountRequested(new Email(email), new User(firstName, lastName))));
+        Email email = new Email("test@test.com");
+        User user = new User("testFirst", "testLast");
+
+        String content = new ObjectMapper().writeValueAsString(new AccountRequestedModel(new se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested(email, user)));
         mockMvc.perform(post("/accounts")
                 .contentType(APPLICATION_JSON)
                 .content(content)
@@ -63,13 +64,11 @@ public class AccountServiceTest {
 
     @Test
     public void should_not_add_account_due_to_duplicate() throws Exception {
-        String email = "block@block.com";
-        String firstName = "blockFirst";
-        String lastName = "blockLast";
+        Email email = new Email("block@block.com");
+        User user = new User("blockFirst", "blockLast");
+        accountRepository.append(Account.requestAccount(new AccountRequested(email, user)));
 
-        accountRepository.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
-
-        String content = new ObjectMapper().writeValueAsString(new AccountRequestedModel(new AccountRequested(new Email(email), new User(firstName, lastName))));
+        String content = new ObjectMapper().writeValueAsString(new AccountRequestedModel(new AccountRequested(email, user)));
         mockMvc.perform(post("/accounts")
                 .contentType(APPLICATION_JSON)
                 .content(content)
@@ -90,44 +89,39 @@ public class AccountServiceTest {
 
     @Test
     public void should_change_user() throws Exception {
-        String email = "initial@initial.com";
-        String firstName = "initial";
-        String lastName = "initial";
+        Email email = new Email("initial@initial.com");
+        User user = new User("initial", "initial");
 
-        String newFirstName = "changed";
-        String newLastName = "changed";
+        User newUser = new User("changed", "changed");
 
-        String newUser = new ObjectMapper().writeValueAsString(new UserModel(new User(newFirstName, newLastName)));
+        String newUserModel = new ObjectMapper().writeValueAsString(new UserModel(newUser));
 
-        accountRepository.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
-        mockMvc.perform(put("/accounts?email=" + email)
+        accountRepository.append(Account.requestAccount(new AccountRequested(email, user)));
+        mockMvc.perform(put("/accounts?email=" + email.address())
                 .contentType(APPLICATION_JSON)
-                .content(newUser)
+                .content(newUserModel)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isAccepted());
     }
 
     @Test
     public void should_retrieve_account() throws Exception {
-        String email = "retrieve@retrieve.com";
-        String firstName = "retrieve";
-        String lastName = "retrieve";
+        Email email = new Email("retrieve@retrieve.com");
+        User user = new User("retrieve", "retrieve");
 
-        accountRepository.accept(Event.wrap(new AccountCreated(new Email(email), new User(firstName, lastName))));
-        mockMvc.perform(get("/accounts?email=" + email)
+        accountRepository.append(Account.requestAccount(new AccountRequested(email, user)));
+        mockMvc.perform(get("/accounts?email=" + email.address())
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(new AccountModel(new Email(email), new User(firstName, lastName)))));
+                .andExpect(content().json(new ObjectMapper().writeValueAsString(new AccountModel(email, user))));
     }
 
     @Test
     public void should_not_retrieve_account_due_to_ill_formed_email() throws Exception {
         String email = "@noRetrieve.com";
-        String firstName = "mock";
-        String lastName = "mock";
 
         mockMvc.perform(get("/accounts?email=" + email)
                 .accept(APPLICATION_JSON))
-                .andExpect(status().isNotAcceptable());
+                .andExpect(status().isBadRequest());
     }
 }

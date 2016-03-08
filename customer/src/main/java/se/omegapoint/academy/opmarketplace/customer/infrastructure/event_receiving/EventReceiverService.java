@@ -15,8 +15,6 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publish
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreatedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountUserChangedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.RemoteEvent;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.io.IOException;
@@ -32,10 +30,10 @@ public class EventReceiverService {
     public ResponseEntity<Void> eventInput(@RequestBody RemoteEvent event) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            if (event.getType().equals(AccountCreated.NAME))
-                eventBus.notify(Selectors.object(AccountEventPublisherService.CHANNEL), Event.wrap(objectMapper.readValue(event.getData(), AccountCreatedModel.class).domainEvent()));
-            if (event.getType().equals(AccountUserChanged.NAME))
-                eventBus.notify(Selectors.object(AccountEventPublisherService.CHANNEL), Event.wrap(objectMapper.readValue(event.getData(), AccountUserChangedModel.class).domainEvent()));
+            if (event.getType().equals(se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated.NAME))
+                eventBus.notify(Selectors.object(AccountEventPublisherService.CHANNEL), Event.wrap(objectMapper.readValue(event.getData(), AccountCreatedModel.class).domainObject()));
+            if (event.getType().equals(se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged.NAME))
+                eventBus.notify(Selectors.object(AccountEventPublisherService.CHANNEL), Event.wrap(objectMapper.readValue(event.getData(), AccountUserChangedModel.class).domainObject()));
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();

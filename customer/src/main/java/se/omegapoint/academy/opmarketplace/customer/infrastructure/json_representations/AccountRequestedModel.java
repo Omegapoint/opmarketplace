@@ -1,12 +1,12 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.Email;
-import se.omegapoint.academy.opmarketplace.customer.domain.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.Result;
+import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.sql.Timestamp;
 
-public class AccountRequestedModel {
+public class AccountRequestedModel implements JsonModel {
     private EmailModel email;
     private UserModel user;
     private Timestamp time;
@@ -14,7 +14,7 @@ public class AccountRequestedModel {
 
     public AccountRequestedModel(){}
 
-    public AccountRequestedModel(AccountRequested accountRequested) {
+    public AccountRequestedModel(se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested accountRequested) {
         this.email = new EmailModel(accountRequested.email());
         this.user = new UserModel(accountRequested.user());
         this.time = accountRequested.time();
@@ -32,7 +32,16 @@ public class AccountRequestedModel {
         return time;
     }
 
-    public AccountRequested domainEvent(){
-        return new AccountRequested(new Email(email.getAddress()), new User(user.getFirstName(), user.getLastName()), time);
+    @Override
+    public Result<AccountRequested> domainObject() {
+        if (!this.email.domainObject().isSuccess())
+            return Result.error(email.domainObject().error());
+        if (!this.user.domainObject().isSuccess())
+            return Result.error(user.domainObject().error());
+        try {
+            return Result.success(new se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested(email.domainObject().value(), user.domainObject().value(), time));
+        } catch (IllegalArgumentValidationException e) {
+            return Result.error(e.getMessage());
+        }
     }
 }

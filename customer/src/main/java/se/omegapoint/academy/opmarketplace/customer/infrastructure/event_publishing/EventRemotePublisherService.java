@@ -12,8 +12,6 @@ import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreatedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountUserChangedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.RemoteEvent;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 
 import java.io.UnsupportedEncodingException;
@@ -31,10 +29,10 @@ public class EventRemotePublisherService implements Consumer<Event<DomainEvent>>
     @Override
     public void accept(Event<DomainEvent> event) {
         DomainEvent domainEvent = event.getData();
-        if (domainEvent instanceof AccountCreated)
-            publish(new RemoteEvent(new AccountCreatedModel((AccountCreated)domainEvent), AccountCreated.NAME));
-        else if (domainEvent instanceof AccountUserChanged)
-            publish(new RemoteEvent(new AccountUserChangedModel((AccountUserChanged)domainEvent), AccountUserChanged.NAME));
+        if (domainEvent instanceof se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated)
+            publish(new RemoteEvent(new AccountCreatedModel((se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated)domainEvent), se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated.NAME));
+        else if (domainEvent instanceof se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged)
+            publish(new RemoteEvent(new AccountUserChangedModel((se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged)domainEvent), se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged.NAME));
     }
 
     private void publish(RemoteEvent remoteEvent) {

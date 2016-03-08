@@ -4,10 +4,12 @@ import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateIdentity;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.Result;
+import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.sql.Timestamp;
 
-public class AccountCreatedModel implements JsonModel{
+public class AccountCreatedModel implements JsonModel {
 
     private AggregateIdentityModel aggregateIdentity;
     private EmailModel email;
@@ -17,7 +19,7 @@ public class AccountCreatedModel implements JsonModel{
 
     public AccountCreatedModel(){}
 
-    public AccountCreatedModel(AccountCreated accountCreated) {
+    public AccountCreatedModel(se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated accountCreated) {
         this.aggregateIdentity = new AggregateIdentityModel(new AggregateIdentity(accountCreated.aggregateMemberId(), accountCreated.aggregateName()));
         this.email = new EmailModel(accountCreated.email());
         this.user = new UserModel(accountCreated.user());
@@ -40,7 +42,11 @@ public class AccountCreatedModel implements JsonModel{
         return time;
     }
 
-    public AccountCreated domainEvent(){
-        return new AccountCreated(new Email(email.getAddress()), new User(user.getFirstName(), user.getLastName()), time);
+    public Result<AccountCreated> domainObject(){
+        try{
+            return Result.success(new se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated(new Email(email.getAddress()), new User(user.getFirstName(), user.getLastName()), time));
+        } catch (IllegalArgumentValidationException e){
+            return Result.error(e.getMessage());
+        }
     }
 }

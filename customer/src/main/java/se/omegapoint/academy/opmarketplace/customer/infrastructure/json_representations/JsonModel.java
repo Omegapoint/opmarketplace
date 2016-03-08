@@ -1,3 +1,7 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
-public interface JsonModel {}
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.Result;
+
+public interface JsonModel {
+    Result domainObject();
+}
