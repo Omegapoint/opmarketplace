@@ -12,7 +12,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import se.omegapoint.accademy.opmarketplace.messageservice.Application;
-import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.DomainEventModel;
+import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.RemoteEvent;
 
 import java.sql.Timestamp;
 
@@ -39,7 +39,7 @@ public class EventReceiverTest {
 
     @Test
     public void testGetExampleEvent() throws Exception {
-        DomainEventModel domainEvent = getExampleDomainEvent();
+        RemoteEvent domainEvent = getExampleDomainEvent();
 
         mockMvc.perform(get("/event"))
                 .andExpect(status().isOk())
@@ -48,24 +48,19 @@ public class EventReceiverTest {
 
     @Test
     public void testReceiveEvent() throws Exception {
-        DomainEventModel domainEvent = getExampleDomainEvent();
+        RemoteEvent domainEvent = getExampleDomainEvent();
         String postContent = new ObjectMapper().writeValueAsString(domainEvent);
 
         mockMvc.perform(post("/event")
                 .contentType(MediaType.APPLICATION_JSON)
+                .param("channel", "one")
                 .content(postContent)
         )
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(""));
     }
 
-    private DomainEventModel getExampleDomainEvent() {
-        return new DomainEventModel(
-                "1",
-                "12345",
-                "Exempelaggregat",
-                "Testevent",
-                "Data 123",
-                new Timestamp(1337));
+    private RemoteEvent getExampleDomainEvent() {
+        return new RemoteEvent("typ1", "some data", new Timestamp(1337));
     }
 }

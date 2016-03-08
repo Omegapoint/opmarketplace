@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
-import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.DomainEventModel;
+import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.RemoteEvent;
 
 import static org.springframework.http.MediaType.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -21,22 +21,16 @@ public class EventReceiver {
     EventBus eventBus;
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<DomainEventModel> getExampleEvent() {
-        DomainEventModel data = new DomainEventModel(
-                "1",
-                "12345",
-                "Exempelaggregat",
-                "Testevent",
-                "Data 123",
-                new Timestamp(1337));
+    public ResponseEntity<RemoteEvent> getExampleEvent() {
+        RemoteEvent data = new RemoteEvent("typ1", "some data", new Timestamp(1337));
 
         return ResponseEntity.ok(data);
     }
 
     @RequestMapping(method = POST, consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<DomainEventModel> receiveEvent(
+    public ResponseEntity<RemoteEvent> receiveEvent(
             @RequestParam("channel") String channel,
-            @RequestBody DomainEventModel data) {
+            @RequestBody RemoteEvent data) {
 
         System.out.print("Event received ---> ");
         eventBus.notify(channel, Event.wrap(data));

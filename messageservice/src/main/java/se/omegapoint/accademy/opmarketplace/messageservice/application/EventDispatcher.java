@@ -9,13 +9,13 @@ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import reactor.bus.Event;
 import reactor.fn.Consumer;
-import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.DomainEventModel;
+import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.RemoteEvent;
 import se.omegapoint.accademy.opmarketplace.messageservice.domain.RuleEngine;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
-public class EventDispatcher implements Consumer<Event<DomainEventModel>> {
+public class EventDispatcher implements Consumer<Event<RemoteEvent>> {
 
     private final CloseableHttpAsyncClient httpAsyncClient;
     private final RuleEngine ruleEngine;
@@ -29,17 +29,17 @@ public class EventDispatcher implements Consumer<Event<DomainEventModel>> {
     }
 
     @Override
-    public void accept(Event<DomainEventModel> event) {
-        DomainEventModel domainEvent = event.getData();
+    public void accept(Event<RemoteEvent> event) {
+        RemoteEvent domainEvent = event.getData();
         if (ruleEngine.allow(domainEvent)) {
             publish(domainEvent, event.getKey().toString());
         } else {
-            System.out.printf("Event with type %s was not allowed...%n", domainEvent.getEventType());
+            System.out.printf("Event with type %s was not allowed...%n", domainEvent.getType());
         }
 
     }
 
-    private void publish(DomainEventModel domainEvent, String channel) {
+    private void publish(RemoteEvent domainEvent, String channel) {
         try {
             StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(domainEvent));
 
@@ -52,7 +52,7 @@ public class EventDispatcher implements Consumer<Event<DomainEventModel>> {
             httpAsyncClient.execute(httpPost, null);
 
             System.out.printf("Event dispatched from channel %s with type %s to URI %s%n",
-                    channel, domainEvent.getEventType(), uriBuilder.build());
+                    channel, domainEvent.getType(), uriBuilder.build());
 
 
         } catch (URISyntaxException | UnsupportedEncodingException | JsonProcessingException e) {
