@@ -10,6 +10,7 @@ import reactor.bus.selector.Selectors;
 import se.omegapoint.accademy.opmarketplace.messageservice.application.EventDispatcher;
 import se.omegapoint.accademy.opmarketplace.messageservice.domain.RuleEngine;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -19,13 +20,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class SubscriptionReceiver {
 
     @Autowired
-    EventBus eventBus;
+    private EventBus eventBus;
 
     @Autowired
-    RuleEngine ruleEngine;
+    private RuleEngine ruleEngine;
 
-    HashMap<String, EventDispatcher> subscribedEndpoints = new HashMap<>();
-    HashMap<String, HashSet<String>> subscriptions = new HashMap<>();
+    private HashMap<String, EventDispatcher> subscribedEndpoints = new HashMap<>();
+    private HashMap<String, HashSet<String>> subscriptions = new HashMap<>();
 
     @RequestMapping(value = "/subscribe", method = POST)
     public ResponseEntity<Void> subscribe(
