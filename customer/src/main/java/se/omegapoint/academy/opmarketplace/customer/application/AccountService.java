@@ -7,7 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing.EventRemotePublisherService;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.UserModel;
@@ -26,6 +30,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 public class AccountService {
 
     @Autowired
+    private EventPublisher publisher;
+
+    @Autowired
     private AccountRepository accountRepository;
 
     @RequestMapping(method = POST)
@@ -33,9 +40,11 @@ public class AccountService {
         Result<AccountRequested> result = newAccount.domainObject();
         if (result.isSuccess()) {
             AccountRequested accountRequested = result.value();
-            Result<Boolean> accountInExistance = accountRepository.accountInExistence(accountRequested.email());
-            if (accountInExistance.isSuccess() && !accountInExistance.value()){
-                accountRepository.append(Account.requestAccount(accountRequested));
+            Result<Boolean> accountInExistence = accountRepository.accountInExistence(accountRequested.email());
+            if (accountInExistence.isSuccess() && !accountInExistence.value()){
+                AccountCreated accountCreated = Account.requestAccount(accountRequested);
+                accountRepository.append(accountCreated);
+                publisher.publish(accountCreated);
                 return ResponseEntity.status(HttpStatus.CREATED).build();
             }
         }
@@ -47,7 +56,9 @@ public class AccountService {
         Result<Account> accountToChange = accountRepository.account(email);
         if (accountToChange.isSuccess()){
             Account account = accountToChange.value();
-            accountRepository.append(account.changeUser(userModel.getFirstName(), userModel.getLastName()));
+            AccountUserChanged accountUserChanged = account.changeUser(userModel.getFirstName(), userModel.getLastName());
+            accountRepository.append(accountUserChanged);
+            publisher.publish(accountUserChanged);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();

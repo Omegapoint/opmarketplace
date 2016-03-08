@@ -5,10 +5,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
-import reactor.bus.Event;
-import reactor.bus.EventBus;
-import reactor.bus.selector.Selectors;
-import reactor.fn.Consumer;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreatedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountUserChangedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.RemoteEvent;
@@ -17,22 +16,20 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import java.io.UnsupportedEncodingException;
 
 
-public class EventRemotePublisherService implements Consumer<Event<DomainEvent>> {
+public class EventRemotePublisherService implements EventPublisher {
     CloseableHttpAsyncClient httpclient;
 
-    public EventRemotePublisherService(EventBus eventBus){
+    public EventRemotePublisherService(){
         httpclient = HttpAsyncClients.createDefault();
         httpclient.start();
-        eventBus.on(Selectors.regex("\\w+"), this);
     }
 
     @Override
-    public void accept(Event<DomainEvent> event) {
-        DomainEvent domainEvent = event.getData();
-        if (domainEvent instanceof se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated)
-            publish(new RemoteEvent(new AccountCreatedModel((se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated)domainEvent), se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated.NAME));
-        else if (domainEvent instanceof se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged)
-            publish(new RemoteEvent(new AccountUserChangedModel((se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged)domainEvent), se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged.NAME));
+    public void publish(DomainEvent event) {
+        if (event instanceof AccountCreated)
+            publish(new RemoteEvent(new AccountCreatedModel((AccountCreated)event), AccountCreated.NAME));
+        else if (event instanceof AccountUserChanged)
+            publish(new RemoteEvent(new AccountUserChangedModel((AccountUserChanged)event), AccountUserChanged.NAME));
     }
 
     private void publish(RemoteEvent remoteEvent) {
