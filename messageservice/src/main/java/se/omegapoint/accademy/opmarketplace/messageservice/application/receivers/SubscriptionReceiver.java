@@ -22,8 +22,7 @@ public class SubscriptionReceiver {
             @RequestParam("channel") String channel,
             @RequestParam("endpoint") URL endpoint) {
 
-        // TODO: 08/03/16 Inject the URL instead of toString. 
-        subscriptionController.subscribeEndpoint(endpoint.toString(), Selectors.object(channel));
+        subscriptionController.subscribeEndpoint(endpoint, Selectors.object(channel));
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
@@ -37,7 +36,7 @@ public class SubscriptionReceiver {
         if (!token.equals("kebabpizza")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         } else {
-            subscriptionController.subscribeEndpoint(endpoint.toString(), Selectors.regex("\\w+"));
+            subscriptionController.subscribeEndpoint(endpoint, Selectors.regex("\\w+"));
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
         }
     }
