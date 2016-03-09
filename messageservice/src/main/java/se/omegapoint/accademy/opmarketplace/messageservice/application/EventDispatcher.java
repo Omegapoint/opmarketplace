@@ -13,7 +13,6 @@ import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.RemoteE
 import se.omegapoint.accademy.opmarketplace.messageservice.domain.RuleEngine;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
