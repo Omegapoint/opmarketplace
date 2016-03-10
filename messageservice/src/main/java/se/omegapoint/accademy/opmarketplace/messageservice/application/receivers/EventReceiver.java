@@ -32,7 +32,7 @@ public class EventReceiver {
             @RequestParam("channel") String channel,
             @RequestBody RemoteEvent data) {
 
-        System.out.print("Event received ---> ");
+        System.out.printf("Event received and published on channel %s...%n", channel);
         eventBus.notify(channel, Event.wrap(data));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
