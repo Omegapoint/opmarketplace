@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publish_receive;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.HttpPost;

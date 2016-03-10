@@ -11,7 +11,6 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publishing.EventRemotePublisherService;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.UserModel;

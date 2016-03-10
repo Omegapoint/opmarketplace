@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.event_receiving;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publish_receive;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
