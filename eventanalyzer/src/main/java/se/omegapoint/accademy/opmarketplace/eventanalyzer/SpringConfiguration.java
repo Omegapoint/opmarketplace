@@ -23,4 +23,9 @@ public class SpringConfiguration {
     EventPublisher createEventPublisher(EventBus eventBus) {
         return new EventPublisher(eventBus);
     }
+
+    @Bean
+    SubscriberInitializer createSubscriberInitializer() {
+        return new SubscriberInitializer();
+    }
 }

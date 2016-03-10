@@ -9,14 +9,12 @@ import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
-@Component
 public class SubscriberInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
     @Value("${subscription.url}")
