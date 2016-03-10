@@ -44,9 +44,9 @@ public class SubscriberInitializer implements ApplicationListener<ContextRefresh
             CloseableHttpResponse response = httpClient.execute(httpPost);
 
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_ACCEPTED) {
-                System.out.printf("Subscribed %s to channel %s on %s%n", eventReceiverUrl, channel, eventReceiverUrl);
+                System.out.printf("Subscribed %s to channel %s on %s%n", eventReceiverUrl, channel, subscriptionUrl);
             } else {
-                System.out.printf("Failed to subscribe %s to channel %s on %s%n", eventReceiverUrl, channel, eventReceiverUrl);
+                System.out.printf("Failed to subscribe %s to channel %s on %s%n", eventReceiverUrl, channel, subscriptionUrl);
             }
             response.close();
 
