@@ -2,6 +2,8 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure;
 
 import java.util.Optional;
 
+//TODO [dd] Consider moving Result to domain. May make things easier...
+
 public class Result<T> {
 
     //TODO [dd]: consider changing API to Result<Optional<T>, Failure>
