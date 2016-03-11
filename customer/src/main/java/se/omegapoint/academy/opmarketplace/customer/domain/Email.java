@@ -24,4 +24,6 @@ public final class Email {
     public String address(){
         return address;
     }
+
+    //TODO [dd]: All value objects must implement equals() and hash code
 }

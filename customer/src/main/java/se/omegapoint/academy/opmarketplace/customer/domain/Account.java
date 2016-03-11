@@ -1,9 +1,9 @@
 package se.omegapoint.academy.opmarketplace.customer.domain;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,9 +12,11 @@ import static se.sawano.java.commons.lang.validate.Validate.notEmpty;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class Account {
+    //TODO [dd]: should be immutable
     private Email email;
     private User user;
 
+    //TODO [dd]: why are we processing generic domain events in the constructor?
     public Account(List<DomainEvent> events) throws IOException {
         notEmpty(events);
         for (DomainEvent e: events) {
@@ -38,6 +40,7 @@ public class Account {
         return user;
     }
 
+    //TODO [dd]: This seems like the task for a domain service, e.g. AccountService
     public AccountUserChanged changeUser(String firstName, String lastName){
         AccountUserChanged accountUserChanged = new AccountUserChanged(this.email(), new User(firstName, lastName));
         mutate(accountUserChanged);

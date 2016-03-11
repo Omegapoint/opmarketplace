@@ -4,6 +4,9 @@ import java.util.Optional;
 
 public class Result<T> {
 
+    //TODO [dd]: consider changing API to Result<Optional<T>, Failure>
+
+    //TODO [dd]: make immutable
     private Optional<T> value;
     private Optional<String> errorMessage;
 

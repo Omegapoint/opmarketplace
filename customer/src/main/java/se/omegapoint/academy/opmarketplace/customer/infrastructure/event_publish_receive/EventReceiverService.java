@@ -24,10 +24,12 @@ public class EventReceiverService {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> eventInput(@RequestParam("channel") final String channel, @RequestBody RemoteEvent event) {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper(); //TODO [dd]: Consider making a final field. A lot is done during creation!
         try {
+            //TODO [dd]: Flip comparison to avoid risk of NPE
             if (event.getType().equals(se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated.NAME))
                 eventBus.notify(Selectors.object(channel), Event.wrap(objectMapper.readValue(event.getData(), AccountCreatedModel.class).domainObject()));
+            //TODO [dd]: Flip comparison to avoid risk of NPE
             if (event.getType().equals(se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged.NAME))
                 eventBus.notify(Selectors.object(channel), Event.wrap(objectMapper.readValue(event.getData(), AccountUserChangedModel.class).domainObject()));
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();

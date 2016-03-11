@@ -13,11 +13,13 @@ public final class User {
     private final String firstName;
     private final String lastName;
 
+    //TODO [dd]: BIG NO NO! Never modify an argument! Make final
     public User(String firstName, String lastName) {
         notBlank(firstName);
         notBlank(lastName);
         firstName = firstName.trim();
         lastName = lastName.trim();
+        //TODO [dd]: consider splitting up. Hard to tell which contract that failed, i.e. length or lexeme?
         isTrue(firstName.length() <= FIRSTNAME_LENGTH && firstName.matches("[\\w\\-]+"), FIRSTNAME_ILLEGAL_FORMAT);
         isTrue(lastName.length() <= LASTNAME_LENGTH && lastName.matches("[\\w\\-]+"), LASTNAME_ILLEGAL_FORMAT);
         this.firstName = firstName;
@@ -32,14 +34,17 @@ public final class User {
         return new User(firstName(), lastName);
     }
 
+    //TODO [dd]: consider changing to a domain primitive, e.g. FirstName to avoid accidental mixup with last name
     public String firstName(){
         return firstName;
     }
 
+    //TODO [dd]: consider changing to a domain primitive, e.g. LastName to avoid accidental mixup with first name
     public String lastName(){
         return lastName;
     }
 
+    //TODO [dd]: consider changing to a domain primitive, e.g. FullName
     public String fullName(){
         return firstName() + " " + lastName();
     }

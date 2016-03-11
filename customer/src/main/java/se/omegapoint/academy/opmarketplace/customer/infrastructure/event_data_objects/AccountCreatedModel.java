@@ -25,6 +25,7 @@ public class AccountCreatedModel {
     public AccountCreatedModel(){}
 
     public AccountCreatedModel(AccountCreated accountCreated) {
+        //TODO [dd] add null check
         this.aggregateMemberId = accountCreated.aggregateMemberId();
         this.aggregateName = accountCreated.aggregateName();
         this.email = accountCreated.email().address();
