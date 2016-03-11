@@ -24,7 +24,10 @@ public class EventReceiverService {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> eventInput(@RequestParam("channel") final String channel, @RequestBody RemoteEvent event) {
+        //TODO [dd] add notNull contracts
+
         ObjectMapper objectMapper = new ObjectMapper(); //TODO [dd]: Consider making a final field. A lot is done during creation!
+
         try {
             //TODO [dd]: Flip comparison to avoid risk of NPE
             if (event.getType().equals(se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated.NAME))

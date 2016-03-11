@@ -24,7 +24,7 @@ public class AccountUserChangedModel {
     public AccountUserChangedModel(){}
 
     public AccountUserChangedModel(AccountUserChanged accountUserChanged){
-        //TODO [dd] add null check
+        //TODO [dd] add notNull contracts
         this.aggregateMemberId = accountUserChanged.aggregateMemberId();
         this.aggregateName = accountUserChanged.aggregateName();
         this.userFirstName = accountUserChanged.user().firstName();

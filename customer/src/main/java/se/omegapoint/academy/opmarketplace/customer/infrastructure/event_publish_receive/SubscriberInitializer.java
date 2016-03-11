@@ -43,6 +43,7 @@ public class SubscriberInitializer implements ApplicationListener<ContextRefresh
             HttpPost httpPost = new HttpPost(uriBuilder.build());
             CloseableHttpResponse response = httpClient.execute(httpPost);
 
+            //TODO [dd] remove printf statements
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_ACCEPTED) {
                 System.out.printf("Subscribed %s to channel %s on %s%n", eventReceiverUrl, channel, subscriptionUrl);
             } else {
@@ -51,7 +52,7 @@ public class SubscriberInitializer implements ApplicationListener<ContextRefresh
             response.close();
 
         } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO [dd] don't print stack trace. What should we do if this happens?
         }
     }
 }

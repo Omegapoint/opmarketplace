@@ -9,6 +9,7 @@ public class EmailModel implements JsonModel {
     private String address;
 
     public EmailModel(Email email){
+        //TODO [dd] add notNull contracts
         this.address = email.address();
     }
 

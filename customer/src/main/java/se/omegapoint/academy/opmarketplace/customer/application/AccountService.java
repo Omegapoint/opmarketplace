@@ -35,6 +35,8 @@ public class AccountService {
 
     @RequestMapping(method = POST)
     public ResponseEntity createAccount(@RequestBody final AccountRequestedModel newAccount) {
+        //TODO [dd] add notNull contracts
+
         Result<AccountRequested> result = newAccount.domainObject();
         if (result.isSuccess()) {
             AccountRequested accountRequested = result.value();
@@ -54,6 +56,8 @@ public class AccountService {
     //TODO [dd]: is this method really idempotent? PUT operations must be idempotent according to the specification. See https://spring.io/understanding/REST
     @RequestMapping(method = PUT)
     public ResponseEntity changeUser(@RequestParam("email") final Email email, @RequestBody UserModel userModel) {
+        //TODO [dd] add notNull contracts
+
         Result<Account> accountToChange = accountRepository.account(email);
         if (accountToChange.isSuccess()){
             Account account = accountToChange.value();
@@ -68,6 +72,8 @@ public class AccountService {
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<AccountModel> account(@RequestParam("email") final Email email) {
+        //TODO [dd] add notNull contracts
+
         Result<Account> response = accountRepository.account(email);
         if (response.isSuccess()){
             Account account = response.value();

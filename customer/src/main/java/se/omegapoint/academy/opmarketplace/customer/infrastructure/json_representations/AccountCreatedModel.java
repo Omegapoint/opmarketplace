@@ -20,6 +20,7 @@ public class AccountCreatedModel implements JsonModel {
     public AccountCreatedModel(){}
 
     public AccountCreatedModel(se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated accountCreated) {
+        //TODO [dd] add notNull contracts
         this.aggregateIdentity = new AggregateIdentityModel(new AggregateIdentity(accountCreated.aggregateMemberId(), accountCreated.aggregateName()));
         this.email = new EmailModel(accountCreated.email());
         this.user = new UserModel(accountCreated.user());

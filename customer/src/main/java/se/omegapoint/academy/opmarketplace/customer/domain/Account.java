@@ -42,6 +42,8 @@ public class Account {
 
     //TODO [dd]: This seems like the task for a domain service, e.g. AccountService
     public AccountUserChanged changeUser(String firstName, String lastName){
+        //TODO [dd] add notNull / notBlank contracts
+
         AccountUserChanged accountUserChanged = new AccountUserChanged(this.email(), new User(firstName, lastName));
         mutate(accountUserChanged);
         return accountUserChanged;
@@ -57,6 +59,8 @@ public class Account {
     }
 
     public static AccountCreated requestAccount(AccountRequested request){
+        //TODO [dd] add notNull contracts
+
         return new AccountCreated(request.email(), request.user());
     }
 }

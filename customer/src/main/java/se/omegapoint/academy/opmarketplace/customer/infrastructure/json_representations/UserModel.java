@@ -1,6 +1,5 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.User;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.Result;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
@@ -11,6 +10,7 @@ public class UserModel implements JsonModel {
     private String lastName;
 
     public UserModel(User user){
+        //TODO [dd] add notNull contracts
         firstName = user.firstName();
         lastName = user.lastName();
     }
