@@ -12,12 +12,16 @@ public class Result<T> {
     private Optional<T> value;
     private Optional<String> errorMessage;
 
+    //TODO [dd] consider invoking one common constructor with an invariant. Cannot be error and success at the same time!
+
     private Result(T value){
+        //TODO [dd] add notNull contracts
         this.value = Optional.of(value);
         this.errorMessage = Optional.empty();
     }
 
     private Result(String errorMessage){
+        //TODO [dd] add notNull contracts
         this.errorMessage = Optional.of(errorMessage);
         this.value = Optional.empty();
     }
