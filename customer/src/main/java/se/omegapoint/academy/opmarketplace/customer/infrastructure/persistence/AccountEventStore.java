@@ -20,21 +20,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 public class AccountEventStore implements AccountRepository {
 
-    //TODO [dd]: make immutable
-
-    private AccountCreatedJPA createAccountRepository;
-    private AccountUserChangedJPA userChangedRepository;
+    private final AccountCreatedJPA createAccountRepository;
+    private final AccountUserChangedJPA userChangedRepository;
 
     public AccountEventStore(AccountCreatedJPA createAccountRepository, AccountUserChangedJPA userChangedRepository) {
+        notNull(createAccountRepository);
+        notNull(userChangedRepository);
         this.createAccountRepository = createAccountRepository;
         this.userChangedRepository = userChangedRepository;
     }
 
     @Override
     public Result<Account> account(Email email) {
-        //TODO [dd] add notNull contracts
+
+        notNull(email);
 
         List<DomainEvent> domainEvents = new ArrayList<>();
 
@@ -64,7 +67,7 @@ public class AccountEventStore implements AccountRepository {
     }
 
     public Result<Boolean> append(AggregateModification event) {
-        //TODO [dd] add notNull contracts
+        notNull(event);
         if (event instanceof AccountCreated) {
             createAccountRepository.save(new AccountCreatedModel((AccountCreated) event));
         } else if (event instanceof AccountUserChanged) {
@@ -77,7 +80,7 @@ public class AccountEventStore implements AccountRepository {
 
     @Override
     public Result<Boolean> accountInExistence(Email email) {
-        //TODO [dd] add notNull contracts
+        notNull(email);
         return Result.success(!createAccountRepository.findByAggregateMemberIdOrderByTime(email.address()).isEmpty());
     }
 }
