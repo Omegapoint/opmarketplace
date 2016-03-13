@@ -8,16 +8,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.bus.Event;
+import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
-import reactor.bus.Event;
-import reactor.bus.EventBus;
-import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.Result;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountModel;
@@ -90,13 +89,19 @@ public class AccountService implements Consumer<Event<DomainEvent>> {
 
     @Override
     public void accept(Event<DomainEvent> event) {
+        //TODO [dd] add notNull contracts
+
         DomainEvent domainEvent = event.getData();
         if (domainEvent instanceof AccountRequested)
             accountRequested((AccountRequested) domainEvent);
     }
 
     public void accountRequested(AccountRequested accountRequested){
+        //TODO [dd] add notNull contracts
+
         Result<Boolean> accountInExistence = accountRepository.accountInExistence(accountRequested.email());
+
+        //TODO [dd]: consider moving into domain
         if (accountInExistence.isSuccess() && !accountInExistence.value()){
             AccountCreated accountCreated = Account.requestAccount(accountRequested);
             accountRepository.append(accountCreated);
