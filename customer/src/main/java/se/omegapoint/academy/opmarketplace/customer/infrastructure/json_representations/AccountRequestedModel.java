@@ -14,7 +14,7 @@ public class AccountRequestedModel implements JsonModel {
 
     public AccountRequestedModel(){}
 
-    public AccountRequestedModel(se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested accountRequested) {
+    public AccountRequestedModel(AccountRequested accountRequested) {
         this.email = new EmailModel(accountRequested.email());
         this.user = new UserModel(accountRequested.user());
         this.time = accountRequested.time();

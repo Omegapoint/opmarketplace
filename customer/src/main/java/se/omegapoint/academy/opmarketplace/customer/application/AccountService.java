@@ -10,10 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
+import reactor.bus.Event;
+import reactor.bus.EventBus;
+import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.Result;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountModel;
@@ -25,7 +29,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/accounts")
-public class AccountService {
+public class AccountService implements Consumer<Event<DomainEvent>> {
 
     @Autowired
     private EventPublisher publisher;
@@ -82,5 +86,21 @@ public class AccountService {
             return ResponseEntity.status(HttpStatus.OK).cacheControl(CacheControl.noCache()).body(accountModel);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    @Override
+    public void accept(Event<DomainEvent> event) {
+        DomainEvent domainEvent = event.getData();
+        if (domainEvent instanceof AccountRequested)
+            accountRequested((AccountRequested) domainEvent);
+    }
+
+    public void accountRequested(AccountRequested accountRequested){
+        Result<Boolean> accountInExistence = accountRepository.accountInExistence(accountRequested.email());
+        if (accountInExistence.isSuccess() && !accountInExistence.value()){
+            AccountCreated accountCreated = Account.requestAccount(accountRequested);
+            accountRepository.append(accountCreated);
+            publisher.publish(accountCreated);
+        }
     }
 }

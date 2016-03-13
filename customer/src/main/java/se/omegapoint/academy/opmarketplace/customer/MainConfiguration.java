@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import reactor.Environment;
 import reactor.bus.EventBus;
+import reactor.bus.selector.Selectors;
+import se.omegapoint.academy.opmarketplace.customer.application.AccountService;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.EntityMarker;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountCreatedJPA;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountUserChangedJPA;
@@ -24,8 +26,10 @@ public class MainConfiguration {
     }
 
     @Bean
-    EventBus createEventBus(Environment env) {
-            return EventBus.create(env, Environment.THREAD_POOL);
+    EventBus createEventBus(Environment env, AccountService accountService) {
+        EventBus eventBus = EventBus.create(env, Environment.THREAD_POOL);
+        eventBus.on(Selectors.object("Account"), accountService);
+        return eventBus;
     }
 
 
