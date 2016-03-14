@@ -13,15 +13,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
 
 public class SubscriberInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
     @Value("${subscription.url}")
     private URL subscriptionUrl;
-
-    @Value("#{'${subscription.channels}'.split(',')}")
-    private List<String> channels;
 
     @Value("${event.receiver.url}")
     private URL eventReceiverUrl;
@@ -30,23 +26,23 @@ public class SubscriberInitializer implements ApplicationListener<ContextRefresh
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        channels.forEach(this::subscribe);
+        subscribeAll();
         System.out.println("----- SUBSCRIPTION FINISHED -----");
     }
 
-    private void subscribe(String channel) {
+    private void subscribeAll() {
         try {
             URIBuilder uriBuilder = new URIBuilder(subscriptionUrl.toURI())
-                    .addParameter("channel", channel)
+                    .addParameter("token", "kebabpizza")
                     .addParameter("endpoint", eventReceiverUrl.toString());
 
             HttpPost httpPost = new HttpPost(uriBuilder.build());
             CloseableHttpResponse response = httpClient.execute(httpPost);
 
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_ACCEPTED) {
-                System.out.printf("Subscribed %s to channel %s on %s%n", eventReceiverUrl, channel, subscriptionUrl);
+                System.out.printf("Subscribed %s to all channels on %s%n", eventReceiverUrl, subscriptionUrl);
             } else {
-                System.out.printf("Failed to subscribe %s to channel %s on %s%n", eventReceiverUrl, channel, subscriptionUrl);
+                System.out.printf("Failed to subscribe %s to all channels on %s%n", eventReceiverUrl, subscriptionUrl);
             }
             response.close();
 
