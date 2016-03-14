@@ -25,7 +25,7 @@ public class CommandReceiver {
         if (!token.equals("kebabpizza"))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        System.out.println("Rule command received ---> ");
+        System.out.print("Rule command received ---> ");
         eventBus.notify("command", Event.wrap(commandEvent));
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
