@@ -3,7 +3,9 @@ package se.omegapoint.academy.opmarketplace.customer.domain;
 import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.factories.AccountFactory;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -17,7 +19,8 @@ public class AccountTest {
     public void should_create_account() throws IOException {
         Email email = new Email("create@create.com");
         User user = new User("createFirst", "createLast");
-        Account account = new Account(Arrays.asList(new DomainEvent[] {Account.requestAccount(new AccountRequested(email, user))}));
+        Account account = AccountFactory.fromDomainEvents(
+                Arrays.asList(new DomainEvent[] {Account.createAccount(new AccountRequested(email, user))}));
         assertEquals(email.address(), account.email().address());
         assertEquals(email.address(), account.id());
         assertEquals(user.firstName(), account.user().firstName());
@@ -25,13 +28,13 @@ public class AccountTest {
     }
 
     @Test
-    public void should_change_last_name_to_z() throws IOException, InterruptedException {
+    public void should_return_correct_AccountUserChanged_event() throws IOException, InterruptedException {
         Email email = new Email("change@change.com");
         User user = new User("initial", "initial");
-        Account account = new Account(Arrays.asList(new DomainEvent[] {Account.requestAccount(new AccountRequested(email, user))}));
-        for (char c = 'a'; c <= 'z'; c++) {
-            account.changeUser("initial", c+"");
-        }
-        assertEquals("z", account.user().lastName());
+        Account account = AccountFactory.fromDomainEvents(
+                Arrays.asList(new DomainEvent[] {Account.createAccount(new AccountRequested(email, user))}));
+        AccountUserChanged accountUserChanged = account.changeUser("a", user.lastName());
+
+        assertEquals("a", accountUserChanged.user().firstName());
     }
 }

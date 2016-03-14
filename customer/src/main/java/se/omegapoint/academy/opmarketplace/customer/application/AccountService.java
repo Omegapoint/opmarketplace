@@ -47,7 +47,7 @@ public class AccountService implements Consumer<Event<DomainEvent>> {
 
             //TODO [dd]: consider moving into domain
             if (accountInExistence.isSuccess() && !accountInExistence.value()){
-                AccountCreated accountCreated = Account.requestAccount(accountRequested);
+                AccountCreated accountCreated = Account.createAccount(accountRequested);
                 accountRepository.append(accountCreated);
                 publisher.publish(accountCreated);
                 return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -104,7 +104,7 @@ public class AccountService implements Consumer<Event<DomainEvent>> {
 
         //TODO [dd]: consider moving into domain
         if (accountInExistence.isSuccess() && !accountInExistence.value()){
-            AccountCreated accountCreated = Account.requestAccount(accountRequested);
+            AccountCreated accountCreated = Account.createAccount(accountRequested);
             accountRepository.append(accountCreated);
             publisher.publish(accountCreated);
         }

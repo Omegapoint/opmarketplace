@@ -66,7 +66,7 @@ public class AccountServiceTest {
     public void should_not_add_account_due_to_duplicate() throws Exception {
         Email email = new Email("block@block.com");
         User user = new User("blockFirst", "blockLast");
-        accountRepository.append(Account.requestAccount(new AccountRequested(email, user)));
+        accountRepository.append(Account.createAccount(new AccountRequested(email, user)));
 
         String content = new ObjectMapper().writeValueAsString(new AccountRequestedModel(new AccountRequested(email, user)));
         mockMvc.perform(post("/accounts")
@@ -96,7 +96,7 @@ public class AccountServiceTest {
 
         String newUserModel = new ObjectMapper().writeValueAsString(new UserModel(newUser));
 
-        accountRepository.append(Account.requestAccount(new AccountRequested(email, user)));
+        accountRepository.append(Account.createAccount(new AccountRequested(email, user)));
         mockMvc.perform(put("/accounts?email=" + email.address())
                 .contentType(APPLICATION_JSON)
                 .content(newUserModel)
@@ -109,7 +109,7 @@ public class AccountServiceTest {
         Email email = new Email("retrieve@retrieve.com");
         User user = new User("retrieve", "retrieve");
 
-        accountRepository.append(Account.requestAccount(new AccountRequested(email, user)));
+        accountRepository.append(Account.createAccount(new AccountRequested(email, user)));
         mockMvc.perform(get("/accounts?email=" + email.address())
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())

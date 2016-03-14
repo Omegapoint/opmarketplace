@@ -27,7 +27,7 @@ public class AccountRepositoryTest {
     public void should_save_account() throws IOException, InterruptedException {
         Email email = new Email("create@create.com");
         User user = new User("createFirst", "createLast");
-        accountRepository.append(Account.requestAccount(new AccountRequested(email, user)));
+        accountRepository.append(Account.createAccount(new AccountRequested(email, user)));
         Account account = accountRepository.account(email).value();
         assertEquals(email.address(), account.email().address());
         assertEquals(email.address(), account.id());
@@ -38,7 +38,7 @@ public class AccountRepositoryTest {
     public void testAccountInExistence() throws Exception {
         Email email = new Email("exist@exist.com");
         User user = new User("exist", "exist");
-        accountRepository.append(Account.requestAccount(new AccountRequested(email, user)));
+        accountRepository.append(Account.createAccount(new AccountRequested(email, user)));
         assertTrue(accountRepository.accountInExistence(email).value());
     }
 
@@ -46,7 +46,7 @@ public class AccountRepositoryTest {
     public void should_change_last_name_to_z() throws IOException, InterruptedException {
         Email email = new Email("change@change.com");
         User user = new User("initial", "initial");
-        accountRepository.append(Account.requestAccount(new AccountRequested(email, user)));
+        accountRepository.append(Account.createAccount(new AccountRequested(email, user)));
         Account account = accountRepository.account(email).value();
         for (char c = 'a'; c <= 'z'; c++) {
             accountRepository.append(account.changeUser("initial", c+""));

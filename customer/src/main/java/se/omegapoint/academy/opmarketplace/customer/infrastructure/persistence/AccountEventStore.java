@@ -12,6 +12,7 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_ob
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountUserChangedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountCreatedJPA;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountUserChangedJPA;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.factories.AccountFactory;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.io.IOException;
@@ -57,9 +58,7 @@ public class AccountEventStore implements AccountRepository {
         Collections.sort(domainEvents);
 
         try {
-            return Result.success(new Account(domainEvents));
-        } catch (IOException e) {
-            return Result.error("Technical Failure");
+            return Result.success(AccountFactory.fromDomainEvents(domainEvents));
         } catch (IllegalArgumentValidationException e) {
             return Result.error(e.getMessage()); //TODO [dd] is this really an error?
         }
