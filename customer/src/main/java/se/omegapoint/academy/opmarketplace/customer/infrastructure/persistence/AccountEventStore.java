@@ -28,11 +28,8 @@ public class AccountEventStore implements AccountRepository {
     private final AccountUserChangedJPA userChangedRepository;
 
     public AccountEventStore(AccountCreatedJPA createAccountRepository, AccountUserChangedJPA userChangedRepository) {
-        notNull(createAccountRepository);
-        notNull(userChangedRepository);
-        // TODO: 14/03/16 fixa notnull on same line
-        this.createAccountRepository = createAccountRepository;
-        this.userChangedRepository = userChangedRepository;
+        this.createAccountRepository = notNull(createAccountRepository);
+        this.userChangedRepository = notNull(userChangedRepository);
     }
 
     @Override
