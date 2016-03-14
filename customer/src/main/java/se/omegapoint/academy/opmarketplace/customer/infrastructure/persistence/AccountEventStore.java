@@ -30,6 +30,7 @@ public class AccountEventStore implements AccountRepository {
     public AccountEventStore(AccountCreatedJPA createAccountRepository, AccountUserChangedJPA userChangedRepository) {
         notNull(createAccountRepository);
         notNull(userChangedRepository);
+        // TODO: 14/03/16 fixa notnull on same line
         this.createAccountRepository = createAccountRepository;
         this.userChangedRepository = userChangedRepository;
     }
@@ -47,6 +48,7 @@ public class AccountEventStore implements AccountRepository {
                 .collect(Collectors.toList()));
 
         //TODO [dd] is this an error, success, or bug? If the latter, change to contract
+        // TODO: 14/03/16 brackets
         if (domainEvents.isEmpty())
             return Result.error("No account for email: " + email.address());
 

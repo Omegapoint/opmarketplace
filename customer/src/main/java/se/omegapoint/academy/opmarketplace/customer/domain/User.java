@@ -48,4 +48,6 @@ public final class User {
     public String fullName(){
         return firstName() + " " + lastName();
     }
+
+    // TODO: 14/03/16 hash code & equals
 }

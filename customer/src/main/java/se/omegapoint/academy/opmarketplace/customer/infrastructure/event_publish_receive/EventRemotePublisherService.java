@@ -32,6 +32,7 @@ public class EventRemotePublisherService implements EventPublisher {
 
     //TODO [dd] potential resource leakage. When is the http client closed?
 
+    // TODO: 14/03/16 Inject HttpClient
     public EventRemotePublisherService(){
         httpclient = HttpAsyncClients.createDefault();
         httpclient.start();
@@ -57,6 +58,7 @@ public class EventRemotePublisherService implements EventPublisher {
             httpclient.execute(httpPost, IGNORE_CALLBACK);
         } catch (UnsupportedEncodingException | JsonProcessingException e) {
             e.printStackTrace(); //TODO [dd] not ok to print stack trace and continue.
+            // TODO: 14/03/16 throw illegalstateexception
         }
     }
 }

@@ -80,7 +80,6 @@ public class AccountService implements Consumer<Event<DomainEvent>> {
         Result<Account> response = accountRepository.account(email);
         if (response.isSuccess()){
             Account account = response.value();
-            //TODO [dd]: creation of json objects should be done in the infrastructure
             AccountModel accountModel = new AccountModel(account.email(), account.user());
             return ResponseEntity.status(HttpStatus.OK).cacheControl(CacheControl.noCache()).body(accountModel);
         }
@@ -92,10 +91,12 @@ public class AccountService implements Consumer<Event<DomainEvent>> {
         //TODO [dd] add notNull contracts
 
         DomainEvent domainEvent = event.getData();
+        // TODO: 14/03/16 curly braces FTW
         if (domainEvent instanceof AccountRequested)
             accountRequested((AccountRequested) domainEvent);
     }
 
+    // TODO: 14/03/16 set to private
     public void accountRequested(AccountRequested accountRequested){
         //TODO [dd] add notNull contracts
 
