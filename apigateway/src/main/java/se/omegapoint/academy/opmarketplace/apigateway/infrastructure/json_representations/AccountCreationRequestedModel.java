@@ -2,12 +2,14 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repre
 
 import java.sql.Timestamp;
 
-public class AccountRequestedModel implements JsonModel {
+public class AccountCreationRequestedModel implements JsonModel {
+    public static final String TYPE = "AccountCreationRequested";
+
     private EmailModel email;
     private UserModel user;
     private Timestamp time;
 
-    public AccountRequestedModel(){
+    public AccountCreationRequestedModel(){
         time = new Timestamp(System.currentTimeMillis());
     }
 

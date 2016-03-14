@@ -28,7 +28,7 @@ public class EventReceiverService {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             System.out.println("Event received");
-            if ("AccountCreated".equals(event.getType())) {
+            if (AccountCreatedModel.TYPE.equals(event.getType())) {
                 System.out.println("Correct event received: Channel: " + channel);
                 eventBus.notify(channel, Event.wrap(objectMapper.readValue(event.getData(), AccountCreatedModel.class)));
             }
