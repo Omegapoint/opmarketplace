@@ -20,7 +20,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
 
     @Override
     public void accept(Event<RemoteEvent> domainEventModelEvent) {
-        System.out.println("Received and analyzing event...");
+        System.out.println("Analyzing event...");
         RemoteEvent domainEvent = domainEventModelEvent.getData();
         String eventType = domainEvent.getType();
         if (!eventCounter.containsKey(eventType)) {
