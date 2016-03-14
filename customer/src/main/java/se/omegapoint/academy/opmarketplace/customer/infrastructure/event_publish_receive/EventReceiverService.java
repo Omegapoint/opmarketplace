@@ -28,7 +28,7 @@ public class EventReceiverService {
         ObjectMapper objectMapper = new ObjectMapper(); //TODO [dd]: Consider making a final field. A lot is done during creation!
 
         try {
-            if (event.getType().equals(AccountCreationRequested.NAME)) {
+            if (event.getType().equals(AccountCreationRequestedModel.TYPE)) {
                 AccountCreationRequested accountCreationRequested = objectMapper.readValue(event.getData(), AccountCreationRequestedModel.class).domainObject().value();
                 eventBus.notify(channel, Event.wrap(accountCreationRequested));
             }

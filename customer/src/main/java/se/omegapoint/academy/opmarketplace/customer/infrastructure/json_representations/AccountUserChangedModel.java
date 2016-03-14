@@ -8,6 +8,8 @@ import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 import java.sql.Timestamp;
 
 public class AccountUserChangedModel implements JsonModel {
+    public static final String TYPE = "AccountUserChanged";
+
     private AggregateIdentityModel aggregateIdentity;
     private UserModel user;
     private Timestamp time;

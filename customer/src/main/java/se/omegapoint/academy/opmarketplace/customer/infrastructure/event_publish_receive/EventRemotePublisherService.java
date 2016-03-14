@@ -42,9 +42,9 @@ public class EventRemotePublisherService implements EventPublisher {
     public void publish(DomainEvent event) {
         notNull(event);
         if (event instanceof AccountCreated)
-            publish(new RemoteEvent(new AccountCreatedModel((AccountCreated)event), AccountCreated.NAME));
+            publish(new RemoteEvent(new AccountCreatedModel((AccountCreated)event), AccountCreatedModel.TYPE));
         else if (event instanceof AccountUserChanged)
-            publish(new RemoteEvent(new AccountUserChangedModel((AccountUserChanged)event), AccountUserChanged.NAME));
+            publish(new RemoteEvent(new AccountUserChangedModel((AccountUserChanged)event), AccountUserChangedModel.TYPE));
 
         //TODO [dd] what happens if we get an event that doesn't match? Is it a bug? Missing feature? Add contract!
     }

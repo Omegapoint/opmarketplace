@@ -10,6 +10,7 @@ import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 import java.sql.Timestamp;
 
 public class AccountCreatedModel implements JsonModel {
+    public static final String TYPE = "AccountCreated";
 
     private AggregateIdentityModel aggregateIdentity;
     private EmailModel email;

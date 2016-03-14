@@ -10,8 +10,6 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountCreationRequested extends DomainEvent{
 
-    public static final String NAME = "AccountCreationRequested";
-
     private final Email email;
     private final User user;
     private final Timestamp time;

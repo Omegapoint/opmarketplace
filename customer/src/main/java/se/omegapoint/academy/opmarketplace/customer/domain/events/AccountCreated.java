@@ -11,8 +11,6 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public final class AccountCreated extends DomainEvent implements AggregateModification {
 
-    public static final String NAME = "AccountCreated";
-
     private final Email email;
     private final User user;
     private final AggregateIdentity aggregate;
