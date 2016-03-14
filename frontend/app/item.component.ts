@@ -2,7 +2,7 @@ import {Component, View} from "angular2/core";
 import {OnInit} from "angular2/core";
 
 export class Item{
-    constructor(private title: string, private description: string, private price: number, private expiration: Date){}
+    constructor(private title: string, private description: string, private price: number, public expiration: Date){}
 }
 
 @Component({

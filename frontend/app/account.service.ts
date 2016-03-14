@@ -39,14 +39,15 @@ export class AccountService {
     public registerAccount(newAccount: Account) : Observable<Response>{
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
-        var registrationSubscription = this._http.post("http://localhost:8001/accounts", JSON.stringify(newAccount), {headers:headers});
+        var registrationSubscription = this._http.post("http://localhost:8002/accounts", JSON.stringify(newAccount), {headers:headers});
         registrationSubscription.subscribe(response => this.handleRegistrationResponse(response, newAccount));
         return registrationSubscription;
     }
 
     private handleRegistrationResponse(response: Response, account: Account){
-        if (response.status == 201){
+        if (response.status == 200){
             this.account = account;
+            console.log("AccountCreated");
         }
     }
 
