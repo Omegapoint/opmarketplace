@@ -1,12 +1,8 @@
 package se.omegapoint.academy.opmarketplace.customer.domain;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
-
-import java.io.IOException;
-import java.util.List;
 
 import static se.sawano.java.commons.lang.validate.Validate.notBlank;
 import static se.sawano.java.commons.lang.validate.Validate.notEmpty;
@@ -33,7 +29,7 @@ public class Account {
         return user;
     }
 
-    public static AccountCreated createAccount(AccountRequested request){
+    public static AccountCreated createAccount(AccountCreationRequested request){
         notNull(request);
         return new AccountCreated(request.email(), request.user());
     }

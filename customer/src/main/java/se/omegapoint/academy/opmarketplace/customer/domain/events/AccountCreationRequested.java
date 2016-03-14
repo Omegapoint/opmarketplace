@@ -8,19 +8,19 @@ import java.sql.Timestamp;
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountRequested extends DomainEvent{
+public class AccountCreationRequested extends DomainEvent{
 
-    public static final String NAME = "AccountRequested";
+    public static final String NAME = "AccountCreationRequested";
 
     private final Email email;
     private final User user;
     private final Timestamp time;
 
-    public AccountRequested(Email email, User user){
+    public AccountCreationRequested(Email email, User user){
         this(email, user, new Timestamp(System.currentTimeMillis()));
     }
 
-    public AccountRequested(Email email, User user, Timestamp time){
+    public AccountCreationRequested(Email email, User user, Timestamp time){
         notNull(email);
         notNull(user);
         notNull(time);
@@ -48,7 +48,7 @@ public class AccountRequested extends DomainEvent{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AccountRequested that = (AccountRequested) o;
+        AccountCreationRequested that = (AccountCreationRequested) o;
 
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (user != null ? !user.equals(that.user) : that.user != null) return false;

@@ -13,14 +13,14 @@ import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.customer.domain.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.Result;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreationRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.UserModel;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -37,17 +37,17 @@ public class AccountService implements Consumer<Event<DomainEvent>> {
     private AccountRepository accountRepository;
 
     @RequestMapping(method = POST)
-    public ResponseEntity createAccount(@RequestBody final AccountRequestedModel newAccount) {
+    public ResponseEntity createAccount(@RequestBody final AccountCreationRequestedModel newAccount) {
         //TODO [dd] add notNull contracts
 
-        Result<AccountRequested> result = newAccount.domainObject();
+        Result<AccountCreationRequested> result = newAccount.domainObject();
         if (result.isSuccess()) {
-            AccountRequested accountRequested = result.value();
-            Result<Boolean> accountInExistence = accountRepository.accountInExistence(accountRequested.email());
+            AccountCreationRequested accountCreationRequested = result.value();
+            Result<Boolean> accountInExistence = accountRepository.accountInExistence(accountCreationRequested.email());
 
             //TODO [dd]: consider moving into domain
             if (accountInExistence.isSuccess() && !accountInExistence.value()){
-                AccountCreated accountCreated = Account.createAccount(accountRequested);
+                AccountCreated accountCreated = Account.createAccount(accountCreationRequested);
                 accountRepository.append(accountCreated);
                 publisher.publish(accountCreated);
                 return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -92,19 +92,19 @@ public class AccountService implements Consumer<Event<DomainEvent>> {
 
         DomainEvent domainEvent = event.getData();
         // TODO: 14/03/16 curly braces FTW
-        if (domainEvent instanceof AccountRequested)
-            accountRequested((AccountRequested) domainEvent);
+        if (domainEvent instanceof AccountCreationRequested)
+            accountRequested((AccountCreationRequested) domainEvent);
     }
 
     // TODO: 14/03/16 set to private
-    public void accountRequested(AccountRequested accountRequested){
+    public void accountRequested(AccountCreationRequested accountCreationRequested){
         //TODO [dd] add notNull contracts
 
-        Result<Boolean> accountInExistence = accountRepository.accountInExistence(accountRequested.email());
+        Result<Boolean> accountInExistence = accountRepository.accountInExistence(accountCreationRequested.email());
 
         //TODO [dd]: consider moving into domain
         if (accountInExistence.isSuccess() && !accountInExistence.value()){
-            AccountCreated accountCreated = Account.createAccount(accountRequested);
+            AccountCreated accountCreated = Account.createAccount(accountCreationRequested);
             accountRepository.append(accountCreated);
             publisher.publish(accountCreated);
         }
