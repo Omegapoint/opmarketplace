@@ -32,6 +32,6 @@ public class RuleEngine implements Consumer<Event<CommandEvent>> {
             prohibitedEvents.add(command.getEventType());
         }
 
-        System.out.printf("Event %s is now allowed: %b%n", command.getEventType(), command.isAllow());
+        System.out.printf("Event %s is set to %b%n", command.getEventType(), command.isAllow());
     }
 }

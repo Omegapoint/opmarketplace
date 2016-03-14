@@ -43,7 +43,8 @@ public class EventPublisher implements Consumer<Event<CommandEvent>> {
 
             httpAsyncClient.execute(httpPost, null);
 
-            System.out.printf("Command event dispatched URI %s%n", uriBuilder.build());
+            System.out.printf("Command event dispatched URI %s. %s is set to %b%n",
+                    uriBuilder.build(), commandEvent.getEventType(), commandEvent.isAllow());
 
         } catch (URISyntaxException | UnsupportedEncodingException | JsonProcessingException e) {
             // TODO: Var detta ok?
