@@ -7,7 +7,9 @@ public class AccountRequestedModel implements JsonModel {
     private UserModel user;
     private Timestamp time;
 
-    public AccountRequestedModel(){}
+    public AccountRequestedModel(){
+        time = new Timestamp(System.currentTimeMillis());
+    }
 
     public EmailModel getEmail() {
         return email;

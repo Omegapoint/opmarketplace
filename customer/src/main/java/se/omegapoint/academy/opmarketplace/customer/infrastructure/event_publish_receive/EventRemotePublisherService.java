@@ -25,8 +25,8 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public class EventRemotePublisherService implements EventPublisher {
 
     private static final FutureCallback<HttpResponse> IGNORE_CALLBACK = null;
-    @Value("${event.receiver.url}")
-    private String receiveURL;
+    @Value("${event.publisher.url}")
+    private String publisherURL;
 
     private final CloseableHttpAsyncClient httpclient;
 
@@ -51,7 +51,7 @@ public class EventRemotePublisherService implements EventPublisher {
     private void publish(RemoteEvent remoteEvent) {
         try {
             StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(remoteEvent));
-            HttpPost httpPost = new HttpPost(receiveURL + "?channel=Account");
+            HttpPost httpPost = new HttpPost(publisherURL + "?channel=Account");
             httpPost.addHeader("Content-Type", "application/json");
             httpPost.setEntity(eventJson);
             httpclient.execute(httpPost, IGNORE_CALLBACK);
