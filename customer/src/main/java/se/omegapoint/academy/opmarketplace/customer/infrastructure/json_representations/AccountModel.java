@@ -1,7 +1,7 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.Email;
-import se.omegapoint.academy.opmarketplace.customer.domain.User;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 
 public class AccountModel {
     private EmailModel email;

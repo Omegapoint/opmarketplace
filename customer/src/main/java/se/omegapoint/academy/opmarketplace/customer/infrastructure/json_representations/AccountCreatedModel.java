@@ -1,10 +1,10 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.Email;
-import se.omegapoint.academy.opmarketplace.customer.domain.User;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateIdentity;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.Result;
+import se.omegapoint.academy.opmarketplace.customer.domain.Result;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.sql.Timestamp;

@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.customer.domain;
+package se.omegapoint.academy.opmarketplace.customer.domain.value_objects;
 
 import org.apache.commons.validator.routines.EmailValidator;
 

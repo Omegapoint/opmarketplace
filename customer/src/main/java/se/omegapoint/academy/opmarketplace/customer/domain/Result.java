@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure;
+package se.omegapoint.academy.opmarketplace.customer.domain;
 
 import java.util.Optional;
 

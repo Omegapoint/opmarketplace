@@ -2,7 +2,7 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_represe
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateIdentity;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.Result;
+import se.omegapoint.academy.opmarketplace.customer.domain.Result;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.sql.Timestamp;

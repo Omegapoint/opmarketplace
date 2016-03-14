@@ -1,8 +1,7 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateIdentity;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.Result;
+import se.omegapoint.academy.opmarketplace.customer.domain.Result;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;

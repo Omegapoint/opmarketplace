@@ -4,6 +4,7 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 

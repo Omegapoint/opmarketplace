@@ -1,8 +1,8 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.events;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.Account;
-import se.omegapoint.academy.opmarketplace.customer.domain.Email;
-import se.omegapoint.academy.opmarketplace.customer.domain.User;
+import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 
 import java.sql.Timestamp;
 

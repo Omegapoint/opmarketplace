@@ -1,6 +1,6 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.factories;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.Account;
+import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;

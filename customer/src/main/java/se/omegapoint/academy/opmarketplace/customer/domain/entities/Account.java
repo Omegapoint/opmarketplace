@@ -1,5 +1,7 @@
-package se.omegapoint.academy.opmarketplace.customer.domain;
+package se.omegapoint.academy.opmarketplace.customer.domain.entities;
 
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
