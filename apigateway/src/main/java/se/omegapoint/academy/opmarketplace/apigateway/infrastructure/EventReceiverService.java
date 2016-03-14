@@ -30,7 +30,8 @@ public class EventReceiverService {
             System.out.println("Event received");
             if (AccountCreatedModel.TYPE.equals(event.getType())) {
                 System.out.println("Correct event received: Channel: " + channel);
-                eventBus.notify(channel, Event.wrap(objectMapper.readValue(event.getData(), AccountCreatedModel.class)));
+                AccountCreatedModel accountCreatedModel = objectMapper.readValue(event.getData(), AccountCreatedModel.class);
+                eventBus.notify(AccountCreatedModel.TYPE + accountCreatedModel.getEmail(), Event.wrap(accountCreatedModel));
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
