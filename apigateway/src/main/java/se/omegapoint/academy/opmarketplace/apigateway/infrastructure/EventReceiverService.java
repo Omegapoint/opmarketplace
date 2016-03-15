@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.AccountCreatedModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.AccountObtainedModel;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.RemoteEvent;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
@@ -27,11 +28,13 @@ public class EventReceiverService {
         notNull(event);
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            System.out.println("Event received");
             if (AccountCreatedModel.TYPE.equals(event.getType())) {
-                System.out.println("Correct event received: Channel: " + channel);
                 AccountCreatedModel accountCreatedModel = objectMapper.readValue(event.getData(), AccountCreatedModel.class);
                 eventBus.notify(AccountCreatedModel.TYPE + accountCreatedModel.getEmail().getAddress(), Event.wrap(accountCreatedModel));
+            }
+            if (AccountObtainedModel.TYPE.equals(event.getType())) {
+                AccountObtainedModel accountObtainedModel = objectMapper.readValue(event.getData(), AccountObtainedModel.class);
+                eventBus.notify(AccountObtainedModel.TYPE + accountObtainedModel.getAccount().getEmail().getAddress(), Event.wrap(accountObtainedModel));
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {

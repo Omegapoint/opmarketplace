@@ -1,9 +1,6 @@
 package se.omegapoint.academy.opmarketplace.apigateway.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,7 +9,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.AccountCreatedListener;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.AccountRequestedListener;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.AccountObtainedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.EventRemotePublisherService;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.*;
 
@@ -46,8 +43,8 @@ public class AccountGateway {
         AccountRequestedModel accountRequested = new AccountRequestedModel(notNull(email));
         DeferredResult<AccountModel> result = new DeferredResult<>();
         publisher.publish(new RemoteEvent(accountRequested, AccountRequestedModel.TYPE));
-        eventBus.on(Selectors.object(AccountRequestedModel.TYPE + accountRequested.getEmail().getAddress()),
-                new AccountRequestedListener(result)).cancelAfterUse();
+        eventBus.on(Selectors.object(AccountObtainedModel.TYPE + accountRequested.getEmail().getAddress()),
+                new AccountObtainedListener(result)).cancelAfterUse();
         return result;
     }
 }
