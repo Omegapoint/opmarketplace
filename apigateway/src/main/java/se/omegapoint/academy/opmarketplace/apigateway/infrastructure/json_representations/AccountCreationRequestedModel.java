@@ -7,10 +7,10 @@ public class AccountCreationRequestedModel implements JsonModel {
 
     private EmailModel email;
     private UserModel user;
-    private Timestamp time;
+    private Timestamp timestamp;
 
     public AccountCreationRequestedModel(){
-        time = new Timestamp(System.currentTimeMillis());
+        timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     public EmailModel getEmail() {
@@ -22,7 +22,7 @@ public class AccountCreationRequestedModel implements JsonModel {
     }
 
     public Timestamp getTime() {
-        return time;
+        return timestamp;
     }
 
 }

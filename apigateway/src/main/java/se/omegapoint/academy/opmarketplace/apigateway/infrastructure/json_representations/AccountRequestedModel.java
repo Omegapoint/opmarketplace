@@ -1,5 +1,7 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations;
 
+import java.sql.Timestamp;
+
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountRequestedModel implements JsonModel {
@@ -7,8 +9,9 @@ public class AccountRequestedModel implements JsonModel {
     public static final String TYPE = "AccountRequested";
 
     private EmailModel email;
+    private Timestamp timestamp;
 
-    public AccountRequestedModel() {}
+    public AccountRequestedModel() {timestamp = new Timestamp(System.currentTimeMillis());}
 
     public AccountRequestedModel(EmailModel email) {
         this.email = notNull(email);
@@ -16,5 +19,9 @@ public class AccountRequestedModel implements JsonModel {
 
     public EmailModel getEmail() {
         return email;
+    }
+
+    public Timestamp getTime() {
+        return timestamp;
     }
 }
