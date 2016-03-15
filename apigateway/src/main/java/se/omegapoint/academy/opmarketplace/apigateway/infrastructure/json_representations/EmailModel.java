@@ -1,12 +1,14 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations;
 
 
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 public class EmailModel implements JsonModel {
 
     private String address;
 
-    private EmailModel(String email){
-        this.address = email;
+    public EmailModel(String email){
+        this.address = notNull(email);
     }
 
     public EmailModel(){}

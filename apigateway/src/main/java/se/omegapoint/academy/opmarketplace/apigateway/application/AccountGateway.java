@@ -10,7 +10,7 @@ import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.AccountCreatedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.AccountObtainedListener;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.EventRemotePublisherService;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -23,10 +23,10 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public class AccountGateway {
 
     @Autowired
-    EventBus eventBus;
+    private EventBus eventBus;
 
     @Autowired
-    EventRemotePublisherService publisher;
+    private RemoteEventPublisher publisher;
 
     @RequestMapping(method = POST)
     public DeferredResult<String> createAccount(@RequestBody final AccountCreationRequestedModel newAccount) {

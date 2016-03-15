@@ -2,6 +2,8 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repre
 
 import java.sql.Timestamp;
 
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 public class AccountCreationRequestedModel implements JsonModel {
     public static final String TYPE = "AccountCreationRequested";
 
@@ -10,6 +12,12 @@ public class AccountCreationRequestedModel implements JsonModel {
     private Timestamp timestamp;
 
     public AccountCreationRequestedModel(){
+        timestamp = new Timestamp(System.currentTimeMillis());
+    }
+
+    public AccountCreationRequestedModel(EmailModel email, UserModel user){
+        this.email = notNull(email);
+        this.user = notNull(user);
         timestamp = new Timestamp(System.currentTimeMillis());
     }
 

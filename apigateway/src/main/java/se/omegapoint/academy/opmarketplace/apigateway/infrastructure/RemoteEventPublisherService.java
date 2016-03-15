@@ -16,7 +16,7 @@ import java.io.UnsupportedEncodingException;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 
-public class EventRemotePublisherService {
+public class RemoteEventPublisherService implements RemoteEventPublisher {
 
     private static final FutureCallback<HttpResponse> IGNORE_CALLBACK = null;
 
@@ -25,11 +25,12 @@ public class EventRemotePublisherService {
 
     private final CloseableHttpAsyncClient httpclient;
 
-    public EventRemotePublisherService(){
+    public RemoteEventPublisherService(){
         httpclient = HttpAsyncClients.createDefault();
         httpclient.start();
     }
 
+    @Override
     public void publish(RemoteEvent remoteEvent) {
         notNull(remoteEvent);
         try {
