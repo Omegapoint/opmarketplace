@@ -9,45 +9,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 import reactor.bus.Event;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.TestConfiguration;
-import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountObtained;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
-import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.*;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreationRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountUserChangeRequestedModel;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CustomerApplication.class)
-@WebAppConfiguration
 @ActiveProfiles("test")
 public class AccountServiceTest {
-
-    @Autowired
-    WebApplicationContext wac;
-
-    @Autowired
-    AccountEventStore accountRepository;
-
-    MockMvc mockMvc;
 
     @Autowired
     private AccountService accountService;
@@ -60,9 +38,9 @@ public class AccountServiceTest {
     @Before
     public void setUp() throws Exception{
         testPublisher.clear();
-        mockMvc = webAppContextSetup(wac).build();
     }
 
+    // TODO: 15/03/16 Maybe check that the account has actually been created?
     @Test
     public void should_create_account() throws Exception {
         addUser("test1@email.com", "first", "last");
