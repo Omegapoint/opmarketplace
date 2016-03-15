@@ -21,20 +21,22 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public class EventReceiverService {
 
     @Autowired
-    EventBus eventBus;
+    private EventBus eventBus;
+    private ObjectMapper json = new ObjectMapper();
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> eventInput(@RequestParam("channel") final String channel, @RequestBody RemoteEvent event) {
+    public ResponseEntity<Void> eventInput(@RequestBody RemoteEvent event) {
         notNull(event);
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            if (AccountCreatedModel.TYPE.equals(event.getType())) {
-                AccountCreatedModel accountCreatedModel = objectMapper.readValue(event.getData(), AccountCreatedModel.class);
-                eventBus.notify(AccountCreatedModel.TYPE + accountCreatedModel.getEmail().getAddress(), Event.wrap(accountCreatedModel));
-            }
-            if (AccountObtainedModel.TYPE.equals(event.getType())) {
-                AccountObtainedModel accountObtainedModel = objectMapper.readValue(event.getData(), AccountObtainedModel.class);
-                eventBus.notify(AccountObtainedModel.TYPE + accountObtainedModel.getAccount().getEmail().getAddress(), Event.wrap(accountObtainedModel));
+            switch(event.getType()){
+                case AccountCreatedModel.TYPE:
+                    AccountCreatedModel accountCreatedModel = json.readValue(event.getData(), AccountCreatedModel.class);
+                    eventBus.notify(AccountCreatedModel.TYPE + accountCreatedModel.getEmail().getAddress(), Event.wrap(accountCreatedModel));
+                    break;
+                case AccountObtainedModel.TYPE:
+                    AccountObtainedModel accountObtainedModel = json.readValue(event.getData(), AccountObtainedModel.class);
+                    eventBus.notify(AccountObtainedModel.TYPE + accountObtainedModel.getAccount().getEmail().getAddress(), Event.wrap(accountObtainedModel));
+                    break;
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {

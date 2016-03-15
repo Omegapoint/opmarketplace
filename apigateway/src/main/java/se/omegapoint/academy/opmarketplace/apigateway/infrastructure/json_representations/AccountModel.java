@@ -6,6 +6,11 @@ public class AccountModel {
 
     public AccountModel(){}
 
+    public AccountModel(EmailModel email, UserModel user) {
+        this.email = email;
+        this.user = user;
+    }
+
     public EmailModel getEmail() {
         return email;
     }
