@@ -1,7 +1,6 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateIdentity;
-import se.omegapoint.academy.opmarketplace.customer.domain.Result;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
@@ -28,11 +27,7 @@ public class AggregateIdentityModel implements JsonModel {
     }
 
     @Override
-    public Result<AggregateIdentity> domainObject() {
-        try{
-            return Result.success(new AggregateIdentity(this.id, this.aggregateName));
-        } catch (IllegalArgumentValidationException e){
-            return Result.error(e.getMessage());
-        }
+    public AggregateIdentity domainObject() {
+        return new AggregateIdentity(this.id, this.aggregateName);
     }
 }

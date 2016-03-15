@@ -2,8 +2,6 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_represe
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateIdentity;
-import se.omegapoint.academy.opmarketplace.customer.domain.Result;
-import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.sql.Timestamp;
 
@@ -34,15 +32,7 @@ public class AccountUserChangedModel implements JsonModel {
         return time;
     }
 
-    public Result<AccountUserChanged> domainObject() {
-        if (!this.aggregateIdentity.domainObject().isSuccess())
-            return Result.error(aggregateIdentity.domainObject().error());
-        if (!this.user.domainObject().isSuccess())
-            return Result.error(user.domainObject().error());
-        try {
-            return Result.success(new se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged(aggregateIdentity.domainObject().value(), user.domainObject().value(), time));
-        } catch (IllegalArgumentValidationException e) {
-            return Result.error(e.getMessage());
-        }
+    public AccountUserChanged domainObject() {
+        return new AccountUserChanged(aggregateIdentity.domainObject(), user.domainObject(), time);
     }
 }

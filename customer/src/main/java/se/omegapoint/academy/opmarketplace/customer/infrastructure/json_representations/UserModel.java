@@ -1,8 +1,6 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
-import se.omegapoint.academy.opmarketplace.customer.domain.Result;
-import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 public class UserModel implements JsonModel {
 
@@ -26,11 +24,7 @@ public class UserModel implements JsonModel {
     }
 
     @Override
-    public Result<User> domainObject() {
-        try{
-            return Result.success(new User(this.firstName, this.lastName));
-        } catch (IllegalArgumentValidationException e){
-            return Result.error(e.getMessage());
-        }
+    public User domainObject() {
+        return new User(this.firstName, this.lastName);
     }
 }

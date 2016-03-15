@@ -4,8 +4,6 @@ import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateIdentity;
-import se.omegapoint.academy.opmarketplace.customer.domain.Result;
-import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.sql.Timestamp;
 
@@ -44,11 +42,7 @@ public class AccountCreatedModel implements JsonModel {
         return time;
     }
 
-    public Result<AccountCreated> domainObject(){
-        try{
-            return Result.success(new se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated(new Email(email.getAddress()), new User(user.getFirstName(), user.getLastName()), time));
-        } catch (IllegalArgumentValidationException e){
-            return Result.error(e.getMessage());
-        }
+    public AccountCreated domainObject() {
+        return new AccountCreated(new Email(email.getAddress()), new User(user.getFirstName(), user.getLastName()), time);
     }
 }

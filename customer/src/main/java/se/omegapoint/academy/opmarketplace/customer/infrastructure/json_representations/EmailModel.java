@@ -1,8 +1,6 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
-import se.omegapoint.academy.opmarketplace.customer.domain.Result;
-import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 public class EmailModel implements JsonModel {
 
@@ -24,11 +22,7 @@ public class EmailModel implements JsonModel {
     }
 
     @Override
-    public Result<Email> domainObject() {
-        try{
-            return Result.success(new Email(this.address));
-        } catch (IllegalArgumentValidationException e){
-            return Result.error(e.getMessage());
-        }
+    public Email domainObject() {
+        return new Email(this.address);
     }
 }

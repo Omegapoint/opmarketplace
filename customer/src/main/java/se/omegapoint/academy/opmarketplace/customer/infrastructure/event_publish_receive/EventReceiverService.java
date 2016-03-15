@@ -29,7 +29,7 @@ public class EventReceiverService {
 
         try {
             if (event.getType().equals(AccountCreationRequestedModel.TYPE)) {
-                AccountCreationRequested accountCreationRequested = objectMapper.readValue(event.getData(), AccountCreationRequestedModel.class).domainObject().value();
+                AccountCreationRequested accountCreationRequested = objectMapper.readValue(event.getData(), AccountCreationRequestedModel.class).domainObject();
                 eventBus.notify(channel, Event.wrap(accountCreationRequested));
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();

@@ -28,7 +28,7 @@ public class AccountRepositoryTest {
         Email email = new Email("create@create.com");
         User user = new User("createFirst", "createLast");
         accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user)));
-        Account account = accountRepository.account(email).value();
+        Account account = accountRepository.account(email).get();
         assertEquals(email.address(), account.email().address());
         assertEquals(email.address(), account.id());
         assertEquals(user.firstName(), account.user().firstName());
@@ -39,7 +39,7 @@ public class AccountRepositoryTest {
         Email email = new Email("exist@exist.com");
         User user = new User("exist", "exist");
         accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user)));
-        assertTrue(accountRepository.accountInExistence(email).value());
+        assertTrue(accountRepository.accountInExistence(email));
     }
 
     @Test
@@ -47,13 +47,13 @@ public class AccountRepositoryTest {
         Email email = new Email("change@change.com");
         User user = new User("initial", "initial");
         accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user)));
-        Account account = accountRepository.account(email).value();
+        Account account = accountRepository.account(email).get();
         for (char c = 'a'; c <= 'z'; c++) {
             accountRepository.append(account.changeUser("initial", c+""));
             Thread.sleep(1);
         }
 
-        account = accountRepository.account(email).value();
+        account = accountRepository.account(email).get();
         assertEquals("z", account.user().lastName());
     }
 }

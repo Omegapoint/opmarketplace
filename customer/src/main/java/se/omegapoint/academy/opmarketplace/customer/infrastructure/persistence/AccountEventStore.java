@@ -7,17 +7,16 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserCha
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateModification;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
-import se.omegapoint.academy.opmarketplace.customer.domain.Result;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountCreatedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountUserChangedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountCreatedJPA;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountUserChangedJPA;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.factories.AccountFactory;
-import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
@@ -33,7 +32,7 @@ public class AccountEventStore implements AccountRepository {
     }
 
     @Override
-    public Result<Account> account(Email email) {
+    public Optional<Account> account(Email email) {
 
         notNull(email);
 
@@ -44,10 +43,9 @@ public class AccountEventStore implements AccountRepository {
                 .map(AccountCreatedModel::domainEvent)
                 .collect(Collectors.toList()));
 
-        //TODO [dd] is this an error, success, or bug? If the latter, change to contract
-        // TODO: 14/03/16 brackets
-        if (domainEvents.isEmpty())
-            return Result.error("No account for email: " + email.address());
+        if (domainEvents.isEmpty()) {
+            return Optional.empty();
+        }
 
         //TODO [dd] consider creating separate method
         domainEvents.addAll(userChangedRepository.findByAggregateMemberIdOrderByTime(email.address()).stream()
@@ -56,28 +54,21 @@ public class AccountEventStore implements AccountRepository {
 
         Collections.sort(domainEvents);
 
-        try {
-            return Result.success(AccountFactory.fromDomainEvents(domainEvents));
-        } catch (IllegalArgumentValidationException e) {
-            return Result.error(e.getMessage()); //TODO [dd] is this really an error?
-        }
+        return Optional.of(AccountFactory.fromDomainEvents(domainEvents));
     }
 
-    public Result<Boolean> append(AggregateModification event) {
+    public void append(AggregateModification event) {
         notNull(event);
         if (event instanceof AccountCreated) {
             createAccountRepository.save(new AccountCreatedModel((AccountCreated) event));
         } else if (event instanceof AccountUserChanged) {
             userChangedRepository.save(new AccountUserChangedModel((AccountUserChanged) event));
-        } else {
-            return Result.success(false);
         }
-        return Result.success(true);
     }
 
     @Override
-    public Result<Boolean> accountInExistence(Email email) {
+    public boolean accountInExistence(Email email) {
         notNull(email);
-        return Result.success(!createAccountRepository.findByAggregateMemberIdOrderByTime(email.address()).isEmpty());
+        return !createAccountRepository.findByAggregateMemberIdOrderByTime(email.address()).isEmpty();
     }
 }
