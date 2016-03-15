@@ -12,20 +12,16 @@ public class AccountCreationRequested extends DomainEvent{
 
     private final Email email;
     private final User user;
-    private final Timestamp time;
+    private final Timestamp timestamp;
 
-    public AccountCreationRequested(Email email, User user){
-        this(email, user, new Timestamp(System.currentTimeMillis()));
-    }
-
-    public AccountCreationRequested(Email email, User user, Timestamp time){
+    public AccountCreationRequested(Email email, User user, Timestamp timestamp){
         notNull(email);
         notNull(user);
-        notNull(time);
-        isTrue(time.before(new Timestamp(System.currentTimeMillis() + 1)));
+        notNull(timestamp);
+        isTrue(timestamp.before(new Timestamp(System.currentTimeMillis() + 1)));
         this.email = email;
         this.user = user;
-        this.time = time;
+        this.timestamp = timestamp;
     }
 
     public Email email() {
@@ -38,7 +34,7 @@ public class AccountCreationRequested extends DomainEvent{
 
     @Override
     public Timestamp time() {
-        return time;
+        return timestamp;
     }
 
     @Override
@@ -50,7 +46,7 @@ public class AccountCreationRequested extends DomainEvent{
 
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (user != null ? !user.equals(that.user) : that.user != null) return false;
-        return time != null ? time.equals(that.time) : that.time == null;
+        return timestamp != null ? timestamp.equals(that.timestamp) : that.timestamp == null;
 
     }
 
@@ -58,7 +54,7 @@ public class AccountCreationRequested extends DomainEvent{
     public int hashCode() {
         int result = email != null ? email.hashCode() : 0;
         result = 31 * result + (user != null ? user.hashCode() : 0);
-        result = 31 * result + (time != null ? time.hashCode() : 0);
+        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
         return result;
     }
 }

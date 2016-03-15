@@ -13,6 +13,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
 import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -27,7 +28,7 @@ public class AccountRepositoryTest {
     public void should_save_account() throws IOException, InterruptedException {
         Email email = new Email("create@create.com");
         User user = new User("createFirst", "createLast");
-        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user)));
+        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1))));
         Account account = accountRepository.account(email).get();
         assertEquals(email.address(), account.email().address());
         assertEquals(email.address(), account.id());
@@ -38,7 +39,7 @@ public class AccountRepositoryTest {
     public void testAccountInExistence() throws Exception {
         Email email = new Email("exist@exist.com");
         User user = new User("exist", "exist");
-        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user)));
+        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1))));
         assertTrue(accountRepository.accountInExistence(email));
     }
 
@@ -46,7 +47,7 @@ public class AccountRepositoryTest {
     public void should_change_last_name_to_z() throws IOException, InterruptedException {
         Email email = new Email("change@change.com");
         User user = new User("initial", "initial");
-        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user)));
+        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1))));
         Account account = accountRepository.account(email).get();
         for (char c = 'a'; c <= 'z'; c++) {
             accountRepository.append(account.changeUser("initial", c+""));
