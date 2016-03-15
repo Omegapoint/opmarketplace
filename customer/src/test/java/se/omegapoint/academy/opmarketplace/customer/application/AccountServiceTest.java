@@ -17,12 +17,12 @@ import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.TestConfiguration;
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountObtained;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreationRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.UserModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.*;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
 
 import java.sql.Timestamp;
@@ -100,40 +100,51 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void should_change_user() throws Exception {
-        Email email = new Email("initial@initial.com");
-        User user = new User("initial", "initial");
-
-        User newUser = new User("changed", "changed");
-
-        String newUserModel = new ObjectMapper().writeValueAsString(new UserModel(newUser));
-
-        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1))));
-        mockMvc.perform(put("/accounts?email=" + email.address())
-                .contentType(APPLICATION_JSON)
-                .content(newUserModel)
-                .accept(APPLICATION_JSON))
-                .andExpect(status().isAccepted());
-    }
-
-    @Test
     public void should_retrieve_account() throws Exception {
-        Email email = new Email("retrieve@retrieve.com");
-        User user = new User("retrieve", "retrieve");
+        String inputData = "{\"email\":{\"address\":\"test3@test.com\"}," +
+                "\"user\":{\"firstName\":\"testFirst\", \"lastName\":\"testLast\"}," +
+                "\"timestamp\":123456789}";
+        AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
 
-        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1))));
-        mockMvc.perform(get("/accounts?email=" + email.address())
-                .accept(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(new AccountModel(email, user))));
+        accountService.accept(Event.wrap(model));
+
+        String inputData2 = "{\"email\":{\"address\":\"test3@test.com\"}," +
+                "\"timestamp\":123456789}";
+
+        AccountRequestedModel accountRequestedModel = objectMapper.readValue(inputData2, AccountRequestedModel.class);
+        accountService.accept(Event.wrap(accountRequestedModel));
+
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountObtained.class.getName()));
     }
 
     @Test
     public void should_not_retrieve_account_due_to_ill_formed_email() throws Exception {
-        String email = "@noRetrieve.com";
+        String inputData = "{\"email\":{\"address\":\"@broken2.com\"}," +
+                "\"user\":{\"firstName\":\"testFirst\", \"lastName\":\"testLast\"}," +
+                "\"timestamp\":123456789}";
 
-        mockMvc.perform(get("/accounts?email=" + email)
-                .accept(APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+        AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
+        accountService.accept(Event.wrap(model));
+
+        Assert.assertEquals(0, testPublisher.seenEvents(AccountObtained.class.getName()));
+    }
+
+    @Test
+    public void should_change_user() throws Exception {
+        String inputData = "{\"email\":{\"address\":\"test4@test.com\"}," +
+                "\"user\":{\"firstName\":\"testFirst\", \"lastName\":\"testLast\"}," +
+                "\"timestamp\":123456789}";
+
+        AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
+        accountService.accept(Event.wrap(model));
+
+        String inputData2 = "{\"email\":{\"address\":\"test4@test.com\"}," +
+                "\"user\":{\"firstName\":\"changed\", \"lastName\":\"testLast\"}," +
+                "\"timestamp\":123456789}";
+
+        AccountUserChangeRequestedModel accountUserChangeRequestedModel = objectMapper.readValue(inputData, AccountUserChangeRequestedModel.class);
+        accountService.accept(Event.wrap(accountUserChangeRequestedModel));
+
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountUserChanged.class.getName()));
     }
 }

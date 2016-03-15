@@ -36,6 +36,7 @@ public class Account {
         return new AccountCreated(request.email(), request.user());
     }
 
+    // TODO: 15/03/16 Take a request instead 
     public AccountUserChanged changeUser(String firstName, String lastName){
         return new AccountUserChanged(this.email(), new User(notBlank(firstName), notBlank(lastName)));
     }
