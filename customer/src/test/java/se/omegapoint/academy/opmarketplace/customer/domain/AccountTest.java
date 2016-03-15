@@ -11,6 +11,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.factories.AccountFactory;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
@@ -23,7 +24,7 @@ public class AccountTest {
         Email email = new Email("create@create.com");
         User user = new User("createFirst", "createLast");
         Account account = AccountFactory.fromDomainEvents(
-                Arrays.asList(new DomainEvent[] {Account.createAccount(new AccountCreationRequested(email, user))}));
+                Arrays.asList(new DomainEvent[] {Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1)))}));
         assertEquals(email.address(), account.email().address());
         assertEquals(email.address(), account.id());
         assertEquals(user.firstName(), account.user().firstName());
@@ -35,7 +36,7 @@ public class AccountTest {
         Email email = new Email("change@change.com");
         User user = new User("initial", "initial");
         Account account = AccountFactory.fromDomainEvents(
-                Arrays.asList(new DomainEvent[] {Account.createAccount(new AccountCreationRequested(email, user))}));
+                Arrays.asList(new DomainEvent[] {Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1)))}));
         AccountUserChanged accountUserChanged = account.changeUser("a", user.lastName());
 
         assertEquals("a", accountUserChanged.user().firstName());

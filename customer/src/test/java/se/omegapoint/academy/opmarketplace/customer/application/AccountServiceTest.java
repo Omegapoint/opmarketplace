@@ -21,6 +21,8 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_represen
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.UserModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
 
+import java.sql.Timestamp;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -52,7 +54,7 @@ public class AccountServiceTest {
         Email email = new Email("test@test.com");
         User user = new User("testFirst", "testLast");
 
-        String content = new ObjectMapper().writeValueAsString(new AccountCreationRequestedModel(new AccountCreationRequested(email, user)));
+        String content = new ObjectMapper().writeValueAsString(new AccountCreationRequestedModel(new AccountCreationRequested(email, user, new Timestamp(1))));
         mockMvc.perform(post("/accounts")
                 .contentType(APPLICATION_JSON)
                 .content(content)
@@ -64,9 +66,9 @@ public class AccountServiceTest {
     public void should_not_add_account_due_to_duplicate() throws Exception {
         Email email = new Email("block@block.com");
         User user = new User("blockFirst", "blockLast");
-        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user)));
+        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1))));
 
-        String content = new ObjectMapper().writeValueAsString(new AccountCreationRequestedModel(new AccountCreationRequested(email, user)));
+        String content = new ObjectMapper().writeValueAsString(new AccountCreationRequestedModel(new AccountCreationRequested(email, user, new Timestamp(1))));
         mockMvc.perform(post("/accounts")
                 .contentType(APPLICATION_JSON)
                 .content(content)
@@ -94,7 +96,7 @@ public class AccountServiceTest {
 
         String newUserModel = new ObjectMapper().writeValueAsString(new UserModel(newUser));
 
-        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user)));
+        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1))));
         mockMvc.perform(put("/accounts?email=" + email.address())
                 .contentType(APPLICATION_JSON)
                 .content(newUserModel)
@@ -107,7 +109,7 @@ public class AccountServiceTest {
         Email email = new Email("retrieve@retrieve.com");
         User user = new User("retrieve", "retrieve");
 
-        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user)));
+        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1))));
         mockMvc.perform(get("/accounts?email=" + email.address())
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
