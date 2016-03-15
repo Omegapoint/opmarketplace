@@ -25,6 +25,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreatio
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.*;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -64,87 +65,79 @@ public class AccountServiceTest {
 
     @Test
     public void should_create_account() throws Exception {
-        String inputData = "{\"email\":{\"address\":\"test1@test.com\"}," +
-                "\"user\":{\"firstName\":\"testFirst\", \"lastName\":\"testLast\"}," +
-                "\"timestamp\":123456789}";
-        AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
-
-        accountService.accept(Event.wrap(model));
+        addUser("test1@email.com", "first", "last");
         Assert.assertEquals(1, testPublisher.seenEvents(AccountCreated.class.getName()));
     }
 
     @Test
     public void should_not_add_account_due_to_duplicate() throws Exception {
-        String inputData = "{\"email\":{\"address\":\"test2@test.com\"}," +
-                "\"user\":{\"firstName\":\"testFirst\", \"lastName\":\"testLast\"}," +
-                "\"timestamp\":123456789}";
-
-        AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
-
-        accountService.accept(Event.wrap(model));
-        accountService.accept(Event.wrap(model));
+        addUser("test2@email.com", "first", "last");
+        addUser("test2@email.com", "first", "last");
         Assert.assertEquals(1, testPublisher.seenEvents(AccountCreated.class.getName()));
     }
 
     @Test
     public void should_not_add_account_due_to_ill_formed_email() throws Exception {
-
-        String inputData = "{\"email\":{\"address\":\"@broken.com\"}," +
-                "\"user\":{\"firstName\":\"testFirst\", \"lastName\":\"testLast\"}," +
-                "\"timestamp\":123456789}";
-
-        AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
-
-        accountService.accept(Event.wrap(model));
+        addUser("@email.com", "first", "last");
         Assert.assertEquals(0, testPublisher.seenEvents(AccountCreated.class.getName()));
     }
 
     @Test
     public void should_retrieve_account() throws Exception {
-        String inputData = "{\"email\":{\"address\":\"test3@test.com\"}," +
-                "\"user\":{\"firstName\":\"testFirst\", \"lastName\":\"testLast\"}," +
-                "\"timestamp\":123456789}";
-        AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
-
-        accountService.accept(Event.wrap(model));
-
-        String inputData2 = "{\"email\":{\"address\":\"test3@test.com\"}," +
-                "\"timestamp\":123456789}";
-
-        AccountRequestedModel accountRequestedModel = objectMapper.readValue(inputData2, AccountRequestedModel.class);
-        accountService.accept(Event.wrap(accountRequestedModel));
-
+        addUser("test3@email.com", "first", "last");
+        getUser("test3@email.com");
         Assert.assertEquals(1, testPublisher.seenEvents(AccountObtained.class.getName()));
     }
 
     @Test
+    public void should_not_retrieve_non_existing_account() throws Exception {
+        getUser("test4@email.com");
+        Assert.assertEquals(0, testPublisher.seenEvents(AccountObtained.class.getName()));
+    }
+
+    @Test
     public void should_not_retrieve_account_due_to_ill_formed_email() throws Exception {
-        String inputData = "{\"email\":{\"address\":\"@broken2.com\"}," +
-                "\"user\":{\"firstName\":\"testFirst\", \"lastName\":\"testLast\"}," +
-                "\"timestamp\":123456789}";
-
-        AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
-        accountService.accept(Event.wrap(model));
-
+        addUser("@email.com", "first", "last");
+        getUser("@email.com");
         Assert.assertEquals(0, testPublisher.seenEvents(AccountObtained.class.getName()));
     }
 
     @Test
     public void should_change_user() throws Exception {
-        String inputData = "{\"email\":{\"address\":\"test4@test.com\"}," +
-                "\"user\":{\"firstName\":\"testFirst\", \"lastName\":\"testLast\"}," +
+        addUser("test5@email.com", "first", "last");
+        changeUser("test5@email.com", "changed", "last");
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountUserChanged.class.getName()));
+    }
+
+    @Test
+    public void should_not_change_non_existing_user() throws Exception {
+        changeUser("test6@email.com", "changed", "last");
+        Assert.assertEquals(0, testPublisher.seenEvents(AccountUserChanged.class.getName()));
+    }
+
+    private void addUser(String email, String firstName, String lastName) throws IOException {
+        String inputData = "{\"email\":{\"address\":\"" + email +"\"}," +
+                "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}," +
                 "\"timestamp\":123456789}";
 
         AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
         accountService.accept(Event.wrap(model));
+    }
 
-        String inputData2 = "{\"email\":{\"address\":\"test4@test.com\"}," +
-                "\"user\":{\"firstName\":\"changed\", \"lastName\":\"testLast\"}," +
+    private void getUser(String email) throws IOException {
+        String inputData = "{\"email\":{\"address\":\"" + email + "\"}," +
+                "\"timestamp\":123456789}";
+
+        AccountRequestedModel accountRequestedModel = objectMapper.readValue(inputData, AccountRequestedModel.class);
+        accountService.accept(Event.wrap(accountRequestedModel));
+    }
+
+    private void changeUser(String email, String firstName, String lastName) throws IOException {
+        String inputData = "{\"email\":{\"address\":\"" + email +"\"}," +
+                "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}," +
                 "\"timestamp\":123456789}";
 
         AccountUserChangeRequestedModel accountUserChangeRequestedModel = objectMapper.readValue(inputData, AccountUserChangeRequestedModel.class);
         accountService.accept(Event.wrap(accountUserChangeRequestedModel));
-
-        Assert.assertEquals(1, testPublisher.seenEvents(AccountUserChanged.class.getName()));
     }
 }
