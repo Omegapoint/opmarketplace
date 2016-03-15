@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountCreatedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountObtainedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
@@ -25,7 +26,7 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public class AccountGateway {
 
     @Autowired
-    private EventBus eventBus;
+    private Router router;
 
     @Autowired
     private RemoteEventPublisher publisher;
@@ -35,8 +36,8 @@ public class AccountGateway {
         notNull(newAccount);
         DeferredResult<String> result = new DeferredResult<>();
         publisher.publish(new RemoteEvent(newAccount, AccountCreationRequestedModel.TYPE));
-        eventBus.on(Selectors.object(AccountCreatedModel.TYPE + newAccount.getEmail().getAddress()),
-                new AccountCreatedListener(result)).cancelAfterUse();
+        AccountCreatedListener listener =  new AccountCreatedListener(result);
+        router.subscribe(Router.CHANNEL.ACCOUNTCREATION, newAccount.getEmail().getAddress(), listener);
         return result;
     }
 
@@ -45,8 +46,8 @@ public class AccountGateway {
         AccountRequestedModel accountRequested = new AccountRequestedModel(notNull(email));
         DeferredResult<AccountModel> result = new DeferredResult<>();
         publisher.publish(new RemoteEvent(accountRequested, AccountRequestedModel.TYPE));
-        eventBus.on(Selectors.object(AccountObtainedModel.TYPE + accountRequested.getEmail().getAddress()),
-                new AccountObtainedListener(result)).cancelAfterUse();
+        AccountObtainedListener listener =  new AccountObtainedListener(result);
+        router.subscribe(Router.CHANNEL.ACCOUNTREQUEST, accountRequested.getEmail().getAddress(), listener);
         return result;
     }
 }

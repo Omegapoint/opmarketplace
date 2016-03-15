@@ -7,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountCreatedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountNotCreatedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountObtainedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.*;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.io.IOException;
@@ -22,7 +19,7 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public class EventReceiverService {
 
     @Autowired
-    private EventBus eventBus;
+    private Router router;
     private ObjectMapper json = new ObjectMapper();
 
     @RequestMapping(method = RequestMethod.POST)
@@ -31,16 +28,16 @@ public class EventReceiverService {
         try {
             switch(event.getType()){
                 case AccountCreatedModel.TYPE:
-                    AccountCreatedModel accountCreatedModel = json.readValue(event.getData(), AccountCreatedModel.class);
-                    eventBus.notify(AccountCreatedModel.TYPE + accountCreatedModel.getEmail().getAddress(), Event.wrap(accountCreatedModel));
+                    router.publish(json.readValue(event.getData(), AccountCreatedModel.class));
                     break;
                 case AccountNotCreatedModel.TYPE:
-                    AccountNotCreatedModel accountNotCreatedModel = json.readValue(event.getData(), AccountNotCreatedModel.class);
-                    eventBus.notify(AccountNotCreatedModel.TYPE + accountNotCreatedModel.getEmail().getAddress(), Event.wrap(accountNotCreatedModel));
+                    router.publish(json.readValue(event.getData(), AccountNotCreatedModel.class));
                     break;
                 case AccountObtainedModel.TYPE:
-                    AccountObtainedModel accountObtainedModel = json.readValue(event.getData(), AccountObtainedModel.class);
-                    eventBus.notify(AccountObtainedModel.TYPE + accountObtainedModel.getAccount().getEmail().getAddress(), Event.wrap(accountObtainedModel));
+                    router.publish(json.readValue(event.getData(), AccountObtainedModel.class));
+                    break;
+                case AccountNotObtainedModel.TYPE:
+                    router.publish(json.readValue(event.getData(), AccountNotObtainedModel.class));
                     break;
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();

@@ -17,10 +17,7 @@ import reactor.bus.registry.Registration;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountCreatedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountNotCreatedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountObtainedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.AccountModel;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.UserModel;
@@ -56,7 +53,7 @@ public class EventReceiverServiceTest {
         EmailModel email = new EmailModel("test@test.com");
 
         Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(AccountCreatedModel.TYPE + email.getAddress()), event -> {}).cancelAfterUse();
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTCREATION.NAME + email.getAddress()), event -> {}).cancelAfterUse();
 
         String content = json.writeValueAsString(new RemoteEvent(new AccountCreatedModel(email), AccountCreatedModel.TYPE));
         mockMvc.perform(post("/event")
@@ -72,7 +69,7 @@ public class EventReceiverServiceTest {
         String reason = "Invalid Email";
 
         Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(AccountNotCreatedModel.TYPE + email.getAddress()), event -> {}).cancelAfterUse();
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTCREATION.NAME + email.getAddress()), event -> {}).cancelAfterUse();
 
         String content = json.writeValueAsString(new RemoteEvent(new AccountNotCreatedModel(email, reason), AccountNotCreatedModel.TYPE));
         mockMvc.perform(post("/event")
@@ -88,9 +85,25 @@ public class EventReceiverServiceTest {
         UserModel user = new UserModel("testFirst", "testLast");
 
         Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(AccountObtainedModel.TYPE + email.getAddress()), event -> {}).cancelAfterUse();
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTREQUEST.NAME + email.getAddress()), event -> {}).cancelAfterUse();
 
         String content = json.writeValueAsString(new RemoteEvent(new AccountObtainedModel(new AccountModel(email, user)), AccountObtainedModel.TYPE));
+        mockMvc.perform(post("/event")
+                .contentType(APPLICATION_JSON)
+                .content(content));
+        Thread.sleep(50);
+        assertTrue(registration.isCancelled());
+    }
+
+    @Test
+    public void should_receive_account_not_obtained() throws Exception {
+        EmailModel email = new EmailModel("@invalid.com");
+        String reason = "Invalid Email";
+
+        Registration<Object, Consumer<? extends Event<?>>> registration =
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTREQUEST.NAME + email.getAddress()), event -> {}).cancelAfterUse();
+
+        String content = json.writeValueAsString(new RemoteEvent(new AccountNotObtainedModel(email, reason), AccountNotObtainedModel.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
