@@ -1,4 +1,6 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events;
+
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
 
 public class AggregateIdentityModel implements JsonModel {
 

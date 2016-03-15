@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects;
 
 public class AccountModel {
     private EmailModel email;

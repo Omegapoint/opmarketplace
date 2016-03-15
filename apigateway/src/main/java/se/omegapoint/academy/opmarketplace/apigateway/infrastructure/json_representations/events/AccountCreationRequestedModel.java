@@ -1,4 +1,8 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events;
+
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.UserModel;
 
 import java.sql.Timestamp;
 

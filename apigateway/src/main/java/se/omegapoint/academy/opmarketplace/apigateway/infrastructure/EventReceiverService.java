@@ -7,9 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.AccountCreatedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.AccountObtainedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountCreatedModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountNotCreatedModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountObtainedModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.RemoteEvent;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.io.IOException;
@@ -33,13 +34,19 @@ public class EventReceiverService {
                     AccountCreatedModel accountCreatedModel = json.readValue(event.getData(), AccountCreatedModel.class);
                     eventBus.notify(AccountCreatedModel.TYPE + accountCreatedModel.getEmail().getAddress(), Event.wrap(accountCreatedModel));
                     break;
+                case AccountNotCreatedModel.TYPE:
+                    AccountNotCreatedModel accountNotCreatedModel = json.readValue(event.getData(), AccountNotCreatedModel.class);
+                    eventBus.notify(AccountNotCreatedModel.TYPE + accountNotCreatedModel.getEmail().getAddress(), Event.wrap(accountNotCreatedModel));
+                    break;
                 case AccountObtainedModel.TYPE:
                     AccountObtainedModel accountObtainedModel = json.readValue(event.getData(), AccountObtainedModel.class);
                     eventBus.notify(AccountObtainedModel.TYPE + accountObtainedModel.getAccount().getEmail().getAddress(), Event.wrap(accountObtainedModel));
                     break;
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
+        }catch (IllegalArgumentValidationException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }catch (IOException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
     }

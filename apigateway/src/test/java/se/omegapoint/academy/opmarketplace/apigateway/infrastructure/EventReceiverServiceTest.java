@@ -17,7 +17,13 @@ import reactor.bus.registry.Registration;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountCreatedModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountNotCreatedModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountObtainedModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.AccountModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.UserModel;
 
 import static org.junit.Assert.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -53,6 +59,22 @@ public class EventReceiverServiceTest {
                 eventBus.on(Selectors.object(AccountCreatedModel.TYPE + email.getAddress()), event -> {}).cancelAfterUse();
 
         String content = json.writeValueAsString(new RemoteEvent(new AccountCreatedModel(email), AccountCreatedModel.TYPE));
+        mockMvc.perform(post("/event")
+                .contentType(APPLICATION_JSON)
+                .content(content));
+        Thread.sleep(50);
+        assertTrue(registration.isCancelled());
+    }
+
+    @Test
+    public void should_receive_account_not_created_confirmation() throws Exception {
+        EmailModel email = new EmailModel("@invalid.com");
+        String reason = "Invalid Email";
+
+        Registration<Object, Consumer<? extends Event<?>>> registration =
+                eventBus.on(Selectors.object(AccountNotCreatedModel.TYPE + email.getAddress()), event -> {}).cancelAfterUse();
+
+        String content = json.writeValueAsString(new RemoteEvent(new AccountNotCreatedModel(email, reason), AccountNotCreatedModel.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));

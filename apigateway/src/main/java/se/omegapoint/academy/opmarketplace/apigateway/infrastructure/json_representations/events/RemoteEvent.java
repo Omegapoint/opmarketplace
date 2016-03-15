@@ -1,7 +1,8 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
 
 import java.sql.Timestamp;
 

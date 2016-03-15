@@ -1,4 +1,6 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects;
+
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 

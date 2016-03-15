@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.AccountCreatedListener;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.AccountObtainedListener;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountCreatedListener;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountObtainedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.AccountModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
