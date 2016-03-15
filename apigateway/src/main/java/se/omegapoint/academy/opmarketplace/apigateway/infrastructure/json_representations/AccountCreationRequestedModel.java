@@ -21,7 +21,7 @@ public class AccountCreationRequestedModel implements JsonModel {
         return user;
     }
 
-    public Timestamp getTime() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
