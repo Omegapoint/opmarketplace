@@ -48,7 +48,7 @@ public class AccountUserChanged extends DomainEvent implements AggregateModifica
     }
 
     @Override
-    public Timestamp time() {
+    public Timestamp timestamp() {
         return time;
     }
 

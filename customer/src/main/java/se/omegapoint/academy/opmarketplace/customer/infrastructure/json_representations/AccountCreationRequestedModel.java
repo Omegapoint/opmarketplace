@@ -1,7 +1,6 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
-import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.sql.Timestamp;
 
@@ -10,14 +9,14 @@ public class AccountCreationRequestedModel implements JsonModel {
 
     private EmailModel email;
     private UserModel user;
-    private Timestamp time;
+    private Timestamp timestamp;
 
     public AccountCreationRequestedModel(){}
 
     public AccountCreationRequestedModel(AccountCreationRequested accountCreationRequested) {
         this.email = new EmailModel(accountCreationRequested.email());
         this.user = new UserModel(accountCreationRequested.user());
-        this.time = accountCreationRequested.time();
+        this.timestamp = accountCreationRequested.timestamp();
     }
 
     public EmailModel getEmail() {
@@ -28,12 +27,12 @@ public class AccountCreationRequestedModel implements JsonModel {
         return user;
     }
 
-    public Timestamp getTime() {
-        return time;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
     @Override
     public AccountCreationRequested domainObject() {
-        return new AccountCreationRequested(email.domainObject(), user.domainObject(), time);
+        return new AccountCreationRequested(email.domainObject(), user.domainObject(), timestamp);
     }
 }

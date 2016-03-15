@@ -29,7 +29,7 @@ public class AccountUserChangedModel {
         this.aggregateName = accountUserChanged.aggregateName();
         this.userFirstName = accountUserChanged.user().firstName();
         this.userLastName = accountUserChanged.user().lastName();
-        this.time = accountUserChanged.time();
+        this.time = accountUserChanged.timestamp();
     }
 
     public AccountUserChanged domainEvent(){

@@ -7,10 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreationRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.RemoteEvent;
-import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.io.IOException;
 
@@ -31,13 +30,22 @@ public class EventReceiverService {
         notNull(event);
 
         try {
-            if (event.getType().equals(AccountCreationRequestedModel.TYPE)) {
-                AccountCreationRequested accountCreationRequested = objectMapper.readValue(event.getData(), AccountCreationRequestedModel.class).domainObject();
-                eventBus.notify(channel, Event.wrap(accountCreationRequested));
+            switch (event.getType()) {
+                case AccountCreationRequestedModel.TYPE:
+                    AccountCreationRequestedModel accountCreationRequestedModel = objectMapper.readValue(event.getData(), AccountCreationRequestedModel.class);
+                    eventBus.notify(channel, Event.wrap(accountCreationRequestedModel));
+                    break;
+                case AccountRequestedModel.TYPE:
+                    AccountRequestedModel accountRequestedModel = objectMapper.readValue(event.getData(), AccountRequestedModel.class);
+                    eventBus.notify(channel, Event.wrap(accountRequestedModel));
+                    break;
+
             }
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }catch (IllegalArgumentException | IllegalArgumentValidationException | IOException e) {
+        } catch (IOException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 }

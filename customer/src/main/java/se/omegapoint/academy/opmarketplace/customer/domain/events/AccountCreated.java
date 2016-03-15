@@ -40,7 +40,7 @@ public final class AccountCreated extends DomainEvent implements AggregateModifi
     }
 
     @Override
-    public Timestamp time() {
+    public Timestamp timestamp() {
         return time;
     }
 

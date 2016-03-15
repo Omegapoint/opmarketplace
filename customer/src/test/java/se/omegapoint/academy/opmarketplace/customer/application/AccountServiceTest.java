@@ -1,6 +1,7 @@
 package se.omegapoint.academy.opmarketplace.customer.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +12,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
+import reactor.bus.Event;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
+import se.omegapoint.academy.opmarketplace.customer.TestConfiguration;
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
@@ -44,47 +48,55 @@ public class AccountServiceTest {
 
     MockMvc mockMvc;
 
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private TestConfiguration.TestPublisher testPublisher;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Before
     public void setUp() throws Exception{
+        testPublisher.clear();
         mockMvc = webAppContextSetup(wac).build();
     }
 
     @Test
-    public void should_add_account() throws Exception {
-        Email email = new Email("test@test.com");
-        User user = new User("testFirst", "testLast");
+    public void should_create_account() throws Exception {
+        String inputData = "{\"email\":{\"address\":\"test1@test.com\"}," +
+                "\"user\":{\"firstName\":\"testFirst\", \"lastName\":\"testLast\"}," +
+                "\"timestamp\":123456789}";
+        AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
 
-        String content = new ObjectMapper().writeValueAsString(new AccountCreationRequestedModel(new AccountCreationRequested(email, user, new Timestamp(1))));
-        mockMvc.perform(post("/accounts")
-                .contentType(APPLICATION_JSON)
-                .content(content)
-                .accept(APPLICATION_JSON))
-                .andExpect(status().isCreated());
+        accountService.accept(Event.wrap(model));
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountCreated.class.getName()));
     }
 
     @Test
     public void should_not_add_account_due_to_duplicate() throws Exception {
-        Email email = new Email("block@block.com");
-        User user = new User("blockFirst", "blockLast");
-        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1))));
+        String inputData = "{\"email\":{\"address\":\"test2@test.com\"}," +
+                "\"user\":{\"firstName\":\"testFirst\", \"lastName\":\"testLast\"}," +
+                "\"timestamp\":123456789}";
 
-        String content = new ObjectMapper().writeValueAsString(new AccountCreationRequestedModel(new AccountCreationRequested(email, user, new Timestamp(1))));
-        mockMvc.perform(post("/accounts")
-                .contentType(APPLICATION_JSON)
-                .content(content)
-                .accept(APPLICATION_JSON))
-                .andExpect(status().isNotAcceptable());
+        AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
+
+        accountService.accept(Event.wrap(model));
+        accountService.accept(Event.wrap(model));
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountCreated.class.getName()));
     }
 
     @Test
     public void should_not_add_account_due_to_ill_formed_email() throws Exception {
 
-        String content = "{\"email\":{\"address\":\"@broken.email\"},\"user\":{\"firstName\":\"mock\", \"lastName\":\"mock\"}}";
-        mockMvc.perform(post("/accounts")
-                .contentType(APPLICATION_JSON)
-                .content(content)
-                .accept(APPLICATION_JSON))
-                .andExpect(status().isNotAcceptable());
+        String inputData = "{\"email\":{\"address\":\"@broken.com\"}," +
+                "\"user\":{\"firstName\":\"testFirst\", \"lastName\":\"testLast\"}," +
+                "\"timestamp\":123456789}";
+
+        AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
+
+        accountService.accept(Event.wrap(model));
+        Assert.assertEquals(0, testPublisher.seenEvents(AccountCreated.class.getName()));
     }
 
     @Test

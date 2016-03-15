@@ -23,7 +23,7 @@ public class AccountCreatedModel implements JsonModel {
         this.aggregateIdentity = new AggregateIdentityModel(new AggregateIdentity(accountCreated.aggregateMemberId(), accountCreated.aggregateName()));
         this.email = new EmailModel(accountCreated.email());
         this.user = new UserModel(accountCreated.user());
-        this.time = accountCreated.time();
+        this.time = accountCreated.timestamp();
     }
 
     public AggregateIdentityModel getAggregateIdentity() {

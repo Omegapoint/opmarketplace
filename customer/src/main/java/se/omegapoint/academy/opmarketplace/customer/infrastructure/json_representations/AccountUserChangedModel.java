@@ -17,7 +17,7 @@ public class AccountUserChangedModel implements JsonModel {
     public AccountUserChangedModel(se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged accountUserChanged) {
         this.aggregateIdentity = new AggregateIdentityModel(new AggregateIdentity(accountUserChanged.aggregateMemberId(), accountUserChanged.aggregateName()));
         this.user = new UserModel(accountUserChanged.user());
-        this.time = accountUserChanged.time();
+        this.time = accountUserChanged.timestamp();
     }
 
     public AggregateIdentityModel getAggregateIdentity() {

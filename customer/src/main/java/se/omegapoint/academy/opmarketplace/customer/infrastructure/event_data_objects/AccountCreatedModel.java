@@ -31,7 +31,7 @@ public class AccountCreatedModel {
         this.email = accountCreated.email().address();
         this.userFirstName = accountCreated.user().firstName();
         this.userLastName = accountCreated.user().lastName();
-        this.time = accountCreated.time();
+        this.time = accountCreated.timestamp();
     }
 
     public AccountCreated domainEvent(){

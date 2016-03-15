@@ -33,7 +33,7 @@ public class AccountCreationRequested extends DomainEvent{
     }
 
     @Override
-    public Timestamp time() {
+    public Timestamp timestamp() {
         return timestamp;
     }
 

@@ -14,12 +14,12 @@ import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreationRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.JsonModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.UserModel;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
@@ -31,34 +31,13 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @RestController
 @RequestMapping("/accounts")
-public class AccountService implements Consumer<Event<DomainEvent>> {
+public class AccountService implements Consumer<Event<JsonModel>> {
 
     @Autowired
     private EventPublisher publisher;
 
     @Autowired
     private AccountRepository accountRepository;
-
-    @RequestMapping(method = POST)
-    public ResponseEntity createAccount(@RequestBody final AccountCreationRequestedModel newAccount) {
-        //TODO [dd] add notNull contracts
-
-        AccountCreationRequested accountCreationRequested = null;
-        try {
-            accountCreationRequested = newAccount.domainObject();
-        } catch (IllegalArgumentValidationException e) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
-        }
-
-        //TODO [dd]: consider moving into domain
-        if (!accountRepository.accountInExistence(accountCreationRequested.email())){
-            AccountCreated accountCreated = Account.createAccount(accountCreationRequested);
-            accountRepository.append(accountCreated);
-            publisher.publish(accountCreated);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        }
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
-    }
 
     //TODO [dd]: is this method really idempotent? PUT operations must be idempotent according to the specification. See https://spring.io/understanding/REST
     @RequestMapping(method = PUT)
@@ -91,23 +70,28 @@ public class AccountService implements Consumer<Event<DomainEvent>> {
     }
 
     @Override
-    public void accept(Event<DomainEvent> event) {
+    public void accept(Event<JsonModel> event) {
         notNull(event);
 
-        DomainEvent domainEvent = event.getData();
-        if (domainEvent instanceof AccountCreationRequested) {
-            accountCreationRequested((AccountCreationRequested) domainEvent);
+        JsonModel jsonModel = event.getData();
+        if (jsonModel instanceof AccountCreationRequestedModel) {
+            accountCreationRequested((AccountCreationRequestedModel) jsonModel);
         }
     }
 
-    private void accountCreationRequested(AccountCreationRequested accountCreationRequested){
-        notNull(accountCreationRequested);
+    private void accountCreationRequested(AccountCreationRequestedModel accountCreationRequestedModel){
+        try {
+            AccountCreationRequested request = accountCreationRequestedModel.domainObject();
 
-        //TODO [dd]: consider moving into domain
-        if (!accountRepository.accountInExistence(accountCreationRequested.email())){
-            AccountCreated accountCreated = Account.createAccount(accountCreationRequested);
-            accountRepository.append(accountCreated);
-            publisher.publish(accountCreated);
+            if (!accountRepository.accountInExistence(request.email())){
+                AccountCreated accountCreated = Account.createAccount(request);
+                accountRepository.append(accountCreated);
+                publisher.publish(accountCreated);
+            }
+
+        } catch (IllegalArgumentValidationException e) {
+            // TODO: 15/03/16 Send user not created event with reason
+            e.printStackTrace();
         }
     }
 }

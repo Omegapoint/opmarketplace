@@ -4,13 +4,13 @@ import java.sql.Timestamp;
 
 public abstract class DomainEvent implements Comparable<DomainEvent> {
 
-    public abstract Timestamp time();
+    public abstract Timestamp timestamp();
 
     @Override
     public int compareTo(DomainEvent other){
-        if (this.time().after(other.time()))
+        if (this.timestamp().after(other.timestamp()))
             return 1;
-        if (this.time().before(other.time()))
+        if (this.timestamp().before(other.timestamp()))
             return -1;
         return 0;
     }
