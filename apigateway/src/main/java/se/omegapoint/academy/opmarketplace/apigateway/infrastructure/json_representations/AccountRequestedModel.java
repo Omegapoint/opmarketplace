@@ -21,7 +21,7 @@ public class AccountRequestedModel implements JsonModel {
         return email;
     }
 
-    public Timestamp getTime() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 }
