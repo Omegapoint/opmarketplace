@@ -8,6 +8,9 @@ import reactor.Environment;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import se.omegapoint.academy.opmarketplace.customer.application.AccountService;
+import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.EntityMarker;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountCreatedJPA;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountUserChangedJPA;
@@ -18,6 +21,11 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.A
 @EntityScan(basePackageClasses = EntityMarker.class)
 @EnableJpaRepositories(basePackageClasses = AccountCreatedJPA.class)
 public class MainConfiguration {
+
+    @Bean
+    AccountService createAccountService(AccountRepository accountRepository, EventPublisher eventPublisher) {
+        return new AccountService(accountRepository, eventPublisher);
+    }
 
     @Bean
     Environment env() {
@@ -31,7 +39,6 @@ public class MainConfiguration {
         eventBus.on(Selectors.object("Account"), accountService);
         return eventBus;
     }
-
 
     @Bean
     AccountEventStore createAccountEventStore(AccountCreatedJPA accountCreatedRepository, AccountUserChangedJPA accountUserChangedRepository){
