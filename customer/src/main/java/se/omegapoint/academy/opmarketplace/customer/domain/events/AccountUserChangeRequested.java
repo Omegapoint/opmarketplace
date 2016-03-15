@@ -1,6 +1,5 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
+package se.omegapoint.academy.opmarketplace.customer.domain.events;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 
