@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @RestController
 @RequestMapping("/accounts")
@@ -91,17 +92,16 @@ public class AccountService implements Consumer<Event<DomainEvent>> {
 
     @Override
     public void accept(Event<DomainEvent> event) {
-        //TODO [dd] add notNull contracts
+        notNull(event);
 
         DomainEvent domainEvent = event.getData();
-        // TODO: 14/03/16 curly braces FTW
-        if (domainEvent instanceof AccountCreationRequested)
+        if (domainEvent instanceof AccountCreationRequested) {
             accountCreationRequested((AccountCreationRequested) domainEvent);
+        }
     }
 
-    // TODO: 14/03/16 set to private
-    public void accountCreationRequested(AccountCreationRequested accountCreationRequested){
-        //TODO [dd] add notNull contracts
+    private void accountCreationRequested(AccountCreationRequested accountCreationRequested){
+        notNull(accountCreationRequested);
 
         //TODO [dd]: consider moving into domain
         if (!accountRepository.accountInExistence(accountCreationRequested.email())){

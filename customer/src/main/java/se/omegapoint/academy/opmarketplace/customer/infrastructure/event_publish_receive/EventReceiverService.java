@@ -14,18 +14,21 @@ import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.io.IOException;
 
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 @RestController
 @RequestMapping("/event")
 public class EventReceiverService {
 
     @Autowired
-    EventBus eventBus;
+    private EventBus eventBus;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> eventInput(@RequestParam("channel") final String channel, @RequestBody RemoteEvent event) {
-        //TODO [dd] add notNull contracts
-
-        ObjectMapper objectMapper = new ObjectMapper(); //TODO [dd]: Consider making a final field. A lot is done during creation!
+        notNull(channel);
+        notNull(event);
 
         try {
             if (event.getType().equals(AccountCreationRequestedModel.TYPE)) {
