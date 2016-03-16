@@ -42,6 +42,7 @@ public class AccountCreatedModel implements JsonModel {
         return time;
     }
 
+    // TODO: 16/03/16 No usage for this method.
     public AccountCreated domainObject() {
         return new AccountCreated(new Email(email.getAddress()), new User(user.getFirstName(), user.getLastName()), time);
     }

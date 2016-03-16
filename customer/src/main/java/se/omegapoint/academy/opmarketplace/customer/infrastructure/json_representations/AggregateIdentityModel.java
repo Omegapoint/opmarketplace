@@ -26,6 +26,7 @@ public class AggregateIdentityModel implements JsonModel {
         return aggregateName;
     }
 
+    // TODO: 16/03/16 No usage for this
     @Override
     public AggregateIdentity domainObject() {
         return new AggregateIdentity(this.id, this.aggregateName);

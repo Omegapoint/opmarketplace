@@ -32,6 +32,7 @@ public class AccountUserChangedModel implements JsonModel {
         return time;
     }
 
+    // TODO: 16/03/16 No usage for this
     public AccountUserChanged domainObject() {
         return new AccountUserChanged(aggregateIdentity.domainObject(), user.domainObject(), time);
     }

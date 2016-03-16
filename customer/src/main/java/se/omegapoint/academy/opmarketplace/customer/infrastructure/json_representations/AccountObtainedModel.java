@@ -32,6 +32,7 @@ public class AccountObtainedModel implements JsonModel{
         return timestamp;
     }
 
+    // TODO: 16/03/16 No usage for this method
     @Override
     public AccountObtained domainObject() {
         return new AccountObtained(new Account(
