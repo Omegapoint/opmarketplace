@@ -9,6 +9,7 @@ import reactor.bus.Event;
 import reactor.bus.EventBus;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreationRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountUserChangeRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.RemoteEvent;
 
 import java.io.IOException;
@@ -39,6 +40,12 @@ public class EventReceiverService {
                     AccountRequestedModel accountRequestedModel = objectMapper.readValue(event.getData(), AccountRequestedModel.class);
                     eventBus.notify(channel, Event.wrap(accountRequestedModel));
                     break;
+                case AccountUserChangeRequestedModel.TYPE:
+                    AccountUserChangeRequestedModel accountUserChangeRequestedModel = objectMapper.readValue(event.getData(), AccountUserChangeRequestedModel.class);
+                    eventBus.notify(channel, Event.wrap(accountUserChangeRequestedModel));
+                    break;
+                default:
+                    System.err.printf("Received unknown event; %s%n", event.getType());
 
             }
         } catch (IOException e) {

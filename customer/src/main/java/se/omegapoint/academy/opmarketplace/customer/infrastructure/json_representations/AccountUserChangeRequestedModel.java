@@ -10,6 +10,7 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 
 public class AccountUserChangeRequestedModel implements JsonModel {
+    public final static String TYPE = "AccountUserChangeRequested";
 
     private EmailModel email;
     private UserModel user;
@@ -19,9 +20,9 @@ public class AccountUserChangeRequestedModel implements JsonModel {
 
     public AccountUserChangeRequestedModel(AccountUserChangeRequested request) {
         notNull(request);
-        this.email = new EmailModel(notNull(request.email()));
-        this.user = new UserModel(notNull(request.user()));
-        this.timestamp = notNull(request.timestamp());
+        this.email = new EmailModel(request.email());
+        this.user = new UserModel(request.user());
+        this.timestamp = request.timestamp();
     }
 
     public EmailModel getEmail() {

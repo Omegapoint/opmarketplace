@@ -45,7 +45,7 @@ public class Router {
     }
 
     public enum CHANNEL {
-        ACCOUNTCREATION("AccountCreation"), ACCOUNTREQUEST("AccountRequest"), ACCOUNTUSERCHANGE("AccountUserChange");
+        ACCOUNTCREATION("AccountCreation"), ACCOUNTREQUEST("AccountRequest"), ACCOUNTUSERCHANGE("AccountUserChanged");
 
         public final String NAME;
 

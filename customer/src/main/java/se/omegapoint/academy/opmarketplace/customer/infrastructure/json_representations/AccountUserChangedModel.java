@@ -19,6 +19,10 @@ public class AccountUserChangedModel implements JsonModel {
         this.timestamp = accountUserChanged.timestamp();
     }
 
+    public EmailModel getEmail() {
+        return email;
+    }
+
     public UserModel getUser() {
         return user;
     }
