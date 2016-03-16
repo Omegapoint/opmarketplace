@@ -11,11 +11,6 @@ public class AggregateIdentityModel implements JsonModel {
 
     public AggregateIdentityModel(){}
 
-    public AggregateIdentityModel(String id, String aggregateName) {
-        this.id = notNull(id);
-        this.aggregateName = notNull(aggregateName);
-    }
-
     public String getId() {
         return id;
     }

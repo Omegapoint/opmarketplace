@@ -13,10 +13,6 @@ public class AccountObtainedModel implements JsonModel {
 
     public AccountObtainedModel() {}
 
-    public AccountObtainedModel(AccountModel account) {
-        this.account = account;
-    }
-
     public AccountModel getAccount() {
         return account;
     }

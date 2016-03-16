@@ -14,10 +14,6 @@ public class AccountUserChangedModel implements JsonModel {
 
     public AccountUserChangedModel(){}
 
-    public AccountUserChangedModel(AggregateIdentityModel aggregateIdentity){
-        this.aggregateIdentity = notNull(aggregateIdentity);
-    }
-
     public AggregateIdentityModel getAggregateIdentity() {
         return aggregateIdentity;
     }

@@ -15,11 +15,6 @@ public class AccountNotCreatedModel implements JsonModel {
 
     public AccountNotCreatedModel() {}
 
-    public AccountNotCreatedModel(EmailModel email, String reason) {
-        this.email = notNull(email);
-        this.reason = notNull(reason);
-    }
-
     public EmailModel getEmail() {
         return email;
     }

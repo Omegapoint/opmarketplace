@@ -54,48 +54,54 @@ public class AccountGatewayTest {
 
     @Test
     public void should_request_account_creation() throws Exception {
-        EmailModel email = new EmailModel("test@test.com");
-        UserModel user = new UserModel("testFirst", "testLast");
-        AccountCreationRequestedModel request = new AccountCreationRequestedModel(email, user);
-
-        String content = json.writeValueAsString(request);
+        String content = "{\n" +
+                "    \"email\":{\n" +
+                "        \"address\":\"test@test.com\"\n" +
+                "    },\n" +
+                "    \"user\":{\n" +
+                "        \"firstName\":\"testFirst\",\n" +
+                "        \"lastName\":\"testLast\"\n" +
+                "    }\n" +
+                "}";
         mockMvc.perform(post("/accounts")
                 .contentType(APPLICATION_JSON)
                 .content(content));
         JsonModel latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountCreationRequestedModel requestedModel = (AccountCreationRequestedModel) latestEvent;
-        assertEquals(email.getAddress(), requestedModel.getEmail().getAddress());
-        assertEquals(user.getFirstName(), requestedModel.getUser().getFirstName());
-        assertEquals(user.getLastName(), requestedModel.getUser().getLastName());
+        assertEquals("test@test.com", requestedModel.getEmail().getAddress());
+        assertEquals("testFirst", requestedModel.getUser().getFirstName());
+        assertEquals("testLast", requestedModel.getUser().getLastName());
     }
 
     @Test
     public void should_request_account_user_change() throws Exception {
-        EmailModel email = new EmailModel("test@test.com");
-        UserModel user = new UserModel("testFirst", "testLast");
-        AccountUserChangeRequestedModel request = new AccountUserChangeRequestedModel(email, user);
-
-        String content = json.writeValueAsString(request);
+        String content = "{\n" +
+                "    \"email\":{\n" +
+                "        \"address\":\"test@test.com\"\n" +
+                "    },\n" +
+                "    \"user\":{\n" +
+                "        \"firstName\":\"testFirst\",\n" +
+                "        \"lastName\":\"testLast\"\n" +
+                "    }\n" +
+                "}";
         mockMvc.perform(put("/accounts")
                 .contentType(APPLICATION_JSON)
                 .content(content));
         JsonModel latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountUserChangeRequestedModel requestedModel = (AccountUserChangeRequestedModel) latestEvent;
-        assertEquals(email.getAddress(), requestedModel.getEmail().getAddress());
+        assertEquals("test@test.com", requestedModel.getEmail().getAddress());
     }
 
     @Test
     public void should_request_account() throws Exception {
-        EmailModel email = new EmailModel("test@test.com");
-
         mockMvc.perform(get("/accounts")
                 .contentType(APPLICATION_JSON)
                 .param("email", "test@test.com"));
         JsonModel latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountRequestedModel requestedModel = (AccountRequestedModel) latestEvent;
-        assertEquals(email.getAddress(), requestedModel.getEmail().getAddress());
+        assertEquals("test@test.com" , requestedModel.getEmail().getAddress());
     }
 }

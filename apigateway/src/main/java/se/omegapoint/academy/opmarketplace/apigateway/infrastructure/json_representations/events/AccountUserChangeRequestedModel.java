@@ -16,12 +16,8 @@ public class AccountUserChangeRequestedModel implements JsonModel {
     private UserModel user;
     private Timestamp timestamp;
 
-    public AccountUserChangeRequestedModel() {}
-
-    public AccountUserChangeRequestedModel(EmailModel email, UserModel user) {
-        this.email = notNull(email);
-        this.user = notNull(user);
-        timestamp = new Timestamp(System.currentTimeMillis());
+    public AccountUserChangeRequestedModel() {
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     public EmailModel getEmail() {

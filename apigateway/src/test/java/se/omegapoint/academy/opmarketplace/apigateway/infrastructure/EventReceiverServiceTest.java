@@ -53,12 +53,16 @@ public class EventReceiverServiceTest {
 
     @Test
     public void should_receive_account_creation_confirmation() throws Exception {
-        EmailModel email = new EmailModel("test@test.com");
-
         Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTCREATION.NAME + email.getAddress()), event -> {}).cancelAfterUse();
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTCREATION.NAME + "test@test.com"), event -> {}).cancelAfterUse();
 
-        String content = json.writeValueAsString(new RemoteEvent(new AccountCreatedModel(email), AccountCreatedModel.TYPE));
+        AccountCreatedModel model = json.readValue("{\n" +
+                "    \"email\":{\n" +
+                "        \"address\":\"test@test.com\"\n" +
+                "    }\n" +
+                "}", AccountCreatedModel.class);
+
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountCreatedModel.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -68,13 +72,17 @@ public class EventReceiverServiceTest {
 
     @Test
     public void should_receive_account_not_created_confirmation() throws Exception {
-        EmailModel email = new EmailModel("@invalid.com");
-        String reason = "Invalid Email";
-
         Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTCREATION.NAME + email.getAddress()), event -> {}).cancelAfterUse();
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTCREATION.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
 
-        String content = json.writeValueAsString(new RemoteEvent(new AccountNotCreatedModel(email, reason), AccountNotCreatedModel.TYPE));
+        AccountNotCreatedModel model = json.readValue("{\n" +
+                "    \"email\":{\n" +
+                "        \"address\":\"@invalid.com\"\n" +
+                "    },\n" +
+                "    \"reason\":\"Invalid Email\"\n" +
+                "}", AccountNotCreatedModel.class);
+
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotCreatedModel.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -84,13 +92,22 @@ public class EventReceiverServiceTest {
 
     @Test
     public void should_receive_account_obtained() throws Exception {
-        EmailModel email = new EmailModel("test@test.com");
-        UserModel user = new UserModel("testFirst", "testLast");
-
         Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTREQUEST.NAME + email.getAddress()), event -> {}).cancelAfterUse();
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTREQUEST.NAME + "test@test.com"), event -> {}).cancelAfterUse();
 
-        String content = json.writeValueAsString(new RemoteEvent(new AccountObtainedModel(new AccountModel(email, user)), AccountObtainedModel.TYPE));
+        AccountObtainedModel model = json.readValue("{\n" +
+                "    \"account\":{\n" +
+                "        \"email\":{\n" +
+                "            \"address\":\"test@test.com\"\n" +
+                "        },\n" +
+                "        \"user\":{\n" +
+                "            \"firstName\":\"testFirst\",\n" +
+                "            \"lastName\":\"testLast\"\n" +
+                "        }\n" +
+                "    }\n" +
+                "}", AccountObtainedModel.class);
+
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountObtainedModel.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -100,13 +117,17 @@ public class EventReceiverServiceTest {
 
     @Test
     public void should_receive_account_not_obtained() throws Exception {
-        EmailModel email = new EmailModel("@invalid.com");
-        String reason = "Invalid Email";
-
         Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTREQUEST.NAME + email.getAddress()), event -> {}).cancelAfterUse();
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTREQUEST.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
 
-        String content = json.writeValueAsString(new RemoteEvent(new AccountNotObtainedModel(email, reason), AccountNotObtainedModel.TYPE));
+        AccountNotObtainedModel model = json.readValue("{\n" +
+                "    \"email\":{\n" +
+                "        \"address\":\"@invalid.com\"\n" +
+                "    },\n" +
+                "    \"reason\":\"Invalid Email\"\n" +
+                "}", AccountNotObtainedModel.class);
+
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotObtainedModel.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -116,14 +137,17 @@ public class EventReceiverServiceTest {
 
     @Test
     public void should_receive_account_user_changed_confirmation() throws Exception {
-        String id = "test@test.com";
-        String aggregateName = "Account";
-
         Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + id), event -> {}).cancelAfterUse();
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "test@test.com"), event -> {}).cancelAfterUse();
 
-        String content = json.writeValueAsString(
-                new RemoteEvent(new AccountUserChangedModel(new AggregateIdentityModel(id, aggregateName)), AccountUserChangedModel.TYPE));
+        AccountUserChangedModel model = json.readValue("{\n" +
+                "    \"aggregateIdentity\":{\n" +
+                "        \"id\":\"test@test.com\",\n" +
+                "        \"aggregateName\":\"Account\"\n" +
+                "    }\n" +
+                "}", AccountUserChangedModel.class);
+
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountUserChangedModel.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -133,15 +157,18 @@ public class EventReceiverServiceTest {
 
     @Test
     public void should_receive_account_user_not_changed_confirmation() throws Exception {
-        String id = "@test.com";
-        String aggregateName = "Account";
-        String reason = "Invalid email";
-
         Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + id), event -> {}).cancelAfterUse();
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
 
-        String content = json.writeValueAsString(
-                new RemoteEvent(new AccountUserNotChangedModel(new AggregateIdentityModel(id, aggregateName), reason), AccountUserNotChangedModel.TYPE));
+        AccountUserNotChangedModel model = json.readValue("{\n" +
+                "    \"aggregateIdentity\":{\n" +
+                "        \"id\":\"@invalid.com\",\n" +
+                "        \"aggregateName\":\"Account\"\n" +
+                "    },\n" +
+                "    \"reason\":\"Invalid Email\"\n" +
+                "}", AccountUserNotChangedModel.class);
+
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountUserNotChangedModel.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));

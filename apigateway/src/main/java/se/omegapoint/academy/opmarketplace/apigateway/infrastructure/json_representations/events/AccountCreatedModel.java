@@ -14,10 +14,6 @@ public class AccountCreatedModel implements JsonModel {
 
     public AccountCreatedModel() {}
 
-    public AccountCreatedModel(EmailModel email) {
-        this.email = notNull(email);
-    }
-
     public EmailModel getEmail() {
         return email;
     }
