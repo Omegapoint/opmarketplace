@@ -141,9 +141,8 @@ public class EventReceiverServiceTest {
                 eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "test@test.com"), event -> {}).cancelAfterUse();
 
         AccountUserChangedModel model = json.readValue("{\n" +
-                "    \"aggregateIdentity\":{\n" +
-                "        \"id\":\"test@test.com\",\n" +
-                "        \"aggregateName\":\"Account\"\n" +
+                "    \"email\":{\n" +
+                "        \"address\":\"test@test.com\"\n" +
                 "    }\n" +
                 "}", AccountUserChangedModel.class);
 
@@ -161,9 +160,8 @@ public class EventReceiverServiceTest {
                 eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
 
         AccountUserNotChangedModel model = json.readValue("{\n" +
-                "    \"aggregateIdentity\":{\n" +
-                "        \"id\":\"@invalid.com\",\n" +
-                "        \"aggregateName\":\"Account\"\n" +
+                "    \"email\":{\n" +
+                "        \"address\":\"@invalid.com\"\n" +
                 "    },\n" +
                 "    \"reason\":\"Invalid Email\"\n" +
                 "}", AccountUserNotChangedModel.class);

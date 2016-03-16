@@ -33,15 +33,15 @@ public class Router {
     }
 
     public void publish(AccountUserChangedModel model) {
-        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getAggregateIdentity().getId(), Event.wrap(model));
+        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
     }
 
     public void publish(AccountUserNotChangedModel model) {
-        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getAggregateIdentity().getId(), Event.wrap(model));
+        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
     }
 
     public void subscribe(CHANNEL channel, String id, Consumer consumer){
-        eventBus.on(Selectors.regex(channel.NAME+ "(\\s*)" + id + "(\\s*)"), consumer).cancelAfterUse();
+        eventBus.on(Selectors.regex(channel.NAME + "(\\s*)" + id + "(\\s*)"), consumer).cancelAfterUse();
     }
 
     public enum CHANNEL {
