@@ -1,5 +1,8 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountNotCreated;
+
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 
@@ -11,9 +14,10 @@ public class AccountNotCreatedModel implements JsonModel {
 
     public AccountNotCreatedModel() {}
 
-    public AccountNotCreatedModel(EmailModel email, String reason) {
-        this.email = notNull(email);
-        this.reason = notNull(reason);
+    public AccountNotCreatedModel(AccountNotCreated accountNotCreated) {
+        notNull(accountNotCreated);
+        this.email = new EmailModel(accountNotCreated.email());
+        this.reason = accountNotCreated.reason();
     }
 
     public EmailModel getEmail() {

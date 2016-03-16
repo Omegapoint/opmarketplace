@@ -3,7 +3,7 @@ package se.omegapoint.academy.opmarketplace.customer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 
 import java.util.HashMap;
@@ -22,7 +22,25 @@ public class TestConfiguration {
         HashMap<String, Integer> seenDomainEvents = new HashMap<>();
 
         @Override
-        public void publish(DomainEvent event) {
+        public void publish(AccountCreated event) {
+            String eventName = event.getClass().getName();
+            seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
+        }
+
+        @Override
+        public void publish(AccountNotCreated event) {
+            String eventName = event.getClass().getName();
+            seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
+        }
+
+        @Override
+        public void publish(AccountObtained event) {
+            String eventName = event.getClass().getName();
+            seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
+        }
+
+        @Override
+        public void publish(AccountUserChanged event) {
             String eventName = event.getClass().getName();
             seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
         }

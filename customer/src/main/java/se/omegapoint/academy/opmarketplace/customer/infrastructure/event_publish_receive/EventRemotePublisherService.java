@@ -9,13 +9,9 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.springframework.beans.factory.annotation.Value;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreatedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountUserChangedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.*;
 
 import java.io.UnsupportedEncodingException;
 
@@ -39,14 +35,23 @@ public class EventRemotePublisherService implements EventPublisher {
     }
 
     @Override
-    public void publish(DomainEvent event) {
-        notNull(event);
-        if (event instanceof AccountCreated)
-            publish(new RemoteEvent(new AccountCreatedModel((AccountCreated)event), AccountCreatedModel.TYPE));
-        else if (event instanceof AccountUserChanged)
-            publish(new RemoteEvent(new AccountUserChangedModel((AccountUserChanged)event), AccountUserChangedModel.TYPE));
+    public void publish(AccountCreated event) {
+        publish(new RemoteEvent(new AccountCreatedModel(event), AccountCreatedModel.TYPE));
+    }
 
-        //TODO [dd] what happens if we get an event that doesn't match? Is it a bug? Missing feature? Add contract!
+    @Override
+    public void publish(AccountNotCreated event) {
+        publish(new RemoteEvent(new AccountNotCreatedModel(event), AccountNotCreatedModel.TYPE));
+    }
+
+    @Override
+    public void publish(AccountObtained event) {
+        publish(new RemoteEvent(new AccountObtainedModel(event), AccountObtainedModel.TYPE));
+    }
+
+    @Override
+    public void publish(AccountUserChanged event) {
+        publish(new RemoteEvent(new AccountUserChangedModel(event), AccountUserChangedModel.TYPE));
     }
 
     private void publish(RemoteEvent remoteEvent) {

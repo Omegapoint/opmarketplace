@@ -7,6 +7,8 @@ import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 
 import java.sql.Timestamp;
 
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 public class AccountObtainedModel implements JsonModel{
 
     public static final String TYPE = "AccountObtained";
@@ -16,9 +18,10 @@ public class AccountObtainedModel implements JsonModel{
 
     public AccountObtainedModel() {}
 
-    public AccountObtainedModel(AccountModel account, Timestamp timestamp) {
-        this.account = account;
-        this.timestamp = timestamp;
+    public AccountObtainedModel(AccountObtained accountObtained) {
+        notNull(accountObtained);
+        this.account = new AccountModel(accountObtained.account());
+        this.timestamp = accountObtained.timestamp();
     }
 
     public AccountModel getAccount() {

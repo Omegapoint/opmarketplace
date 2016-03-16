@@ -1,7 +1,10 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
+import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
+
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountModel {
     private EmailModel email;
@@ -9,10 +12,10 @@ public class AccountModel {
 
     public AccountModel(){}
 
-    public AccountModel(Email email, User user) {
-        //TODO [dd] add notNull contracts
-        this.email = new EmailModel(email);
-        this.user = new UserModel(user);
+    public AccountModel(Account account) {
+        notNull(account);
+        this.email = new EmailModel(account.email());
+        this.user = new UserModel(account.user());
     }
 
     public EmailModel getEmail() {
