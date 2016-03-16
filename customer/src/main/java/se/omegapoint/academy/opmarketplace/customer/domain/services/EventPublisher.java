@@ -8,4 +8,5 @@ public interface EventPublisher {
     void publish(AccountObtained event);
     void publish(AccountUserChanged event);
     void publish(AccountNotObtained event);
+    void publish(AccountUserNotChanged event);
 }

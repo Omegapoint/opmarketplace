@@ -93,6 +93,15 @@ public class AccountServiceTest {
     public void should_not_change_non_existing_user() throws Exception {
         changeUser("test6@email.com", "changed", "last");
         Assert.assertEquals(0, testPublisher.seenEvents(AccountUserChanged.class.getName()));
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountUserNotChanged.class.getName()));
+    }
+
+    @Test
+    public void should_not_change_user_due_to_ill_formed_email() throws Exception {
+        addUser("@email.com", "first", "last");
+        changeUser("6@email.com", "changed", "last");
+        Assert.assertEquals(0, testPublisher.seenEvents(AccountUserChanged.class.getName()));
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountUserNotChanged.class.getName()));
     }
 
     private void addUser(String email, String firstName, String lastName) throws IOException {

@@ -23,32 +23,32 @@ public class TestConfiguration {
 
         @Override
         public void publish(AccountCreated event) {
-            String eventName = event.getClass().getName();
-            seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
+            incrementCounter(event);
         }
 
         @Override
         public void publish(AccountNotCreated event) {
-            String eventName = event.getClass().getName();
-            seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
+            incrementCounter(event);
         }
 
         @Override
         public void publish(AccountObtained event) {
-            String eventName = event.getClass().getName();
-            seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
+            incrementCounter(event);
         }
 
         @Override
         public void publish(AccountUserChanged event) {
-            String eventName = event.getClass().getName();
-            seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
+            incrementCounter(event);
         }
 
         @Override
         public void publish(AccountNotObtained event) {
-            String eventName = event.getClass().getName();
-            seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
+            incrementCounter(event);
+        }
+
+        @Override
+        public void publish(AccountUserNotChanged event) {
+            incrementCounter(event);
         }
 
         public int seenEvents(String eventName) {
@@ -57,6 +57,11 @@ public class TestConfiguration {
 
         public void clear() {
             seenDomainEvents.clear();
+        }
+
+        private void incrementCounter(DomainEvent event) {
+            String eventName = event.getClass().getName();
+            seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
         }
     }
 }

@@ -51,9 +51,12 @@ public class AccountService implements Consumer<Event<JsonModel>> {
                 accountRepository.append(userChangedEvent);
                 publisher.publish(userChangedEvent);
             } else {
-                // TODO: 15/03/16 Send account user not changed with reason
+                AccountUserNotChanged accountUserNotChanged = new AccountUserNotChanged(request.email().address(), "User does not exist.");
+                publisher.publish(accountUserNotChanged);
             }
         } catch (IllegalArgumentValidationException e) {
+            AccountUserNotChanged accountUserNotChanged = new AccountUserNotChanged(model.getEmail().getAddress(), e.getMessage());
+            publisher.publish(accountUserNotChanged);
             // TODO: 15/03/16 Send account user not changed with reason
             e.printStackTrace();
         }
