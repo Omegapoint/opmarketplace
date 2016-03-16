@@ -1,5 +1,7 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.context.request.async.DeferredResult;
 import reactor.bus.Event;
 import reactor.fn.Consumer;
@@ -11,20 +13,25 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountObtainedListener implements Consumer<Event<JsonModel>> {
-    private DeferredResult<AccountModel> result;
+    private DeferredResult<String> result;
+    ObjectMapper json = new ObjectMapper();
 
-    public AccountObtainedListener(DeferredResult<AccountModel> result) {
+    public AccountObtainedListener(DeferredResult<String> result) {
         this.result = notNull(result);
     }
 
     @Override
     public void accept(Event<JsonModel> event) {
         JsonModel model = event.getData();
-        if (model instanceof AccountObtainedModel){
-            result.setResult(((AccountObtainedModel)model).getAccount());
-        }
-        if (model instanceof AccountNotObtainedModel){
-            result.setErrorResult(((AccountNotObtainedModel)model).getReason());
+        try {
+            if (model instanceof AccountObtainedModel){
+                result.setResult(json.writeValueAsString(((AccountObtainedModel)model).getAccount()));
+            }
+            if (model instanceof AccountNotObtainedModel){
+                result.setErrorResult(((AccountNotObtainedModel)model).getReason());
+            }
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
     }
 }
