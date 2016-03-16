@@ -3,31 +3,25 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_represe
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateIdentity;
 
 import java.sql.Timestamp;
+
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountCreatedModel implements JsonModel {
     public static final String TYPE = "AccountCreated";
 
-    private AggregateIdentityModel aggregateIdentity;
     private EmailModel email;
     private UserModel user;
-    private Timestamp time;
-
+    private Timestamp timestamp;
 
     public AccountCreatedModel(){}
 
     public AccountCreatedModel(AccountCreated accountCreated) {
-        //TODO [dd] add notNull contracts
-        this.aggregateIdentity = new AggregateIdentityModel(new AggregateIdentity(accountCreated.aggregateMemberId(), accountCreated.aggregateName()));
+        notNull(accountCreated);
         this.email = new EmailModel(accountCreated.email());
         this.user = new UserModel(accountCreated.user());
-        this.time = accountCreated.timestamp();
-    }
-
-    public AggregateIdentityModel getAggregateIdentity() {
-        return aggregateIdentity;
+        this.timestamp = accountCreated.timestamp();
     }
 
     public EmailModel getEmail() {
@@ -38,12 +32,12 @@ public class AccountCreatedModel implements JsonModel {
         return user;
     }
 
-    public Timestamp getTime() {
-        return time;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
     // TODO: 16/03/16 No usage for this method.
     public AccountCreated domainObject() {
-        return new AccountCreated(new Email(email.getAddress()), new User(user.getFirstName(), user.getLastName()), time);
+        return new AccountCreated(new Email(email.getAddress()), new User(user.getFirstName(), user.getLastName()), timestamp);
     }
 }

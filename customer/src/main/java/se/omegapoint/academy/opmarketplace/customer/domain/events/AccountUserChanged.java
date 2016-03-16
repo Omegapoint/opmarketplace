@@ -1,36 +1,33 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.events;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountUserChanged extends DomainEvent implements AggregateModification {
+public class AccountUserChanged extends DomainEvent {
 
-    private final AggregateIdentity identity;
+    private final Email email;
     private final User user;
-    private final Timestamp time;
+    private final Timestamp timestamp;
 
-    public AccountUserChanged(Email id, User user) {
-        this(id, user, new Timestamp(System.currentTimeMillis()));
+    public AccountUserChanged(Email email, User user) {
+        this(email, user, new Timestamp(System.currentTimeMillis()));
     }
 
-    public AccountUserChanged(Email id, User user, Timestamp time) {
-        this(new AggregateIdentity(id.address(), Account.class.getSimpleName()), user, time);
+    public AccountUserChanged(Email email, User user, Timestamp timestamp){
+        isTrue(timestamp.before(new Timestamp(System.currentTimeMillis() + 1)));
+        this.email = notNull(email);
+        this.user = notNull(user);
+        this.timestamp = notNull(timestamp);
     }
 
-    public AccountUserChanged(AggregateIdentity identity, User user, Timestamp time){
-        notNull(identity);
-        notNull(user);
-        notNull(time);
-        isTrue(time.before(new Timestamp(System.currentTimeMillis() + 1)));
-        this.user = user;
-        this.identity = identity;
-        this.time = time;
+    public Email email() {
+        return email;
     }
 
     public User user() {
@@ -38,38 +35,22 @@ public class AccountUserChanged extends DomainEvent implements AggregateModifica
     }
 
     @Override
-    public String aggregateMemberId() {
-        return identity.id();
-    }
-
-    @Override
-    public String aggregateName() {
-        return identity.aggregateName();
-    }
-
-    @Override
     public Timestamp timestamp() {
-        return time;
+        return timestamp;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         AccountUserChanged that = (AccountUserChanged) o;
-
-        if (identity != null ? !identity.equals(that.identity) : that.identity != null) return false;
-        if (user != null ? !user.equals(that.user) : that.user != null) return false;
-        return time != null ? time.equals(that.time) : that.time == null;
-
+        return Objects.equals(email, that.email) &&
+                Objects.equals(user, that.user) &&
+                Objects.equals(timestamp, that.timestamp);
     }
 
     @Override
     public int hashCode() {
-        int result = identity != null ? identity.hashCode() : 0;
-        result = 31 * result + (user != null ? user.hashCode() : 0);
-        result = 31 * result + (time != null ? time.hashCode() : 0);
-        return result;
+        return Objects.hash(email, user, timestamp);
     }
 }

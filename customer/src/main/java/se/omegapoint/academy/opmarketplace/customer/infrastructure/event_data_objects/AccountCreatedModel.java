@@ -15,8 +15,6 @@ public class AccountCreatedModel {
     @Id
     @GeneratedValue
     private Long id;
-    private String aggregateMemberId;
-    private String aggregateName;
     private String email;
     private String userFirstName;
     private String userLastName;
@@ -26,8 +24,6 @@ public class AccountCreatedModel {
 
     public AccountCreatedModel(AccountCreated accountCreated) {
         //TODO [dd] add notNull contracts
-        this.aggregateMemberId = accountCreated.aggregateMemberId();
-        this.aggregateName = accountCreated.aggregateName();
         this.email = accountCreated.email().address();
         this.userFirstName = accountCreated.user().firstName();
         this.userLastName = accountCreated.user().lastName();

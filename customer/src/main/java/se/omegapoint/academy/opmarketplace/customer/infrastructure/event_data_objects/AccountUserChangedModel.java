@@ -15,8 +15,7 @@ public class AccountUserChangedModel {
     @Id
     @GeneratedValue
     private Long id;
-    private String aggregateMemberId;
-    private String aggregateName;
+    private String email;
     private String userFirstName;
     private String userLastName;
     private Timestamp time;
@@ -25,14 +24,13 @@ public class AccountUserChangedModel {
 
     public AccountUserChangedModel(AccountUserChanged accountUserChanged){
         //TODO [dd] add notNull contracts
-        this.aggregateMemberId = accountUserChanged.aggregateMemberId();
-        this.aggregateName = accountUserChanged.aggregateName();
+        this.email = accountUserChanged.email().address();
         this.userFirstName = accountUserChanged.user().firstName();
         this.userLastName = accountUserChanged.user().lastName();
         this.time = accountUserChanged.timestamp();
     }
 
     public AccountUserChanged domainEvent(){
-        return new AccountUserChanged(new Email(aggregateMemberId), new User(userFirstName, userLastName), time);
+        return new AccountUserChanged(new Email(email), new User(userFirstName, userLastName), time);
     }
 }

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface AccountUserChangedJPA extends JpaRepository<AccountUserChangedModel, Long> {
 
-    List<AccountUserChangedModel> findByAggregateMemberIdOrderByTime(String aggregateId);
+    List<AccountUserChangedModel> findByEmailOrderByTime(String aggregateId);
 }

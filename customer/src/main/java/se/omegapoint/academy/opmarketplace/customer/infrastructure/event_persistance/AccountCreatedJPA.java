@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface AccountCreatedJPA extends JpaRepository<AccountCreatedModel, Long> {
 
-    List<AccountCreatedModel> findByAggregateMemberIdOrderByTime(String aggregateId);
+    List<AccountCreatedModel> findByEmailOrderByTime(String email);
 }

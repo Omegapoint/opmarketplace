@@ -4,7 +4,6 @@ import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateModification;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountCreatedModel;
@@ -39,7 +38,7 @@ public class AccountEventStore implements AccountRepository {
         List<DomainEvent> domainEvents = new ArrayList<>();
 
         //TODO [dd] consider creating separate method
-        domainEvents.addAll(createAccountRepository.findByAggregateMemberIdOrderByTime(email.address()).stream()
+        domainEvents.addAll(createAccountRepository.findByEmailOrderByTime(email.address()).stream()
                 .map(AccountCreatedModel::domainEvent)
                 .collect(Collectors.toList()));
 
@@ -48,7 +47,7 @@ public class AccountEventStore implements AccountRepository {
         }
 
         //TODO [dd] consider creating separate method
-        domainEvents.addAll(userChangedRepository.findByAggregateMemberIdOrderByTime(email.address()).stream()
+        domainEvents.addAll(userChangedRepository.findByEmailOrderByTime(email.address()).stream()
                 .map(AccountUserChangedModel::domainEvent)
                 .collect(Collectors.toList()));
 
@@ -57,7 +56,8 @@ public class AccountEventStore implements AccountRepository {
         return Optional.of(AccountFactory.fromDomainEvents(domainEvents));
     }
 
-    public void append(AggregateModification event) {
+    // TODO: 16/03/16 Maybe ModifyingEvent interface?
+    public void append(DomainEvent event) {
         notNull(event);
         if (event instanceof AccountCreated) {
             createAccountRepository.save(new AccountCreatedModel((AccountCreated) event));
@@ -69,6 +69,6 @@ public class AccountEventStore implements AccountRepository {
     @Override
     public boolean accountInExistence(Email email) {
         notNull(email);
-        return !createAccountRepository.findByAggregateMemberIdOrderByTime(email.address()).isEmpty();
+        return !createAccountRepository.findByEmailOrderByTime(email.address()).isEmpty();
     }
 }

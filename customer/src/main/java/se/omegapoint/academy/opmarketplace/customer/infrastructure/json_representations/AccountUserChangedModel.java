@@ -1,39 +1,34 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AggregateIdentity;
 
 import java.sql.Timestamp;
 
 public class AccountUserChangedModel implements JsonModel {
     public static final String TYPE = "AccountUserChanged";
 
-    private AggregateIdentityModel aggregateIdentity;
+    private EmailModel email;
     private UserModel user;
-    private Timestamp time;
+    private Timestamp timestamp;
 
     public AccountUserChangedModel(){}
 
-    public AccountUserChangedModel(se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged accountUserChanged) {
-        this.aggregateIdentity = new AggregateIdentityModel(new AggregateIdentity(accountUserChanged.aggregateMemberId(), accountUserChanged.aggregateName()));
+    public AccountUserChangedModel(AccountUserChanged accountUserChanged) {
+        this.email = new EmailModel(accountUserChanged.email());
         this.user = new UserModel(accountUserChanged.user());
-        this.time = accountUserChanged.timestamp();
-    }
-
-    public AggregateIdentityModel getAggregateIdentity() {
-        return aggregateIdentity;
+        this.timestamp = accountUserChanged.timestamp();
     }
 
     public UserModel getUser() {
         return user;
     }
 
-    public Timestamp getTime() {
-        return time;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
     // TODO: 16/03/16 No usage for this
     public AccountUserChanged domainObject() {
-        return new AccountUserChanged(aggregateIdentity.domainObject(), user.domainObject(), time);
+        return new AccountUserChanged(email.domainObject(), user.domainObject(), timestamp);
     }
 }
