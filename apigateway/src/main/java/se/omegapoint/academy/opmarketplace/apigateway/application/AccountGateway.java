@@ -27,6 +27,9 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 @RequestMapping("/accounts")
 public class AccountGateway {
 
+    private final long TIMEOUT = 2000;
+    private final String TIMEOUTTEXT = "Request timed out...";
+
     @Autowired
     private Router router;
 
@@ -36,7 +39,7 @@ public class AccountGateway {
     @RequestMapping(method = POST)
     public DeferredResult<String> createAccount(@RequestBody final AccountCreationRequestedModel newAccount) {
         notNull(newAccount);
-        DeferredResult<String> result = new DeferredResult<>();
+        DeferredResult<String> result = new DeferredResult<>(TIMEOUT, TIMEOUTTEXT);
         publisher.publish(new RemoteEvent(newAccount, AccountCreationRequestedModel.TYPE));
         AccountCreatedListener listener =  new AccountCreatedListener(result);
         router.subscribe(Router.CHANNEL.ACCOUNTCREATION, newAccount.getEmail().getAddress(), listener);
@@ -46,7 +49,7 @@ public class AccountGateway {
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
     public DeferredResult<AccountModel> account(@RequestParam("email") final EmailModel email) {
         AccountRequestedModel accountRequested = new AccountRequestedModel(notNull(email));
-        DeferredResult<AccountModel> result = new DeferredResult<>();
+        DeferredResult<AccountModel> result = new DeferredResult<>(TIMEOUT, TIMEOUTTEXT);
         publisher.publish(new RemoteEvent(accountRequested, AccountRequestedModel.TYPE));
         AccountObtainedListener listener =  new AccountObtainedListener(result);
         router.subscribe(Router.CHANNEL.ACCOUNTREQUEST, accountRequested.getEmail().getAddress(), listener);
@@ -56,7 +59,7 @@ public class AccountGateway {
     @RequestMapping(method = PUT)
     public DeferredResult<String> changeUser(@RequestBody final AccountUserChangeRequestedModel change) {
         notNull(change);
-        DeferredResult<String> result = new DeferredResult<>();
+        DeferredResult<String> result = new DeferredResult<>(TIMEOUT, TIMEOUTTEXT);
         publisher.publish(new RemoteEvent(change, AccountUserChangeRequestedModel.TYPE));
         AccountUserChangedListener listener =  new AccountUserChangedListener(result);
         router.subscribe(Router.CHANNEL.ACCOUNTUSERCHANGE, change.getEmail().getAddress(), listener);

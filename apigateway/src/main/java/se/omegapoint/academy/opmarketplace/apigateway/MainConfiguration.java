@@ -26,9 +26,4 @@ public class MainConfiguration {
         return new Router(eventBus);
     }
 
-    @Bean
-    SubscriberInitializer createSubscriberInitializer() {
-        return new SubscriberInitializer();
-    }
-
 }
