@@ -77,21 +77,23 @@ public class AccountService implements Consumer<Event<JsonModel>> {
         }
     }
 
-    private void accountCreationRequested(AccountCreationRequestedModel accountCreationRequestedModel){
+    private void accountCreationRequested(AccountCreationRequestedModel model){
         try {
-            AccountCreationRequested request = accountCreationRequestedModel.domainObject();
+            AccountCreationRequested request = model.domainObject();
 
             if (!accountRepository.accountInExistence(request.email())){
                 AccountCreated accountCreated = Account.createAccount(request);
                 accountRepository.append(accountCreated);
                 publisher.publish(accountCreated);
             } else {
-                // TODO: 15/03/16 Send user not created event with reason
+                AccountNotCreated accountNotCreated = new AccountNotCreated(request.email().address(), "Account already exists");
+                publisher.publish(accountNotCreated);
             }
 
         } catch (IllegalArgumentValidationException e) {
-            // TODO: 15/03/16 Send user not created event with reason
             e.printStackTrace();
+            AccountNotCreated accountNotCreated = new AccountNotCreated(model.getEmail().getAddress(), e.getMessage());
+            publisher.publish(accountNotCreated);
         }
     }
 }
