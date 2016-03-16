@@ -41,7 +41,7 @@ public class Router {
     }
 
     public void subscribe(CHANNEL channel, String id, Consumer consumer){
-        eventBus.on(Selectors.object(channel.NAME + id), consumer).cancelAfterUse();
+        eventBus.on(Selectors.regex(channel.NAME+ "\\s*" + id + "\\s*"), consumer).cancelAfterUse();
     }
 
     public enum CHANNEL {
