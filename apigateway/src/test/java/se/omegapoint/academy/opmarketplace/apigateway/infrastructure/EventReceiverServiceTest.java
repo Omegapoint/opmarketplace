@@ -111,4 +111,38 @@ public class EventReceiverServiceTest {
         assertTrue(registration.isCancelled());
     }
 
+    @Test
+    public void should_receive_account_user_changed_confirmation() throws Exception {
+        String id = "test@test.com";
+        String aggregateName = "Account";
+
+        Registration<Object, Consumer<? extends Event<?>>> registration =
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + id), event -> {}).cancelAfterUse();
+
+        String content = json.writeValueAsString(
+                new RemoteEvent(new AccountUserChangedModel(new AggregateIdentityModel(id, aggregateName)), AccountUserChangedModel.TYPE));
+        mockMvc.perform(post("/event")
+                .contentType(APPLICATION_JSON)
+                .content(content));
+        Thread.sleep(50);
+        assertTrue(registration.isCancelled());
+    }
+
+    @Test
+    public void should_receive_account_user_not_changed_confirmation() throws Exception {
+        String id = "@test.com";
+        String aggregateName = "Account";
+        String reason = "Invalid email";
+
+        Registration<Object, Consumer<? extends Event<?>>> registration =
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + id), event -> {}).cancelAfterUse();
+
+        String content = json.writeValueAsString(
+                new RemoteEvent(new AccountUserNotChangedModel(new AggregateIdentityModel(id, aggregateName), reason), AccountUserNotChangedModel.TYPE));
+        mockMvc.perform(post("/event")
+                .contentType(APPLICATION_JSON)
+                .content(content));
+        Thread.sleep(50);
+        assertTrue(registration.isCancelled());
+    }
 }

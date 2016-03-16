@@ -12,6 +12,7 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountCreatedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountObtainedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountUserChangedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.AccountModel;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
@@ -19,6 +20,7 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @RestController
@@ -48,6 +50,16 @@ public class AccountGateway {
         publisher.publish(new RemoteEvent(accountRequested, AccountRequestedModel.TYPE));
         AccountObtainedListener listener =  new AccountObtainedListener(result);
         router.subscribe(Router.CHANNEL.ACCOUNTREQUEST, accountRequested.getEmail().getAddress(), listener);
+        return result;
+    }
+
+    @RequestMapping(method = PUT)
+    public DeferredResult<String> changeUser(@RequestBody final AccountUserChangeRequestedModel change) {
+        notNull(change);
+        DeferredResult<String> result = new DeferredResult<>();
+        publisher.publish(new RemoteEvent(change, AccountUserChangeRequestedModel.TYPE));
+        AccountUserChangedListener listener =  new AccountUserChangedListener(result);
+        router.subscribe(Router.CHANNEL.ACCOUNTUSERCHANGE, change.getEmail().getAddress(), listener);
         return result;
     }
 }

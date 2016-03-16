@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Profile;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountCreationRequestedModel;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountRequestedModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountUserChangeRequestedModel;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.RemoteEvent;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
 
@@ -26,19 +27,20 @@ public class TestConfiguration {
         private JsonModel lastestEvent;
         @Override
         public void publish(RemoteEvent remoteEvent) {
-            if (remoteEvent.getType().equals(AccountCreationRequestedModel.TYPE)){
-                try {
-                    lastestEvent = json.readValue(remoteEvent.getData(), AccountCreationRequestedModel.class);
-                } catch (IOException e) {
-                    e.printStackTrace();
+            try {
+                switch (remoteEvent.getType()) {
+                    case AccountCreationRequestedModel.TYPE:
+                        lastestEvent = json.readValue(remoteEvent.getData(), AccountCreationRequestedModel.class);
+                        break;
+                    case AccountRequestedModel.TYPE:
+                        lastestEvent = json.readValue(remoteEvent.getData(), AccountRequestedModel.class);
+                        break;
+                    case AccountUserChangeRequestedModel.TYPE:
+                        lastestEvent = json.readValue(remoteEvent.getData(), AccountUserChangeRequestedModel.class);
+                        break;
                 }
-            }
-            else if (remoteEvent.getType().equals(AccountRequestedModel.TYPE)){
-                try {
-                    lastestEvent = json.readValue(remoteEvent.getData(), AccountRequestedModel.class);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            }catch (IOException e){
+                e.printStackTrace();
             }
         }
 
