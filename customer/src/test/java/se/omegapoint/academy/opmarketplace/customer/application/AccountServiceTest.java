@@ -12,10 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.bus.Event;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.TestConfiguration;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountNotCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountObtained;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreationRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountUserChangeRequestedModel;
@@ -74,6 +71,7 @@ public class AccountServiceTest {
     public void should_not_retrieve_non_existing_account() throws Exception {
         getUser("test4@email.com");
         Assert.assertEquals(0, testPublisher.seenEvents(AccountObtained.class.getName()));
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountNotObtained.class.getName()));
     }
 
     @Test
@@ -81,6 +79,7 @@ public class AccountServiceTest {
         addUser("@email.com", "first", "last");
         getUser("@email.com");
         Assert.assertEquals(0, testPublisher.seenEvents(AccountObtained.class.getName()));
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountNotObtained.class.getName()));
     }
 
     @Test

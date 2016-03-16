@@ -59,21 +59,23 @@ public class AccountService implements Consumer<Event<JsonModel>> {
         }
     }
 
-    private void accountRequested(AccountRequestedModel accountRequestedModel) {
+    private void accountRequested(AccountRequestedModel model) {
         try {
-            AccountRequested request = accountRequestedModel.domainObject();
+            AccountRequested request = model.domainObject();
             Optional<Account> maybeAccount = accountRepository.account(request.email());
 
             if (maybeAccount.isPresent()) {
                 AccountObtained accountObtained = new AccountObtained(maybeAccount.get(), new Timestamp(System.currentTimeMillis()));
                 publisher.publish(accountObtained);
             } else {
-                // TODO: 15/03/16 Send account not obtained event with reason
+                AccountNotObtained accountNotObtained = new AccountNotObtained(request.email().address(), "Account does not exist.");
+                publisher.publish(accountNotObtained);
             }
 
         } catch (IllegalArgumentValidationException e) {
-            // TODO: 15/03/16 Send account not obtained event with reason
             e.printStackTrace();
+            AccountNotObtained accountNotObtained = new AccountNotObtained(model.getEmail().getAddress(), e.getMessage());
+            publisher.publish(accountNotObtained);
         }
     }
 
@@ -86,7 +88,7 @@ public class AccountService implements Consumer<Event<JsonModel>> {
                 accountRepository.append(accountCreated);
                 publisher.publish(accountCreated);
             } else {
-                AccountNotCreated accountNotCreated = new AccountNotCreated(request.email().address(), "Account already exists");
+                AccountNotCreated accountNotCreated = new AccountNotCreated(request.email().address(), "Account already exists.");
                 publisher.publish(accountNotCreated);
             }
 

@@ -45,6 +45,12 @@ public class TestConfiguration {
             seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
         }
 
+        @Override
+        public void publish(AccountNotObtained event) {
+            String eventName = event.getClass().getName();
+            seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
+        }
+
         public int seenEvents(String eventName) {
             return seenDomainEvents.containsKey(eventName) ? seenDomainEvents.get(eventName) : 0;
         }

@@ -54,6 +54,11 @@ public class EventRemotePublisherService implements EventPublisher {
         publish(new RemoteEvent(new AccountUserChangedModel(event), AccountUserChangedModel.TYPE));
     }
 
+    @Override
+    public void publish(AccountNotObtained event) {
+        publish(new RemoteEvent(new AccountNotObtainedModel(event), AccountNotObtainedModel.TYPE));
+    }
+
     private void publish(RemoteEvent remoteEvent) {
         try {
             StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(remoteEvent));
