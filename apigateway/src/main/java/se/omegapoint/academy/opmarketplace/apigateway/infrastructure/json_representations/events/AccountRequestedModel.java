@@ -20,6 +20,7 @@ public class AccountRequestedModel implements JsonModel {
 
     public AccountRequestedModel(EmailModel email) {
         this.email = notNull(email);
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     public EmailModel getEmail() {
