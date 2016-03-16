@@ -13,6 +13,7 @@ import reactor.bus.Event;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.TestConfiguration;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountNotCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountObtained;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreationRequestedModel;
@@ -52,12 +53,14 @@ public class AccountServiceTest {
         addUser("test2@email.com", "first", "last");
         addUser("test2@email.com", "first", "last");
         Assert.assertEquals(1, testPublisher.seenEvents(AccountCreated.class.getName()));
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountNotCreated.class.getName()));
     }
 
     @Test
     public void should_not_add_account_due_to_ill_formed_email() throws Exception {
         addUser("@email.com", "first", "last");
         Assert.assertEquals(0, testPublisher.seenEvents(AccountCreated.class.getName()));
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountNotCreated.class.getName()));
     }
 
     @Test
