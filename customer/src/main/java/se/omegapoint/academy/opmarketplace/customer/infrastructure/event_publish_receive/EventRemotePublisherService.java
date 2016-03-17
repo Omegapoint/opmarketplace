@@ -13,6 +13,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.*;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
@@ -26,12 +27,12 @@ public class EventRemotePublisherService implements EventPublisher {
 
     private final CloseableHttpAsyncClient httpclient;
 
-    //TODO [dd] potential resource leakage. When is the http client closed?
+    public EventRemotePublisherService(CloseableHttpAsyncClient httpclient){
+        this.httpclient = notNull(httpclient);
+    }
 
-    // TODO: 14/03/16 Inject HttpClient
-    public EventRemotePublisherService(){
-        httpclient = HttpAsyncClients.createDefault();
-        httpclient.start();
+    public void cleanup() throws IOException {
+        httpclient.close();
     }
 
     @Override
@@ -73,7 +74,6 @@ public class EventRemotePublisherService implements EventPublisher {
             httpclient.execute(httpPost, IGNORE_CALLBACK);
         } catch (UnsupportedEncodingException | JsonProcessingException e) {
             e.printStackTrace(); //TODO [dd] not ok to print stack trace and continue.
-            // TODO: 14/03/16 throw illegalstateexception
         }
     }
 }

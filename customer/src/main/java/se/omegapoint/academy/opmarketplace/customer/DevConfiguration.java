@@ -1,5 +1,7 @@
 package se.omegapoint.academy.opmarketplace.customer;
 
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -11,9 +13,11 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publish
 @Profile("dev")
 public class DevConfiguration {
 
-    @Bean
-    EventPublisher createEventPublisher(){
-        return new EventRemotePublisherService();
+    @Bean(destroyMethod = "cleanup")
+    EventRemotePublisherService createEventPublisher(){
+        CloseableHttpAsyncClient httpClient = HttpAsyncClients.createDefault();
+        httpClient.start();
+        return new EventRemotePublisherService(httpClient);
     }
 
     @Bean

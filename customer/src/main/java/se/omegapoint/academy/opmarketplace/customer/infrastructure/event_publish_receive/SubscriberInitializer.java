@@ -52,7 +52,7 @@ public class SubscriberInitializer implements ApplicationListener<ContextRefresh
             response.close();
 
         } catch (IOException | URISyntaxException e) {
-            e.printStackTrace(); //TODO [dd] don't print stack trace. What should we do if this happens?
+            throw new IllegalStateException("Could not subscribe : " + e.getMessage());
         }
     }
 }
