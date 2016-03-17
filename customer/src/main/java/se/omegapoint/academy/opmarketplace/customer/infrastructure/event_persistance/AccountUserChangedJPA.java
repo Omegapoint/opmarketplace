@@ -1,7 +1,7 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects.AccountUserChangedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_models.AccountUserChangedModel;
 
 import java.util.List;
 

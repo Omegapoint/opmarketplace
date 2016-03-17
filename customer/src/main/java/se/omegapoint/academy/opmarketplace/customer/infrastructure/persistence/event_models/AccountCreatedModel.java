@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.event_data_objects;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_models;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
