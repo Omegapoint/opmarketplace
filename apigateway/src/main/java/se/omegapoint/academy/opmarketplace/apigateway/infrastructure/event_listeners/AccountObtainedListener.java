@@ -2,6 +2,7 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_list
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 import reactor.bus.Event;
 import reactor.fn.Consumer;
@@ -13,10 +14,10 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountObtainedListener implements Consumer<Event<JsonModel>> {
-    private DeferredResult<String> result;
+    private DeferredResult<ResponseEntity<String>> result;
     ObjectMapper json = new ObjectMapper();
 
-    public AccountObtainedListener(DeferredResult<String> result) {
+    public AccountObtainedListener(DeferredResult<ResponseEntity<String>> result) {
         this.result = notNull(result);
     }
 
@@ -25,10 +26,10 @@ public class AccountObtainedListener implements Consumer<Event<JsonModel>> {
         JsonModel model = event.getData();
         try {
             if (model instanceof AccountObtainedModel){
-                result.setResult(json.writeValueAsString(((AccountObtainedModel)model).getAccount()));
+                result.setResult(ResponseEntity.ok(json.writeValueAsString(((AccountObtainedModel)model).getAccount())));
             }
             if (model instanceof AccountNotObtainedModel){
-                result.setErrorResult(((AccountNotObtainedModel)model).getReason());
+                result.setErrorResult(ResponseEntity.badRequest().body("{\"reason\":\"" + ((AccountNotObtainedModel)model).getReason() + "\"}"));
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();

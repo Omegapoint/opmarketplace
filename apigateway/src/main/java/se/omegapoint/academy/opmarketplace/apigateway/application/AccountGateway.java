@@ -48,9 +48,9 @@ public class AccountGateway {
     }
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
-    public DeferredResult<String> account(@RequestParam("email") final EmailModel email) {
+    public DeferredResult<ResponseEntity<String>> account(@RequestParam("email") final EmailModel email) {
         AccountRequestedModel accountRequested = new AccountRequestedModel(notNull(email));
-        DeferredResult<String> result = new DeferredResult<>(TIMEOUT, TIMEOUTTEXT);
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUTTEXT);
         publisher.publish(new RemoteEvent(accountRequested, AccountRequestedModel.TYPE));
         AccountObtainedListener listener =  new AccountObtainedListener(result);
         router.subscribe(Router.CHANNEL.ACCOUNTREQUEST, accountRequested.getEmail().getAddress(), listener);
