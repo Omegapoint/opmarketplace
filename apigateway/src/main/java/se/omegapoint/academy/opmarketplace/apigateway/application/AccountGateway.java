@@ -58,9 +58,9 @@ public class AccountGateway {
     }
 
     @RequestMapping(method = PUT, produces = APPLICATION_JSON_VALUE)
-    public DeferredResult<String> changeUser(@RequestBody final AccountUserChangeRequestedModel change) {
+    public DeferredResult<ResponseEntity<String>> changeUser(@RequestBody final AccountUserChangeRequestedModel change) {
         notNull(change);
-        DeferredResult<String> result = new DeferredResult<>(TIMEOUT, TIMEOUTTEXT);
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUTTEXT);
         publisher.publish(new RemoteEvent(change, AccountUserChangeRequestedModel.TYPE));
         AccountUserChangedListener listener =  new AccountUserChangedListener(result);
         router.subscribe(Router.CHANNEL.ACCOUNTUSERCHANGE, change.getEmail().getAddress(), listener);
