@@ -13,7 +13,7 @@ public class EmailModel implements JsonModel {
         this.address = email.address();
     }
 
-    // TODO: 16/03/16 Maybe remove?
+    // TODO: 16/03/16 Used for unsafe events, maybe remove?
     public EmailModel(String email) {
         notNull(email);
         this.address = email;

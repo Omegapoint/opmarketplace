@@ -2,13 +2,15 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_represe
 
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 public class UserModel implements JsonModel {
 
     private String firstName;
     private String lastName;
 
     public UserModel(User user){
-        //TODO [dd] add notNull contracts
+        notNull(user);
         firstName = user.firstName();
         lastName = user.lastName();
     }

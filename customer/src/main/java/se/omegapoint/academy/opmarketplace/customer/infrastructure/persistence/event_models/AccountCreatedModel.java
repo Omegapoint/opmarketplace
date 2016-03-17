@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.sql.Timestamp;
 
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 @Entity
 public class AccountCreatedModel {
 
@@ -23,7 +25,7 @@ public class AccountCreatedModel {
     public AccountCreatedModel(){}
 
     public AccountCreatedModel(AccountCreated accountCreated) {
-        //TODO [dd] add notNull contracts
+        notNull(accountCreated);
         this.email = accountCreated.email().address();
         this.userFirstName = accountCreated.user().firstName();
         this.userLastName = accountCreated.user().lastName();

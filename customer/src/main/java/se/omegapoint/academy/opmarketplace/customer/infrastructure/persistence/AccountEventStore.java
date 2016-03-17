@@ -13,7 +13,6 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persist
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.factories.AccountFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,23 +36,27 @@ public class AccountEventStore implements AccountRepository {
 
         List<DomainEvent> domainEvents = new ArrayList<>();
 
-        //TODO [dd] consider creating separate method
-        domainEvents.addAll(createAccountRepository.findByEmailOrderByTime(email.address()).stream()
-                .map(AccountCreatedModel::domainEvent)
-                .collect(Collectors.toList()));
-
-        if (domainEvents.isEmpty()) {
+        Optional<AccountCreated> maybeAccountCreated = retrieveCreatedEvent(email);
+        if (maybeAccountCreated.isPresent()) {
+            domainEvents.add(maybeAccountCreated.get());
+        } else {
             return Optional.empty();
         }
 
-        //TODO [dd] consider creating separate method
-        domainEvents.addAll(userChangedRepository.findByEmailOrderByTime(email.address()).stream()
-                .map(AccountUserChangedModel::domainEvent)
-                .collect(Collectors.toList()));
-
-        Collections.sort(domainEvents);
+        domainEvents.addAll(retrieveUserChangedEvents(email));
 
         return Optional.of(AccountFactory.fromDomainEvents(domainEvents));
+    }
+
+    private Optional<AccountCreated> retrieveCreatedEvent(Email email) {
+        return createAccountRepository.findByEmailOrderByTime(email.address()).stream()
+                .map(AccountCreatedModel::domainEvent).findAny();
+    }
+
+    private List<AccountUserChanged> retrieveUserChangedEvents(Email email) {
+        return userChangedRepository.findByEmailOrderByTime(email.address()).stream()
+                .map(AccountUserChangedModel::domainEvent)
+                .collect(Collectors.toList());
     }
 
     // TODO: 16/03/16 Maybe ModifyingEvent interface?
