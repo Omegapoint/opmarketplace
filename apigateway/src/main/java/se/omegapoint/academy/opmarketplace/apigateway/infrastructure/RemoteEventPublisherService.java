@@ -7,10 +7,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.springframework.beans.factory.annotation.Value;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.RemoteEvent;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
@@ -23,11 +23,11 @@ public class RemoteEventPublisherService implements RemoteEventPublisher {
     @Value("${event.publisher.url}")
     private String PUBLISH_URL;
 
-    private final CloseableHttpAsyncClient httpclient;
+    private final CloseableHttpAsyncClient httpClient;
 
-    public RemoteEventPublisherService(){
-        httpclient = HttpAsyncClients.createDefault();
-        httpclient.start();
+    public RemoteEventPublisherService(CloseableHttpAsyncClient httpClient){
+        this.httpClient = httpClient;
+        this.httpClient.start();
     }
 
     @Override
@@ -38,9 +38,13 @@ public class RemoteEventPublisherService implements RemoteEventPublisher {
             HttpPost httpPost = new HttpPost(PUBLISH_URL + "?channel=Account");
             httpPost.addHeader("Content-Type", "application/json");
             httpPost.setEntity(eventJson);
-            httpclient.execute(httpPost, IGNORE_CALLBACK);
+            httpClient.execute(httpPost, IGNORE_CALLBACK);
         } catch (UnsupportedEncodingException | JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void cleanup() throws IOException {
+        httpClient.close();
     }
 }

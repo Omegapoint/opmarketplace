@@ -9,7 +9,7 @@ public class ReasonModel {
     public ReasonModel(String reason){
         this.reason = notNull(reason);
     }
-
+ 
     public ReasonModel(){}
 
     public String getReason() {

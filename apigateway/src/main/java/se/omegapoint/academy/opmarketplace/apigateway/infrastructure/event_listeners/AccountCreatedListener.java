@@ -19,6 +19,7 @@ public class AccountCreatedListener implements Consumer<Event<JsonModel>> {
 
     @Override
     public void accept(Event<JsonModel> event) {
+        notNull(event);
         JsonModel model = event.getData();
         if (model instanceof AccountCreatedModel){
             result.setResult(ResponseEntity.ok(""));

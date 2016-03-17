@@ -20,6 +20,7 @@ public class AccountUserChangedListener implements Consumer<Event<JsonModel>> {
 
     @Override
     public void accept(Event<JsonModel> event) {
+        notNull(event);
         JsonModel model = event.getData();
         if (model instanceof AccountUserChangedModel){
             result.setResult(ResponseEntity.ok(""));

@@ -23,6 +23,7 @@ public class AccountObtainedListener implements Consumer<Event<JsonModel>> {
 
     @Override
     public void accept(Event<JsonModel> event) {
+        notNull(event);
         JsonModel model = event.getData();
         try {
             if (model instanceof AccountObtainedModel){
