@@ -1,0 +1,13 @@
+server:
+  port: 8002
+spring:
+  profiles:
+    active: dev
+subscription:
+  url: http://localhost:8000/subscribe
+  channels: Account
+event:
+  receiver:
+    url: http://localhost:8002/event
+  publisher:
+    url: http://localhost:8000/event
