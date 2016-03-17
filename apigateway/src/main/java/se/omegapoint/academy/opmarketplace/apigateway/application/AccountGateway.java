@@ -1,6 +1,7 @@
 package se.omegapoint.academy.opmarketplace.apigateway.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,10 +37,10 @@ public class AccountGateway {
     @Autowired
     private RemoteEventPublisher publisher;
 
-    @RequestMapping(method = POST)
-    public DeferredResult<String> createAccount(@RequestBody final AccountCreationRequestedModel newAccount) {
+    @RequestMapping(method = POST, produces = APPLICATION_JSON_VALUE)
+    public DeferredResult<ResponseEntity<String>> createAccount(@RequestBody final AccountCreationRequestedModel newAccount) {
         notNull(newAccount);
-        DeferredResult<String> result = new DeferredResult<>(TIMEOUT, TIMEOUTTEXT);
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUTTEXT);
         publisher.publish(new RemoteEvent(newAccount, AccountCreationRequestedModel.TYPE));
         AccountCreatedListener listener =  new AccountCreatedListener(result);
         router.subscribe(Router.CHANNEL.ACCOUNTCREATION, newAccount.getEmail().getAddress(), listener);
@@ -56,7 +57,7 @@ public class AccountGateway {
         return result;
     }
 
-    @RequestMapping(method = PUT)
+    @RequestMapping(method = PUT, produces = APPLICATION_JSON_VALUE)
     public DeferredResult<String> changeUser(@RequestBody final AccountUserChangeRequestedModel change) {
         notNull(change);
         DeferredResult<String> result = new DeferredResult<>(TIMEOUT, TIMEOUTTEXT);
