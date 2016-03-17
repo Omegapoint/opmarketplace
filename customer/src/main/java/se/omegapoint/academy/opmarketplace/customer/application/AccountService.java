@@ -24,6 +24,8 @@ public class AccountService implements Consumer<Event<JsonModel>> {
         this.publisher = publisher;
     }
 
+    // TODO: 17/03/16 Discuss exception usage?
+    // TODO: 17/03/16 Fail events are sent in two places.
     @Override
     public void accept(Event<JsonModel> event) {
         notNull(event);
@@ -38,8 +40,6 @@ public class AccountService implements Consumer<Event<JsonModel>> {
         }
     }
 
-    //TODO [dd]: is this method really idempotent? PUT operations must be idempotent according to the specification.
-    // See https://spring.io/understanding/REST
     private void accountUserChangeRequested(AccountUserChangeRequestedModel model) {
         try {
             AccountUserChangeRequested request = model.domainObject();
@@ -47,7 +47,7 @@ public class AccountService implements Consumer<Event<JsonModel>> {
 
             if (maybeAccount.isPresent()) {
                 Account account = maybeAccount.get();
-                AccountUserChanged userChangedEvent = account.changeUser(request.user().firstName(), request.user().lastName());
+                AccountUserChanged userChangedEvent = account.changeUser(request);
                 accountRepository.append(userChangedEvent);
                 publisher.publish(userChangedEvent);
             } else {
@@ -57,7 +57,6 @@ public class AccountService implements Consumer<Event<JsonModel>> {
         } catch (IllegalArgumentValidationException e) {
             AccountUserNotChanged accountUserNotChanged = new AccountUserNotChanged(model.getEmail().getAddress(), e.getMessage());
             publisher.publish(accountUserNotChanged);
-            // TODO: 15/03/16 Send account user not changed with reason
             e.printStackTrace();
         }
     }

@@ -2,6 +2,7 @@ package se.omegapoint.academy.opmarketplace.customer.domain;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
@@ -43,8 +44,21 @@ public class EmailTest {
         invalidInput(input.toString(), "Should be rejected for Illegal format since local part of mail is too long.");
     }
 
+    @Test
+    public void emails_with_same_address_are_equal() {
+        Email first = new Email("test@email.com");
+        Email second = new Email("test@email.com");
+        assertTrue(first.equals(second));
+    }
+
+    @Test
+    public void emails_with_different_address_are_not_equal() {
+        Email first = new Email("test1@email.com");
+        Email second = new Email("test2@email.com");
+        assertFalse(first.equals(second));
+    }
+
     public String[] parametersForValid() {
-        //return new String[]{"a@b", "test@test.com", "hej.pa.dig@hej", "123.2432.34253.324@1234:232"};
         return new String[]{"test@test.com"};
     }
 

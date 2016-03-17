@@ -2,6 +2,8 @@ package se.omegapoint.academy.opmarketplace.customer.domain.value_objects;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
+import java.util.Objects;
+
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notBlank;
 
@@ -25,5 +27,16 @@ public final class Email {
         return address;
     }
 
-    //TODO [dd]: All value objects must implement equals() and hash code
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Email email = (Email) o;
+        return Objects.equals(address, email.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(address);
+    }
 }

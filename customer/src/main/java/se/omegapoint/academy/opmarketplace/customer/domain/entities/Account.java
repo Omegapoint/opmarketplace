@@ -1,14 +1,13 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.entities;
 
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChangeRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 
-import static se.sawano.java.commons.lang.validate.Validate.notBlank;
-import static se.sawano.java.commons.lang.validate.Validate.notEmpty;
-import static se.sawano.java.commons.lang.validate.Validate.notNull;
+import static se.sawano.java.commons.lang.validate.Validate.*;
 
 public class Account {
     private final Email email;
@@ -36,8 +35,9 @@ public class Account {
         return new AccountCreated(request.email(), request.user());
     }
 
-    // TODO: 15/03/16 Take a request instead 
-    public AccountUserChanged changeUser(String firstName, String lastName){
-        return new AccountUserChanged(this.email(), new User(notBlank(firstName), notBlank(lastName)));
+    public AccountUserChanged changeUser(AccountUserChangeRequested request){
+        notNull(request);
+        isTrue(this.email.equals(request.email()));
+        return new AccountUserChanged(this.email(), request.user());
     }
 }

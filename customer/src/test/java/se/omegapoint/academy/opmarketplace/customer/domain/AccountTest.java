@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChangeRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
@@ -37,7 +38,10 @@ public class AccountTest {
         User user = new User("initial", "initial");
         Account account = AccountFactory.fromDomainEvents(
                 Arrays.asList(new DomainEvent[] {Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1)))}));
-        AccountUserChanged accountUserChanged = account.changeUser("a", user.lastName());
+
+        User newUser = new User("a", user.lastName());
+        AccountUserChangeRequested changeRequest = new AccountUserChangeRequested(email, newUser, new Timestamp(1));
+        AccountUserChanged accountUserChanged = account.changeUser(changeRequest);
 
         assertEquals("a", accountUserChanged.user().firstName());
     }
