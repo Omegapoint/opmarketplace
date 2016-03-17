@@ -24,7 +24,7 @@ public class AccountCreatedListener implements Consumer<Event<JsonModel>> {
             result.setResult(ResponseEntity.ok(""));
         }
         if (model instanceof AccountNotCreatedModel){
-            result.setErrorResult(ResponseEntity.badRequest().body("{\"reason\":\"" + ((AccountNotCreatedModel)model).getReason() + "\"}"));
+            result.setErrorResult(ResponseEntity.badRequest().body(((AccountNotCreatedModel)model).getReason()));
         }
     }
 }

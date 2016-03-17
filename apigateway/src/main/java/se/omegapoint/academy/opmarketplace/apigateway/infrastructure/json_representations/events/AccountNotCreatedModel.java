@@ -3,6 +3,7 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repre
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.ReasonModel;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -11,7 +12,7 @@ public class AccountNotCreatedModel implements JsonModel {
     public static final String TYPE = "AccountNotCreated";
 
     private EmailModel email;
-    private String reason;
+    private ReasonModel reason;
 
     public AccountNotCreatedModel() {}
 
@@ -19,7 +20,7 @@ public class AccountNotCreatedModel implements JsonModel {
         return email;
     }
 
-    public String getReason(){
+    public ReasonModel getReason(){
         return reason;
     }
 }
