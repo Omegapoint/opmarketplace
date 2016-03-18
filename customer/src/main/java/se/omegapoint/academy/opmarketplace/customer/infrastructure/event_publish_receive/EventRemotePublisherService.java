@@ -2,6 +2,7 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publis
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.org.apache.regexp.internal.RE;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
@@ -12,6 +13,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.RemoteEvent;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event.*;
 
@@ -38,37 +40,28 @@ public class EventRemotePublisherService implements EventPublisher {
     }
 
     @Override
-    public void publish(AccountCreated event) {
-        publish(new RemoteEvent(new AccountCreatedModel(event)));
+    public void publish(DomainEvent event) {
+
+        if (event instanceof AccountCreated) {
+            dispatch(new AccountCreatedModel((AccountCreated) event));
+        } else if (event instanceof AccountNotCreated) {
+            dispatch(new AccountNotCreatedModel((AccountNotCreated) event));
+        } else if (event instanceof AccountObtained) {
+            dispatch(new AccountObtainedModel((AccountObtained) event));
+        } else if (event instanceof AccountNotObtained) {
+            dispatch(new AccountNotObtainedModel((AccountNotObtained) event));
+        } else if (event instanceof AccountUserChanged) {
+            dispatch(new AccountUserChangedModel((AccountUserChanged) event));
+        } else if (event instanceof AccountUserNotChanged) {
+            dispatch(new AccountUserNotChangedModel((AccountUserNotChanged) event));
+        } else {
+            throw new IllegalStateException("Domain Event not recognized.");
+        }
     }
 
-    @Override
-    public void publish(AccountNotCreated event) {
-        publish(new RemoteEvent(new AccountNotCreatedModel(event)));
-    }
-
-    @Override
-    public void publish(AccountObtained event) {
-        publish(new RemoteEvent(new AccountObtainedModel(event)));
-    }
-
-    @Override
-    public void publish(AccountUserChanged event) {
-        publish(new RemoteEvent(new AccountUserChangedModel(event)));
-    }
-
-    @Override
-    public void publish(AccountNotObtained event) {
-        publish(new RemoteEvent(new AccountNotObtainedModel(event)));
-    }
-
-    @Override
-    public void publish(AccountUserNotChanged event) {
-        publish(new RemoteEvent(new AccountUserNotChangedModel(event)));
-    }
-
-    private void publish(RemoteEvent remoteEvent) {
+    private void dispatch(Event eventDTO) {
         try {
+            RemoteEvent remoteEvent = new RemoteEvent(eventDTO);
             StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(remoteEvent));
             HttpPost httpPost = new HttpPost(publisherURL + "?channel=Account");
             httpPost.addHeader("Content-Type", "application/json");

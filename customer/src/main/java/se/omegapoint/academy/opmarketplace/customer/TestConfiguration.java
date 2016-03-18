@@ -23,33 +23,9 @@ public class TestConfiguration {
         HashMap<String, Integer> seenDomainEvents = new HashMap<>();
 
         @Override
-        public void publish(AccountCreated event) {
-            incrementCounter(event);
-        }
-
-        @Override
-        public void publish(AccountNotCreated event) {
-            incrementCounter(event);
-        }
-
-        @Override
-        public void publish(AccountObtained event) {
-            incrementCounter(event);
-        }
-
-        @Override
-        public void publish(AccountUserChanged event) {
-            incrementCounter(event);
-        }
-
-        @Override
-        public void publish(AccountNotObtained event) {
-            incrementCounter(event);
-        }
-
-        @Override
-        public void publish(AccountUserNotChanged event) {
-            incrementCounter(event);
+        public void publish(DomainEvent event) {
+            String eventName = event.getClass().getName();
+            seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
         }
 
         public int seenEvents(String eventName) {
@@ -58,11 +34,6 @@ public class TestConfiguration {
 
         public void clear() {
             seenDomainEvents.clear();
-        }
-
-        private void incrementCounter(DomainEvent event) {
-            String eventName = event.getClass().getName();
-            seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
         }
     }
 }
