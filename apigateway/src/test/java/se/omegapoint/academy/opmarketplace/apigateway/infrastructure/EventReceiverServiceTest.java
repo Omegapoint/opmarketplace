@@ -66,25 +66,25 @@ public class EventReceiverServiceTest {
         assertTrue(registration.isCancelled());
     }
 
-    @Test
-    public void should_receive_account_not_created_confirmation() throws Exception {
-        Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTCREATION.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
-
-        AccountNotCreatedDTO model = json.readValue("{\n" +
-                "    \"email\":{\n" +
-                "        \"address\":\"@invalid.com\"\n" +
-                "    },\n" +
-                "    \"reason\":\"Invalid Email\"\n" +
-                "}", AccountNotCreatedDTO.class);
-
-        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotCreatedDTO.TYPE));
-        mockMvc.perform(post("/event")
-                .contentType(APPLICATION_JSON)
-                .content(content));
-        Thread.sleep(50);
-        assertTrue(registration.isCancelled());
-    }
+//    @Test
+//    public void should_receive_account_not_created_confirmation() throws Exception {
+//        Registration<Object, Consumer<? extends Event<?>>> registration =
+//                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTCREATION.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
+//
+//        AccountNotCreatedDTO model = json.readValue("{\n" +
+//                "    \"email\":{\n" +
+//                "        \"address\":\"@invalid.com\"\n" +
+//                "    },\n" +
+//                "    \"reason\":\"Invalid Email\"\n" +
+//                "}", AccountNotCreatedDTO.class);
+//
+//        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotCreatedDTO.TYPE));
+//        mockMvc.perform(post("/event")
+//                .contentType(APPLICATION_JSON)
+//                .content(content));
+//        Thread.sleep(50);
+//        assertTrue(registration.isCancelled());
+//    }
 
     @Test
     public void should_receive_account_obtained() throws Exception {

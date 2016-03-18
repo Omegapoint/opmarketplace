@@ -29,7 +29,7 @@ public class AccountObtainedListener implements Consumer<Event<JsonModel>> {
                 result.setResult(ResponseEntity.ok(json.writeValueAsString(((AccountObtainedDTO)model).account)));
             }
             if (model instanceof AccountNotObtainedDTO){
-                result.setErrorResult(ResponseEntity.badRequest().body(((AccountNotObtainedDTO)model).reason));
+                result.setErrorResult(ResponseEntity.badRequest().body(((AccountNotObtainedDTO)model)));
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();

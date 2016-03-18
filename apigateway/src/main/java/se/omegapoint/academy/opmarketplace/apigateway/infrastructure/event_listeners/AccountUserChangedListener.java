@@ -25,7 +25,7 @@ public class AccountUserChangedListener implements Consumer<Event<JsonModel>> {
             result.setResult(ResponseEntity.ok(""));
         }
         if (model instanceof AccountUserNotChangedDTO){
-            result.setErrorResult(ResponseEntity.badRequest().body(((AccountUserNotChangedDTO)model).reason));
+            result.setErrorResult(ResponseEntity.badRequest().body(((AccountUserNotChangedDTO)model)));
         }
     }
 }
