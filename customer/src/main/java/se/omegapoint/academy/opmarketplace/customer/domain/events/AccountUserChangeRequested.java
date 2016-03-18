@@ -3,8 +3,6 @@ package se.omegapoint.academy.opmarketplace.customer.domain.events;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 
-import java.sql.Timestamp;
-
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountUserChangeRequested {

@@ -35,4 +35,3 @@ public class AccountRequestedModel implements DTO, Event, Deserializer<AccountRe
         return TYPE;
     }
 }
-

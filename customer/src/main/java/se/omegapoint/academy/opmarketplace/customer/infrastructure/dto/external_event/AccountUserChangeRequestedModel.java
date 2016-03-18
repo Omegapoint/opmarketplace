@@ -9,8 +9,6 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserModel;
 
-import java.sql.Timestamp;
-
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 

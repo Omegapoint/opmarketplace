@@ -2,8 +2,6 @@ package se.omegapoint.academy.opmarketplace.customer.domain.events;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 
-import java.sql.Timestamp;
-
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountObtained implements DomainEvent {

@@ -1,13 +1,11 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserModel;
-
-import java.sql.Timestamp;
 
 public class AccountCreationRequestedModel implements DTO, Event, Deserializer<AccountCreationRequested> {
 

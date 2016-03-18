@@ -9,21 +9,21 @@ import java.sql.Timestamp;
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public final class AccountCreated implements DomainEvent, PersistableEvent {
+public class AccountCreated implements DomainEvent, PersistableEvent {
 
     private final Email email;
     private final User user;
-    private final Timestamp time;
+    private final Timestamp timestamp;
 
     public AccountCreated(Email email, User user){
         this(email, user, new Timestamp(System.currentTimeMillis()));
     }
 
-    public AccountCreated(Email email, User user, Timestamp time){
-        isTrue(time.before(new Timestamp(System.currentTimeMillis() + 1)));
+    public AccountCreated(Email email, User user, Timestamp timestamp){
+        isTrue(timestamp.before(new Timestamp(System.currentTimeMillis() + 1)));
         this.email = notNull(email);
         this.user = notNull(user);
-        this.time = notNull(time);
+        this.timestamp = notNull(timestamp);
     }
 
     public Email email() {
@@ -36,6 +36,6 @@ public final class AccountCreated implements DomainEvent, PersistableEvent {
 
     @Override
     public Timestamp timestamp() {
-        return time;
+        return timestamp;
     }
 }

@@ -1,10 +1,10 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountNotCreated;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
