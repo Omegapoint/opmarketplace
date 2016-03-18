@@ -5,6 +5,7 @@ import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.*;
@@ -51,6 +52,10 @@ public class AccountService implements Consumer<Event<DTO>> {
             DomainEvent event = maybeAccount
                     .map(account -> (DomainEvent) account.changeUser(request))
                     .orElse(new AccountUserNotChanged(request.email().address(), "User does not exist."));
+
+            if (event instanceof PersistableEvent) {
+                accountRepository.append((PersistableEvent) event);
+            }
 
             publisher.publish(event);
 
