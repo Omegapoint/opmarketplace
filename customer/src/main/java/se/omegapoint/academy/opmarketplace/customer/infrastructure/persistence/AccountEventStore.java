@@ -1,6 +1,7 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
@@ -60,7 +61,7 @@ public class AccountEventStore implements AccountRepository {
     }
 
     // TODO: 16/03/16 Maybe ModifyingEvent interface?
-    public void append(DomainEvent event) {
+    public void append(PersistableEvent event) {
         notNull(event);
         if (event instanceof AccountCreated) {
             createAccountRepository.save(new AccountCreatedModel((AccountCreated) event));

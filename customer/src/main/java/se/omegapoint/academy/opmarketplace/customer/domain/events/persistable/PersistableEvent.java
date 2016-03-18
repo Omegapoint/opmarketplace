@@ -3,6 +3,6 @@ package se.omegapoint.academy.opmarketplace.customer.domain.events.persistable;
 
 import java.sql.Timestamp;
 
-public interface Persistable {
+public interface PersistableEvent {
     Timestamp timestamp();
 }
