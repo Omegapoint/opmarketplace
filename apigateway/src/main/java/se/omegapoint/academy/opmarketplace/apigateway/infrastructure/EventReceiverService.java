@@ -1,5 +1,8 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,42 +21,44 @@ public class EventReceiverService {
 
     @Autowired
     private Router router;
-    private ObjectMapper json = new ObjectMapper();
+
+    private final ObjectMapper json = new ObjectMapper();
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> eventInput(@RequestBody RemoteEvent event) {
-        notNull(event);
+    public ResponseEntity<Void> eventInput(@RequestBody JsonNode eventJson) {
+        notNull(eventJson);
+        IncomingRemoteEvent event = new IncomingRemoteEvent(
+                eventJson.get("type").textValue(),
+                eventJson.get("data").toString());
         try {
-            switch(event.getType()){
+            switch(event.type){
                 case AccountCreatedDTO.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountCreatedDTO.class));
+                    router.publish(json.readValue(event.data, AccountCreatedDTO.class));
                     break;
                 case AccountNotCreatedDTO.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountNotCreatedDTO.class));
+                    router.publish(json.readValue(event.data, AccountNotCreatedDTO.class));
                     break;
                 case AccountObtainedDTO.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountObtainedDTO.class));
+                    router.publish(json.readValue(event.data, AccountObtainedDTO.class));
                     break;
                 case AccountNotObtainedDTO.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountNotObtainedDTO.class));
+                    router.publish(json.readValue(event.data, AccountNotObtainedDTO.class));
                     break;
                 case AccountUserChangedDTO.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountUserChangedDTO.class));
+                    router.publish(json.readValue(event.data, AccountUserChangedDTO.class));
                     break;
                 case AccountUserNotChangedDTO.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountUserNotChangedDTO.class));
+                    router.publish(json.readValue(event.data, AccountUserNotChangedDTO.class));
                     break;
                 case AccountDeletedDTO.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountDeletedDTO.class));
+                    router.publish(json.readValue(event.data, AccountDeletedDTO.class));
                     break;
                 case AccountNotDeletedDTO.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountNotDeletedDTO.class));
+                    router.publish(json.readValue(event.data, AccountNotDeletedDTO.class));
                     break;
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }catch (IllegalArgumentValidationException e) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
-        }catch (IOException e){
+        }catch (IllegalArgumentValidationException | IOException  e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
     }

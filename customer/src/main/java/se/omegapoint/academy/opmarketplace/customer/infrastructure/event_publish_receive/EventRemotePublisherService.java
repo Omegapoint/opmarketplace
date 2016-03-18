@@ -2,7 +2,6 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publis
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.regexp.internal.RE;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
@@ -14,7 +13,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.Ac
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.OutgoingRemoteEvent;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event.*;
 
 import java.io.IOException;
@@ -61,8 +60,8 @@ public class EventRemotePublisherService implements EventPublisher {
 
     private void dispatch(Event eventDTO) {
         try {
-            RemoteEvent remoteEvent = new RemoteEvent(eventDTO);
-            StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(remoteEvent));
+            OutgoingRemoteEvent outgoingRemoteEvent = new OutgoingRemoteEvent(eventDTO);
+            StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(outgoingRemoteEvent));
             HttpPost httpPost = new HttpPost(publisherURL + "?channel=Account");
             httpPost.addHeader("Content-Type", "application/json");
             httpPost.setEntity(eventJson);

@@ -22,7 +22,6 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import static org.junit.Assert.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 
@@ -58,7 +57,7 @@ public class EventReceiverServiceTest {
                 "    }\n" +
                 "}", AccountCreatedDTO.class);
 
-        String content = json.writeValueAsString(new RemoteEvent(model, AccountCreatedDTO.TYPE));
+        String content = json.writeValueAsString(new OutgoingRemoteEvent(model));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -78,7 +77,7 @@ public class EventReceiverServiceTest {
 //                "    \"reason\":\"Invalid Email\"\n" +
 //                "}", AccountNotCreatedDTO.class);
 //
-//        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotCreatedDTO.TYPE));
+//        String content = json.writeValueAsString(new OutgoingRemoteEvent(model, AccountNotCreatedDTO.TYPE));
 //        mockMvc.perform(post("/event")
 //                .contentType(APPLICATION_JSON)
 //                .content(content));
@@ -103,7 +102,7 @@ public class EventReceiverServiceTest {
                 "    }\n" +
                 "}", AccountObtainedDTO.class);
 
-        String content = json.writeValueAsString(new RemoteEvent(model, AccountObtainedDTO.TYPE));
+        String content = json.writeValueAsString(new OutgoingRemoteEvent(model));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -143,7 +142,7 @@ public class EventReceiverServiceTest {
                 "    }\n" +
                 "}", AccountUserChangedDTO.class);
 
-        String content = json.writeValueAsString(new RemoteEvent(model, AccountUserChangedDTO.TYPE));
+        String content = json.writeValueAsString(new OutgoingRemoteEvent(model));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -163,7 +162,7 @@ public class EventReceiverServiceTest {
 //                "    \"reason\":\"Invalid Email\"\n" +
 //                "}", AccountUserNotChangedDTO.class);
 //
-//        String content = json.writeValueAsString(new RemoteEvent(model, AccountUserNotChangedDTO.TYPE));
+//        String content = json.writeValueAsString(new OutgoingRemoteEvent(model, AccountUserNotChangedDTO.TYPE));
 //        mockMvc.perform(post("/event")
 //                .contentType(APPLICATION_JSON)
 //                .content(content));
@@ -199,7 +198,7 @@ public class EventReceiverServiceTest {
 //                "    \"reason\":\"Invalid Email\"\n" +
 //                "}", AccountNotDeletedDTO.class);
 //
-//        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotDeletedDTO.TYPE));
+//        String content = json.writeValueAsString(new OutgoingRemoteEvent(model, AccountNotDeletedDTO.TYPE));
 //        mockMvc.perform(post("/event")
 //                .contentType(APPLICATION_JSON)
 //                .content(content));

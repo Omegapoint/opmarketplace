@@ -1,5 +1,6 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.event_publish_receive;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import reactor.bus.EventBus;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.RemoteEvent;
 
 import java.io.IOException;
 
@@ -23,34 +23,31 @@ public class EventReceiverService {
     @Autowired
     private EventBus eventBus;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper json = new ObjectMapper();
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> eventInput(@RequestParam("channel") final String channel, @RequestBody RemoteEvent event) {
+    public ResponseEntity<Void> eventInput(@RequestParam("channel") final String channel, @RequestBody JsonNode eventJson) {
         notNull(channel);
-        notNull(event);
-
+        notNull(eventJson);
+        IncomingRemoteEvent event = new IncomingRemoteEvent(
+                eventJson.get("type").textValue(),
+                eventJson.get("data").toString());
         try {
-            switch (event.getType()) {
+            switch (event.type) {
                 case AccountCreationRequestedModel.TYPE:
-                    AccountCreationRequestedModel accountCreationRequestedModel = objectMapper.readValue(event.getData(), AccountCreationRequestedModel.class);
-                    eventBus.notify(channel, Event.wrap(accountCreationRequestedModel));
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountCreationRequestedModel.class)));
                     break;
                 case AccountRequestedModel.TYPE:
-                    AccountRequestedModel accountRequestedModel = objectMapper.readValue(event.getData(), AccountRequestedModel.class);
-                    eventBus.notify(channel, Event.wrap(accountRequestedModel));
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountRequestedModel.class)));
                     break;
                 case AccountUserChangeRequestedModel.TYPE:
-                    AccountUserChangeRequestedModel accountUserChangeRequestedModel = objectMapper.readValue(event.getData(), AccountUserChangeRequestedModel.class);
-                    eventBus.notify(channel, Event.wrap(accountUserChangeRequestedModel));
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountUserChangeRequestedModel.class)));
                     break;
                 default:
-                    System.err.printf("Received unknown event; %s%n", event.getType());
-
+                    System.err.printf("Received unknown event; %s%n", event.type);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();

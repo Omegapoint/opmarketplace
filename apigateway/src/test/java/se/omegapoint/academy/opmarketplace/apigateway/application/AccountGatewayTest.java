@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.TestPublisher;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountCreationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountDeletionRequestedDTO;
@@ -57,7 +58,7 @@ public class AccountGatewayTest {
         mockMvc.perform(post("/accounts")
                 .contentType(APPLICATION_JSON)
                 .content(content));
-        JsonModel latestEvent = testPublisher.getLatestEvent();
+        Event latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountCreationRequestedDTO requestedModel = (AccountCreationRequestedDTO) latestEvent;
         assertEquals("test@test.com", requestedModel.email.address);
@@ -79,7 +80,7 @@ public class AccountGatewayTest {
         mockMvc.perform(put("/accounts")
                 .contentType(APPLICATION_JSON)
                 .content(content));
-        JsonModel latestEvent = testPublisher.getLatestEvent();
+        Event latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountUserChangeRequestedDTO requestedModel = (AccountUserChangeRequestedDTO) latestEvent;
         assertEquals("test@test.com", requestedModel.email.address);
@@ -90,7 +91,7 @@ public class AccountGatewayTest {
         mockMvc.perform(get("/accounts")
                 .contentType(APPLICATION_JSON)
                 .param("email", "test@test.com"));
-        JsonModel latestEvent = testPublisher.getLatestEvent();
+        Event latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountRequestedDTO requestedModel = (AccountRequestedDTO) latestEvent;
         assertEquals("test@test.com" , requestedModel.email.address);
@@ -101,7 +102,7 @@ public class AccountGatewayTest {
         mockMvc.perform(delete("/accounts")
                 .contentType(APPLICATION_JSON)
                 .param("email", "test@test.com"));
-        JsonModel latestEvent = testPublisher.getLatestEvent();
+        Event latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountDeletionRequestedDTO requestedModel = (AccountDeletionRequestedDTO) latestEvent;
         assertEquals("test@test.com" , requestedModel.email.address);

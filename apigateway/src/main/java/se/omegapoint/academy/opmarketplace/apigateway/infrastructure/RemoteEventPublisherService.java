@@ -8,7 +8,7 @@ import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.springframework.beans.factory.annotation.Value;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.OutgoingRemoteEvent;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -20,8 +20,8 @@ public class RemoteEventPublisherService implements RemoteEventPublisher {
 
     private static final FutureCallback<HttpResponse> IGNORE_CALLBACK = null;
 
-    //@Value("${event.publisher.url}")
-    private String PUBLISH_URL = "http://localhost:8000/event";
+    @Value("${event.publisher.url}")
+    private String PUBLISH_URL;
 
     private final CloseableHttpAsyncClient httpClient;
 
@@ -31,10 +31,10 @@ public class RemoteEventPublisherService implements RemoteEventPublisher {
     }
 
     @Override
-    public void publish(RemoteEvent remoteEvent) {
-        notNull(remoteEvent);
+    public void publish(OutgoingRemoteEvent outgoingRemoteEvent) {
+        notNull(outgoingRemoteEvent);
         try {
-            StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(remoteEvent));
+            StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(outgoingRemoteEvent));
             HttpPost httpPost = new HttpPost(PUBLISH_URL + "?channel=Account");
             httpPost.addHeader("Content-Type", "application/json");
             httpPost.setEntity(eventJson);

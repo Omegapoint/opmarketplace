@@ -4,13 +4,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 import reactor.bus.Event;
 import reactor.fn.Consumer;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountUserChangedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountUserNotChangedDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountUserChangedListener implements Consumer<Event<JsonModel>> {
+public class AccountUserChangedListener implements Consumer<Event<se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event>> {
     private DeferredResult<ResponseEntity<String>> result;
 
     public AccountUserChangedListener(DeferredResult<ResponseEntity<String>> result) {
@@ -18,9 +17,9 @@ public class AccountUserChangedListener implements Consumer<Event<JsonModel>> {
     }
 
     @Override
-    public void accept(Event<JsonModel> event) {
+    public void accept(Event<se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event> event) {
         notNull(event);
-        JsonModel model = event.getData();
+        se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event model = event.getData();
         if (model instanceof AccountUserChangedDTO){
             result.setResult(ResponseEntity.ok(""));
         }

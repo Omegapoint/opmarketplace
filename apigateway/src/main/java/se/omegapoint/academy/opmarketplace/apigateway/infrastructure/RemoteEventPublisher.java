@@ -1,7 +1,7 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure;
 
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.OutgoingRemoteEvent;
 
 public interface RemoteEventPublisher {
-    void publish(RemoteEvent remoteEvent);
+    void publish(OutgoingRemoteEvent outgoingRemoteEvent);
 }

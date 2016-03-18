@@ -200,19 +200,4 @@ public class TestDTO {
         assertEquals("reason", dto.reason);
     }
 
-    @Test
-    public void testRemoteEventDeserialization() throws Exception{
-        RemoteEvent dto = json.readValue("{" +
-                "   \"type\":\"AccountNotObtained\"," +
-                "   \"data\":\"{" +
-                "       \'email\':{" +
-                "           \'address\':\'@invalid.com\'" +
-                "       }," +
-                "       \'reason\':\'Invalid Email\'" +
-                "   }\"" +
-                "}", RemoteEvent.class);
-        assertNotNull(dto);
-        assertNotNull(dto.getData());
-        assertNotNull(dto.getType());
-    }
 }
