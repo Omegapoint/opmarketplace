@@ -5,9 +5,8 @@ import org.springframework.web.context.request.async.DeferredResult;
 import reactor.bus.Event;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountNotObtainedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountUserChangedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountUserNotChangedModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountUserChangedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountUserNotChangedDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -22,11 +21,11 @@ public class AccountUserChangedListener implements Consumer<Event<JsonModel>> {
     public void accept(Event<JsonModel> event) {
         notNull(event);
         JsonModel model = event.getData();
-        if (model instanceof AccountUserChangedModel){
+        if (model instanceof AccountUserChangedDTO){
             result.setResult(ResponseEntity.ok(""));
         }
-        if (model instanceof AccountUserNotChangedModel){
-            result.setErrorResult(ResponseEntity.badRequest().body(((AccountUserNotChangedModel)model).getReason()));
+        if (model instanceof AccountUserNotChangedDTO){
+            result.setErrorResult(ResponseEntity.badRequest().body(((AccountUserNotChangedDTO)model).getReason()));
         }
     }
 }

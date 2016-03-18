@@ -2,20 +2,20 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repre
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccountUserChangedModel implements JsonModel {
+public class AccountUserChangedDTO implements JsonModel {
 
     public static final String TYPE = "AccountUserChanged";
 
-    private EmailModel email;
+    private EmailDTO email;
 
-    public AccountUserChangedModel(){}
+    public AccountUserChangedDTO(){}
 
-    public EmailModel getEmail() {
+    public EmailDTO getEmail() {
         return this.email;
     }
 

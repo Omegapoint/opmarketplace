@@ -7,9 +7,8 @@ import org.springframework.web.context.request.async.DeferredResult;
 import reactor.bus.Event;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountNotObtainedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.AccountModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountObtainedModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountNotObtainedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountObtainedDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -26,11 +25,11 @@ public class AccountObtainedListener implements Consumer<Event<JsonModel>> {
         notNull(event);
         JsonModel model = event.getData();
         try {
-            if (model instanceof AccountObtainedModel){
-                result.setResult(ResponseEntity.ok(json.writeValueAsString(((AccountObtainedModel)model).getAccount())));
+            if (model instanceof AccountObtainedDTO){
+                result.setResult(ResponseEntity.ok(json.writeValueAsString(((AccountObtainedDTO)model).getAccount())));
             }
-            if (model instanceof AccountNotObtainedModel){
-                result.setErrorResult(ResponseEntity.badRequest().body(((AccountNotObtainedModel)model).getReason()));
+            if (model instanceof AccountNotObtainedDTO){
+                result.setErrorResult(ResponseEntity.badRequest().body(((AccountNotObtainedDTO)model).getReason()));
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();

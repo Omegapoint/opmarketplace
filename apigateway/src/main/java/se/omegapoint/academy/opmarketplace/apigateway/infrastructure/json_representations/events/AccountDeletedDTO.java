@@ -1,16 +1,16 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events;
 
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailDTO;
 
-public class AccountDeletedModel implements JsonModel {
+public class AccountDeletedDTO implements JsonModel {
     public static final String TYPE = "AccountDeleted";
 
-    private EmailModel email;
+    private EmailDTO email;
 
-    public AccountDeletedModel() {}
+    public AccountDeletedDTO() {}
 
-    public EmailModel getEmail() {
+    public EmailDTO getEmail() {
         return email;
     }
 }

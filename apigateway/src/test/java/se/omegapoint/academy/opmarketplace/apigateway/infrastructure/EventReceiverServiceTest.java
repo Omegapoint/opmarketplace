@@ -18,16 +18,11 @@ import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.*;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.AccountModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.UserModel;
 
 import static org.junit.Assert.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -56,13 +51,13 @@ public class EventReceiverServiceTest {
         Registration<Object, Consumer<? extends Event<?>>> registration =
                 eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTCREATION.NAME + "test@test.com"), event -> {}).cancelAfterUse();
 
-        AccountCreatedModel model = json.readValue("{\n" +
+        AccountCreatedDTO model = json.readValue("{\n" +
                 "    \"email\":{\n" +
                 "        \"address\":\"test@test.com\"\n" +
                 "    }\n" +
-                "}", AccountCreatedModel.class);
+                "}", AccountCreatedDTO.class);
 
-        String content = json.writeValueAsString(new RemoteEvent(model, AccountCreatedModel.TYPE));
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountCreatedDTO.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -75,14 +70,14 @@ public class EventReceiverServiceTest {
         Registration<Object, Consumer<? extends Event<?>>> registration =
                 eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTCREATION.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
 
-        AccountNotCreatedModel model = json.readValue("{\n" +
+        AccountNotCreatedDTO model = json.readValue("{\n" +
                 "    \"email\":{\n" +
                 "        \"address\":\"@invalid.com\"\n" +
                 "    },\n" +
                 "    \"reason\":\"Invalid Email\"\n" +
-                "}", AccountNotCreatedModel.class);
+                "}", AccountNotCreatedDTO.class);
 
-        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotCreatedModel.TYPE));
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotCreatedDTO.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -95,7 +90,7 @@ public class EventReceiverServiceTest {
         Registration<Object, Consumer<? extends Event<?>>> registration =
                 eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTREQUEST.NAME + "test@test.com"), event -> {}).cancelAfterUse();
 
-        AccountObtainedModel model = json.readValue("{\n" +
+        AccountObtainedDTO model = json.readValue("{\n" +
                 "    \"account\":{\n" +
                 "        \"email\":{\n" +
                 "            \"address\":\"test@test.com\"\n" +
@@ -105,9 +100,9 @@ public class EventReceiverServiceTest {
                 "            \"lastName\":\"testLast\"\n" +
                 "        }\n" +
                 "    }\n" +
-                "}", AccountObtainedModel.class);
+                "}", AccountObtainedDTO.class);
 
-        String content = json.writeValueAsString(new RemoteEvent(model, AccountObtainedModel.TYPE));
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountObtainedDTO.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -120,14 +115,14 @@ public class EventReceiverServiceTest {
         Registration<Object, Consumer<? extends Event<?>>> registration =
                 eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTREQUEST.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
 
-        AccountNotObtainedModel model = json.readValue("{\n" +
+        AccountNotObtainedDTO model = json.readValue("{\n" +
                 "    \"email\":{\n" +
                 "        \"address\":\"@invalid.com\"\n" +
                 "    },\n" +
                 "    \"reason\":\"Invalid Email\"\n" +
-                "}", AccountNotObtainedModel.class);
+                "}", AccountNotObtainedDTO.class);
 
-        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotObtainedModel.TYPE));
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotObtainedDTO.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -140,13 +135,13 @@ public class EventReceiverServiceTest {
         Registration<Object, Consumer<? extends Event<?>>> registration =
                 eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "test@test.com"), event -> {}).cancelAfterUse();
 
-        AccountUserChangedModel model = json.readValue("{\n" +
+        AccountUserChangedDTO model = json.readValue("{\n" +
                 "    \"email\":{\n" +
                 "        \"address\":\"test@test.com\"\n" +
                 "    }\n" +
-                "}", AccountUserChangedModel.class);
+                "}", AccountUserChangedDTO.class);
 
-        String content = json.writeValueAsString(new RemoteEvent(model, AccountUserChangedModel.TYPE));
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountUserChangedDTO.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -159,14 +154,14 @@ public class EventReceiverServiceTest {
         Registration<Object, Consumer<? extends Event<?>>> registration =
                 eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
 
-        AccountUserNotChangedModel model = json.readValue("{\n" +
+        AccountUserNotChangedDTO model = json.readValue("{\n" +
                 "    \"email\":{\n" +
                 "        \"address\":\"@invalid.com\"\n" +
                 "    },\n" +
                 "    \"reason\":\"Invalid Email\"\n" +
-                "}", AccountUserNotChangedModel.class);
+                "}", AccountUserNotChangedDTO.class);
 
-        String content = json.writeValueAsString(new RemoteEvent(model, AccountUserNotChangedModel.TYPE));
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountUserNotChangedDTO.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -179,13 +174,13 @@ public class EventReceiverServiceTest {
         Registration<Object, Consumer<? extends Event<?>>> registration =
                 eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "test@test.com"), event -> {}).cancelAfterUse();
 
-        AccountDeletedModel model = json.readValue("{\n" +
+        AccountDeletedDTO model = json.readValue("{\n" +
                 "    \"email\":{\n" +
                 "        \"address\":\"test@test.com\"\n" +
                 "    }\n" +
-                "}", AccountDeletedModel.class);
+                "}", AccountDeletedDTO.class);
 
-        String content = json.writeValueAsString(new RemoteEvent(model, AccountDeletedModel.TYPE));
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountDeletedDTO.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
@@ -198,14 +193,14 @@ public class EventReceiverServiceTest {
         Registration<Object, Consumer<? extends Event<?>>> registration =
                 eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
 
-        AccountNotDeletedModel model = json.readValue("{\n" +
+        AccountNotDeletedDTO model = json.readValue("{\n" +
                 "    \"email\":{\n" +
                 "        \"address\":\"@invalid.com\"\n" +
                 "    },\n" +
                 "    \"reason\":\"Invalid Email\"\n" +
-                "}", AccountNotDeletedModel.class);
+                "}", AccountNotDeletedDTO.class);
 
-        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotDeletedModel.TYPE));
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotDeletedDTO.TYPE));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));

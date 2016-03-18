@@ -5,15 +5,15 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class EmailModel implements JsonModel {
+public class EmailDTO implements JsonModel {
 
     private String address;
 
-    public EmailModel(String email){
+    public EmailDTO(String email){
         this.address = notNull(email);
     }
 
-    public EmailModel(){}
+    public EmailDTO(){}
 
     public String getAddress() {
         return address;

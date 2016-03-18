@@ -16,35 +16,35 @@ public class Router {
         this.eventBus = notNull(eventBus);
     }
 
-    public void publish(AccountCreatedModel model){
+    public void publish(AccountCreatedDTO model){
         eventBus.notify(CHANNEL.ACCOUNTCREATION.NAME + model.getEmail().getAddress(), Event.wrap(model));
     }
 
-    public void publish(AccountNotCreatedModel model){
+    public void publish(AccountNotCreatedDTO model){
         eventBus.notify(CHANNEL.ACCOUNTCREATION.NAME + model.getEmail().getAddress(), Event.wrap(model));
     }
 
-    public void publish(AccountObtainedModel model){
+    public void publish(AccountObtainedDTO model){
         eventBus.notify(CHANNEL.ACCOUNTREQUEST.NAME + model.getAccount().getEmail().getAddress(), Event.wrap(model));
     }
 
-    public void publish(AccountNotObtainedModel model){
+    public void publish(AccountNotObtainedDTO model){
         eventBus.notify(CHANNEL.ACCOUNTREQUEST.NAME + model.getEmail().getAddress(), Event.wrap(model));
     }
 
-    public void publish(AccountUserChangedModel model) {
+    public void publish(AccountUserChangedDTO model) {
         eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
     }
 
-    public void publish(AccountUserNotChangedModel model) {
+    public void publish(AccountUserNotChangedDTO model) {
         eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
     }
 
-    public void publish(AccountDeletedModel model) {
+    public void publish(AccountDeletedDTO model) {
         eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
     }
 
-    public void publish(AccountNotDeletedModel model) {
+    public void publish(AccountNotDeletedDTO model) {
         eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
     }
 

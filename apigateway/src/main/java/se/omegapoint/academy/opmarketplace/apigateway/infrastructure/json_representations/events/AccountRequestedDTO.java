@@ -1,27 +1,29 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
 
 import java.sql.Timestamp;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountDeletionRequestedModel implements JsonModel{
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class AccountRequestedDTO implements JsonModel {
 
-    public static final String TYPE = "AccountDeletionRequested";
+    public static final String TYPE = "AccountRequested";
 
-    private EmailModel email;
+    private EmailDTO email;
     private Timestamp timestamp;
 
-    public AccountDeletionRequestedModel() {timestamp = new Timestamp(System.currentTimeMillis());}
+    public AccountRequestedDTO() {timestamp = new Timestamp(System.currentTimeMillis());}
 
-    public AccountDeletionRequestedModel(EmailModel email) {
+    public AccountRequestedDTO(EmailDTO email) {
         this.email = notNull(email);
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
-    public EmailModel getEmail() {
+    public EmailDTO getEmail() {
         return email;
     }
 

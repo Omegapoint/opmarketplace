@@ -1,29 +1,29 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.UserModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.UserDTO;
 
 import java.sql.Timestamp;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccountCreationRequestedModel implements JsonModel {
+public class AccountCreationRequestedDTO implements JsonModel {
     public static final String TYPE = "AccountCreationRequested";
 
-    private EmailModel email;
-    private UserModel user;
+    private EmailDTO email;
+    private UserDTO user;
     private Timestamp timestamp;
 
-    public AccountCreationRequestedModel(){
+    public AccountCreationRequestedDTO(){
         timestamp = new Timestamp(System.currentTimeMillis());
     }
 
-    public EmailModel getEmail() {
+    public EmailDTO getEmail() {
         return email;
     }
 
-    public UserModel getUser() {
+    public UserDTO getUser() {
         return user;
     }
 

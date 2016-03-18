@@ -4,14 +4,14 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class UserModel implements JsonModel {
+public class UserDTO implements JsonModel {
 
     private String firstName;
     private String lastName;
 
-    public UserModel(){}
+    public UserDTO(){}
 
-    public UserModel(String firstName, String lastName) {
+    public UserDTO(String firstName, String lastName) {
         this.firstName = notNull(firstName);
         this.lastName = notNull(lastName);
     }

@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.bus.Event;
-import reactor.bus.EventBus;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.*;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
@@ -27,29 +25,29 @@ public class EventReceiverService {
         notNull(event);
         try {
             switch(event.getType()){
-                case AccountCreatedModel.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountCreatedModel.class));
+                case AccountCreatedDTO.TYPE:
+                    router.publish(json.readValue(event.getData(), AccountCreatedDTO.class));
                     break;
-                case AccountNotCreatedModel.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountNotCreatedModel.class));
+                case AccountNotCreatedDTO.TYPE:
+                    router.publish(json.readValue(event.getData(), AccountNotCreatedDTO.class));
                     break;
-                case AccountObtainedModel.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountObtainedModel.class));
+                case AccountObtainedDTO.TYPE:
+                    router.publish(json.readValue(event.getData(), AccountObtainedDTO.class));
                     break;
-                case AccountNotObtainedModel.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountNotObtainedModel.class));
+                case AccountNotObtainedDTO.TYPE:
+                    router.publish(json.readValue(event.getData(), AccountNotObtainedDTO.class));
                     break;
-                case AccountUserChangedModel.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountUserChangedModel.class));
+                case AccountUserChangedDTO.TYPE:
+                    router.publish(json.readValue(event.getData(), AccountUserChangedDTO.class));
                     break;
-                case AccountUserNotChangedModel.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountUserNotChangedModel.class));
+                case AccountUserNotChangedDTO.TYPE:
+                    router.publish(json.readValue(event.getData(), AccountUserNotChangedDTO.class));
                     break;
-                case AccountDeletedModel.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountDeletedModel.class));
+                case AccountDeletedDTO.TYPE:
+                    router.publish(json.readValue(event.getData(), AccountDeletedDTO.class));
                     break;
-                case AccountNotDeletedModel.TYPE:
-                    router.publish(json.readValue(event.getData(), AccountNotDeletedModel.class));
+                case AccountNotDeletedDTO.TYPE:
+                    router.publish(json.readValue(event.getData(), AccountNotDeletedDTO.class));
                     break;
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();

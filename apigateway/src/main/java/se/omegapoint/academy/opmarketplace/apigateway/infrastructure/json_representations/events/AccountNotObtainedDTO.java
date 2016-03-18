@@ -2,27 +2,27 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repre
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.ReasonModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.ReasonDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccountNotObtainedModel implements JsonModel {
+public class AccountNotObtainedDTO implements JsonModel {
     public static final String TYPE = "AccountNotObtained";
 
-    private EmailModel email;
-    private ReasonModel reason;
+    private EmailDTO email;
+    private ReasonDTO reason;
 
-    public AccountNotObtainedModel() {
+    public AccountNotObtainedDTO() {
     }
 
 
-    public EmailModel getEmail() {
+    public EmailDTO getEmail() {
         return email;
     }
 
-    public ReasonModel getReason() {
+    public ReasonDTO getReason() {
         return reason;
     }
 }

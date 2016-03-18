@@ -2,15 +2,15 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repre
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class ReasonModel {
+public class ReasonDTO {
 
     private String reason;
 
-    public ReasonModel(String reason){
+    public ReasonDTO(String reason){
         this.reason = notNull(reason);
     }
  
-    public ReasonModel(){}
+    public ReasonDTO(){}
 
     public String getReason() {
         return reason;

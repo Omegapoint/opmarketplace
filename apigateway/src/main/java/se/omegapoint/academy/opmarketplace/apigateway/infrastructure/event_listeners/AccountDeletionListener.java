@@ -5,8 +5,8 @@ import org.springframework.web.context.request.async.DeferredResult;
 import reactor.bus.Event;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountDeletedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountNotDeletedModel;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountDeletedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountNotDeletedDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -21,11 +21,11 @@ public class AccountDeletionListener implements Consumer<Event<JsonModel>> {
     public void accept(Event<JsonModel> event) {
         notNull(event);
         JsonModel model = event.getData();
-        if (model instanceof AccountDeletedModel){
+        if (model instanceof AccountDeletedDTO){
             result.setResult(ResponseEntity.ok(""));
         }
-        if (model instanceof AccountNotDeletedModel){
-            result.setErrorResult(ResponseEntity.badRequest().body(((AccountNotDeletedModel)model).getReason()));
+        if (model instanceof AccountNotDeletedDTO){
+            result.setErrorResult(ResponseEntity.badRequest().body(((AccountNotDeletedDTO)model).getReason()));
         }
     }
 }
