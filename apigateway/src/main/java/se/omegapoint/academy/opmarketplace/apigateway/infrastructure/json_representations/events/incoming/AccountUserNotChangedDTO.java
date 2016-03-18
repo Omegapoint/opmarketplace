@@ -1,25 +1,27 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.UserDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccountCreationRequestedDTO implements Event {
-    public static final String TYPE = "AccountCreationRequested";
+public class AccountUserNotChangedDTO implements Event {
 
+    public static final String TYPE = "AccountUserNotChanged";
+
+    @JsonIgnore
     public final EmailDTO email;
-    public final UserDTO user;
+    public final String reason;
 
     @JsonCreator
-    public AccountCreationRequestedDTO(@JsonProperty("email") EmailDTO email, @JsonProperty("user") UserDTO user) {
+    public AccountUserNotChangedDTO(@JsonProperty("email") EmailDTO email, @JsonProperty("reason") String reason) {
         this.email = notNull(email);
-        this.user = notNull(user);
+        this.reason = notNull(reason);
     }
 
     @Override

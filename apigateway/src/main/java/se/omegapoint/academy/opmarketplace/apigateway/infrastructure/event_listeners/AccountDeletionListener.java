@@ -4,8 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 import reactor.bus.Event;
 import reactor.fn.Consumer;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountDeletedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountNotDeletedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.AccountDeletedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.AccountNotDeletedDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 

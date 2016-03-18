@@ -14,7 +14,7 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_liste
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountObtainedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountUserChangedListener;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailDTO;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;

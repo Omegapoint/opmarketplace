@@ -1,7 +1,6 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
@@ -10,17 +9,13 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccountNotCreatedDTO implements Event {
-    public static final String TYPE = "AccountNotCreated";
+public class AccountCreatedDTO implements Event {
+    public static final String TYPE = "AccountCreated";
 
-    @JsonIgnore
     public final EmailDTO email;
-    public final String reason;
-
     @JsonCreator
-    public AccountNotCreatedDTO(@JsonProperty("email") EmailDTO email, @JsonProperty("reason") String reason) {
+    public AccountCreatedDTO(@JsonProperty("email") EmailDTO email) {
         this.email = notNull(email);
-        this.reason = notNull(reason);
     }
 
     @Override

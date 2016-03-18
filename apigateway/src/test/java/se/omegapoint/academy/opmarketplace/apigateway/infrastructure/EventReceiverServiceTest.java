@@ -17,7 +17,10 @@ import reactor.bus.registry.Registration;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.AccountCreatedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.AccountObtainedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.AccountUserChangedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.OutgoingRemoteEvent;
 
 import static org.junit.Assert.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;

@@ -4,7 +4,7 @@ import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.*;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 

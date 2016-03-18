@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 

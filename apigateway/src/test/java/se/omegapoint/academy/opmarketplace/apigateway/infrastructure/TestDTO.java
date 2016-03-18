@@ -3,11 +3,12 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
 
 public class TestDTO {
 

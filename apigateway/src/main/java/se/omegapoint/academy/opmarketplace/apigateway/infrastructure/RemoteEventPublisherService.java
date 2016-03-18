@@ -8,7 +8,7 @@ import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.springframework.beans.factory.annotation.Value;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.OutgoingRemoteEvent;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.OutgoingRemoteEvent;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

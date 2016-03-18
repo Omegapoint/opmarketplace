@@ -1,14 +1,12 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.*;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.io.IOException;
