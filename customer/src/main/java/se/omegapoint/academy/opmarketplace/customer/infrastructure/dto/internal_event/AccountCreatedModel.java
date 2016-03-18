@@ -1,16 +1,12 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
-import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserModel;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.sql.Timestamp;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;

@@ -13,6 +13,8 @@ import reactor.bus.Event;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.TestConfiguration;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedModel;

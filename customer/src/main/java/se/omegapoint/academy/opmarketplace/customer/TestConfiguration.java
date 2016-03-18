@@ -4,10 +4,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 @Configuration
 @Profile("test")

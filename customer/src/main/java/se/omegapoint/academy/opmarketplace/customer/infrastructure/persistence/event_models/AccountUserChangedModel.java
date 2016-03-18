@@ -2,7 +2,7 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.
 
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

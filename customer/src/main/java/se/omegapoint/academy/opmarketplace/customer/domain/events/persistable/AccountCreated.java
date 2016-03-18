@@ -1,6 +1,6 @@
-package se.omegapoint.academy.opmarketplace.customer.domain.events;
+package se.omegapoint.academy.opmarketplace.customer.domain.events.persistable;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 
@@ -10,7 +10,7 @@ import java.util.Objects;
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public final class AccountCreated extends DomainEvent {
+public final class AccountCreated extends DomainEvent implements Persistable {
 
     private final Email email;
     private final User user;
