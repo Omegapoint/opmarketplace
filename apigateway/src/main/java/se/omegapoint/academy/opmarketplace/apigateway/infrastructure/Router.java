@@ -17,35 +17,35 @@ public class Router {
     }
 
     public void publish(AccountCreatedDTO model){
-        eventBus.notify(CHANNEL.ACCOUNTCREATION.NAME + model.getEmail().getAddress(), Event.wrap(model));
+        eventBus.notify(CHANNEL.ACCOUNTCREATION.NAME + model.email.address, Event.wrap(model));
     }
 
     public void publish(AccountNotCreatedDTO model){
-        eventBus.notify(CHANNEL.ACCOUNTCREATION.NAME + model.getEmail().getAddress(), Event.wrap(model));
+        eventBus.notify(CHANNEL.ACCOUNTCREATION.NAME + model.email.address, Event.wrap(model));
     }
 
     public void publish(AccountObtainedDTO model){
-        eventBus.notify(CHANNEL.ACCOUNTREQUEST.NAME + model.getAccount().getEmail().getAddress(), Event.wrap(model));
+        eventBus.notify(CHANNEL.ACCOUNTREQUEST.NAME + model.account.email.address, Event.wrap(model));
     }
 
     public void publish(AccountNotObtainedDTO model){
-        eventBus.notify(CHANNEL.ACCOUNTREQUEST.NAME + model.getEmail().getAddress(), Event.wrap(model));
+        eventBus.notify(CHANNEL.ACCOUNTREQUEST.NAME + model.email.address, Event.wrap(model));
     }
 
     public void publish(AccountUserChangedDTO model) {
-        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
+        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.email.address, Event.wrap(model));
     }
 
     public void publish(AccountUserNotChangedDTO model) {
-        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
+        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.email.address, Event.wrap(model));
     }
 
     public void publish(AccountDeletedDTO model) {
-        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
+        eventBus.notify(CHANNEL.ACCOUNTDELETED.NAME + model.email.address, Event.wrap(model));
     }
 
     public void publish(AccountNotDeletedDTO model) {
-        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
+        eventBus.notify(CHANNEL.ACCOUNTDELETED.NAME + model.email.address, Event.wrap(model));
     }
 
     public void subscribe(CHANNEL channel, String id, Consumer consumer){

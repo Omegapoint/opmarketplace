@@ -40,7 +40,7 @@ public class AccountGateway {
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         publisher.publish(new RemoteEvent(newAccount, AccountCreationRequestedDTO.TYPE));
         AccountCreatedListener listener =  new AccountCreatedListener(result);
-        router.subscribe(Router.CHANNEL.ACCOUNTCREATION, newAccount.getEmail().getAddress(), listener);
+        router.subscribe(Router.CHANNEL.ACCOUNTCREATION, newAccount.email.address, listener);
         return result;
     }
 
@@ -50,7 +50,7 @@ public class AccountGateway {
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         publisher.publish(new RemoteEvent(accountRequested, AccountRequestedDTO.TYPE));
         AccountObtainedListener listener =  new AccountObtainedListener(result);
-        router.subscribe(Router.CHANNEL.ACCOUNTREQUEST, accountRequested.getEmail().getAddress(), listener);
+        router.subscribe(Router.CHANNEL.ACCOUNTREQUEST, accountRequested.email.address, listener);
         return result;
     }
 
@@ -60,7 +60,7 @@ public class AccountGateway {
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         publisher.publish(new RemoteEvent(change, AccountUserChangeRequestedDTO.TYPE));
         AccountUserChangedListener listener =  new AccountUserChangedListener(result);
-        router.subscribe(Router.CHANNEL.ACCOUNTUSERCHANGE, change.getEmail().getAddress(), listener);
+        router.subscribe(Router.CHANNEL.ACCOUNTUSERCHANGE, change.email.address, listener);
         return result;
     }
 
@@ -70,7 +70,7 @@ public class AccountGateway {
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         publisher.publish(new RemoteEvent(accountDeletionRequested, AccountDeletionRequestedDTO.TYPE));
         AccountDeletionListener listener =  new AccountDeletionListener(result);
-        router.subscribe(Router.CHANNEL.ACCOUNTREQUEST, accountDeletionRequested.getEmail().getAddress(), listener);
+        router.subscribe(Router.CHANNEL.ACCOUNTREQUEST, accountDeletionRequested.email.address, listener);
         return result;
     }
 }

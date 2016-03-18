@@ -25,7 +25,7 @@ public class AccountDeletionListener implements Consumer<Event<JsonModel>> {
             result.setResult(ResponseEntity.ok(""));
         }
         if (model instanceof AccountNotDeletedDTO){
-            result.setErrorResult(ResponseEntity.badRequest().body(((AccountNotDeletedDTO)model).getReason()));
+            result.setErrorResult(ResponseEntity.badRequest().body(((AccountNotDeletedDTO)model).reason));
         }
     }
 }

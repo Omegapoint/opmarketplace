@@ -60,9 +60,9 @@ public class AccountGatewayTest {
         JsonModel latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountCreationRequestedDTO requestedModel = (AccountCreationRequestedDTO) latestEvent;
-        assertEquals("test@test.com", requestedModel.getEmail().getAddress());
-        assertEquals("testFirst", requestedModel.getUser().getFirstName());
-        assertEquals("testLast", requestedModel.getUser().getLastName());
+        assertEquals("test@test.com", requestedModel.email.address);
+        assertEquals("testFirst", requestedModel.user.firstName);
+        assertEquals("testLast", requestedModel.user.lastName);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class AccountGatewayTest {
         JsonModel latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountUserChangeRequestedDTO requestedModel = (AccountUserChangeRequestedDTO) latestEvent;
-        assertEquals("test@test.com", requestedModel.getEmail().getAddress());
+        assertEquals("test@test.com", requestedModel.email.address);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class AccountGatewayTest {
         JsonModel latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountRequestedDTO requestedModel = (AccountRequestedDTO) latestEvent;
-        assertEquals("test@test.com" , requestedModel.getEmail().getAddress());
+        assertEquals("test@test.com" , requestedModel.email.address);
     }
 
     @Test
@@ -104,6 +104,6 @@ public class AccountGatewayTest {
         JsonModel latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountDeletionRequestedDTO requestedModel = (AccountDeletionRequestedDTO) latestEvent;
-        assertEquals("test@test.com" , requestedModel.getEmail().getAddress());
+        assertEquals("test@test.com" , requestedModel.email.address);
     }
 }

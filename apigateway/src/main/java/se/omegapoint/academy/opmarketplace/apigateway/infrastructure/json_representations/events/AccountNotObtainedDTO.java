@@ -1,9 +1,11 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.ReasonDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -11,18 +13,13 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public class AccountNotObtainedDTO implements JsonModel {
     public static final String TYPE = "AccountNotObtained";
 
-    private EmailDTO email;
-    private ReasonDTO reason;
+    @JsonIgnore
+    public final EmailDTO email;
+    public final String reason;
 
-    public AccountNotObtainedDTO() {
-    }
-
-
-    public EmailDTO getEmail() {
-        return email;
-    }
-
-    public ReasonDTO getReason() {
-        return reason;
+    @JsonCreator
+    public AccountNotObtainedDTO(@JsonProperty("email") EmailDTO email, @JsonProperty("reason") String reason) {
+        this.email = notNull(email);
+        this.reason = notNull(reason);
     }
 }

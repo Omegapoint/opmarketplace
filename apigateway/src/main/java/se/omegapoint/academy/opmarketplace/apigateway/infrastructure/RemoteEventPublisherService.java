@@ -20,8 +20,8 @@ public class RemoteEventPublisherService implements RemoteEventPublisher {
 
     private static final FutureCallback<HttpResponse> IGNORE_CALLBACK = null;
 
-    @Value("${event.publisher.url}")
-    private String PUBLISH_URL;
+    //@Value("${event.publisher.url}")
+    private String PUBLISH_URL = "http://localhost:8000/event";
 
     private final CloseableHttpAsyncClient httpClient;
 

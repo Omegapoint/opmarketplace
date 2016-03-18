@@ -25,7 +25,7 @@ public class AccountCreatedListener implements Consumer<Event<JsonModel>> {
             result.setResult(ResponseEntity.ok(""));
         }
         if (model instanceof AccountNotCreatedDTO){
-            result.setErrorResult(ResponseEntity.badRequest().body(((AccountNotCreatedDTO)model).getReason()));
+            result.setErrorResult(ResponseEntity.badRequest().body(((AccountNotCreatedDTO)model).reason));
         }// todo fix contract
     }
 }

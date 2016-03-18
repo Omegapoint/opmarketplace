@@ -1,26 +1,19 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDTO implements JsonModel {
 
-    private String firstName;
-    private String lastName;
+    public final String firstName;
+    public final String lastName;
 
-    public UserDTO(){}
-
-    public UserDTO(String firstName, String lastName) {
+    public UserDTO(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName) {
         this.firstName = notNull(firstName);
         this.lastName = notNull(lastName);
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
     }
 }
