@@ -10,12 +10,10 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public class AccountUserChangeRequested {
     private final Email email;
     private final User user;
-    private final Timestamp timestamp;
 
-    public AccountUserChangeRequested(Email email, User user, Timestamp timestamp) {
+    public AccountUserChangeRequested(Email email, User user) {
         this.email = notNull(email);
         this.user = notNull(user);
-        this.timestamp = notNull(timestamp);
     }
 
     public Email email() {

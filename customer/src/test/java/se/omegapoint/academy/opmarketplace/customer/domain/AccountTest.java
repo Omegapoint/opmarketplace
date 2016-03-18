@@ -26,7 +26,7 @@ public class AccountTest {
         Email email = new Email("create@create.com");
         User user = new User("createFirst", "createLast");
         Account account = AccountFactory.fromPersistableEvents(
-                Arrays.asList(new PersistableEvent[] {Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1)))}));
+                Arrays.asList(new PersistableEvent[] {Account.createAccount(new AccountCreationRequested(email, user))}));
         assertEquals(email.address(), account.email().address());
         assertEquals(email.address(), account.id());
         assertEquals(user.firstName(), account.user().firstName());
@@ -38,10 +38,10 @@ public class AccountTest {
         Email email = new Email("change@change.com");
         User user = new User("initial", "initial");
         Account account = AccountFactory.fromPersistableEvents(
-                Arrays.asList(new PersistableEvent[] {Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1)))}));
+                Arrays.asList(new PersistableEvent[] {Account.createAccount(new AccountCreationRequested(email, user))}));
 
         User newUser = new User("a", user.lastName());
-        AccountUserChangeRequested changeRequest = new AccountUserChangeRequested(email, newUser, new Timestamp(1));
+        AccountUserChangeRequested changeRequest = new AccountUserChangeRequested(email, newUser);
         AccountUserChanged accountUserChanged = account.changeUser(changeRequest);
 
         assertEquals("a", accountUserChanged.user().firstName());

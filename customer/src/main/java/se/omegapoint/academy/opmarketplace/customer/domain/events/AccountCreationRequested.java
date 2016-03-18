@@ -13,16 +13,12 @@ public class AccountCreationRequested implements DomainEvent{
 
     private final Email email;
     private final User user;
-    private final Timestamp timestamp;
 
-    public AccountCreationRequested(Email email, User user, Timestamp timestamp){
+    public AccountCreationRequested(Email email, User user){
         notNull(email);
         notNull(user);
-        notNull(timestamp);
-        isTrue(timestamp.before(new Timestamp(System.currentTimeMillis() + 1)));
         this.email = email;
         this.user = user;
-        this.timestamp = timestamp;
     }
 
     public Email email() {

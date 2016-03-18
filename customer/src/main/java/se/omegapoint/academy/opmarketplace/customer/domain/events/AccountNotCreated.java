@@ -1,7 +1,5 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.events;
 
-import java.sql.Timestamp;
-
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountNotCreated implements DomainEvent {
@@ -10,12 +8,10 @@ public class AccountNotCreated implements DomainEvent {
     private final String email;
     // TODO: 16/03/16 Create value object Reason?
     private final String reason;
-    private final Timestamp timestamp;
 
     public AccountNotCreated(String email, String reason) {
         this.email = notNull(email);
         this.reason = notNull(reason);
-        timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     public String email() {

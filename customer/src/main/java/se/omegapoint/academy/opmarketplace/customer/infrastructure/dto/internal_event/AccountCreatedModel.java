@@ -7,8 +7,6 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serialize
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserModel;
 
-import java.sql.Timestamp;
-
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountCreatedModel implements DTO, Event, Serializer {
@@ -17,7 +15,6 @@ public class AccountCreatedModel implements DTO, Event, Serializer {
 
     private EmailModel email;
     private UserModel user;
-    private Timestamp timestamp;
 
     public AccountCreatedModel(){}
 
@@ -25,7 +22,6 @@ public class AccountCreatedModel implements DTO, Event, Serializer {
         notNull(accountCreated);
         this.email = new EmailModel(accountCreated.email());
         this.user = new UserModel(accountCreated.user());
-        this.timestamp = accountCreated.timestamp();
     }
 
     public EmailModel getEmail() {
@@ -34,10 +30,6 @@ public class AccountCreatedModel implements DTO, Event, Serializer {
 
     public UserModel getUser() {
         return user;
-    }
-
-    public Timestamp getTimestamp() {
-        return timestamp;
     }
 
     @Override

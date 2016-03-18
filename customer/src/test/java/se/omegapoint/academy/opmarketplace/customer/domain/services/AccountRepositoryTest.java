@@ -29,7 +29,7 @@ public class AccountRepositoryTest {
     public void should_save_account() throws IOException, InterruptedException {
         Email email = new Email("create@create.com");
         User user = new User("createFirst", "createLast");
-        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1))));
+        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user)));
         Account account = accountRepository.account(email).get();
         assertEquals(email.address(), account.email().address());
         assertEquals(email.address(), account.id());
@@ -40,7 +40,7 @@ public class AccountRepositoryTest {
     public void testAccountInExistence() throws Exception {
         Email email = new Email("exist@exist.com");
         User user = new User("exist", "exist");
-        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1))));
+        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user)));
         assertTrue(accountRepository.accountInExistence(email));
     }
 
@@ -48,11 +48,11 @@ public class AccountRepositoryTest {
     public void should_change_last_name_to_z() throws IOException, InterruptedException {
         Email email = new Email("change@change.com");
         User user = new User("initial", "initial");
-        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user, new Timestamp(1))));
+        accountRepository.append(Account.createAccount(new AccountCreationRequested(email, user)));
         Account account = accountRepository.account(email).get();
         for (char c = 'a'; c <= 'z'; c++) {
             User newUser = new User(user.firstName(), c+"");
-            AccountUserChangeRequested changeRequest = new AccountUserChangeRequested(email, newUser, new Timestamp(System.currentTimeMillis()));
+            AccountUserChangeRequested changeRequest = new AccountUserChangeRequested(email, newUser);
             accountRepository.append(account.changeUser(changeRequest));
             Thread.sleep(1);
         }

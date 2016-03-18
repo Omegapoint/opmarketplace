@@ -15,7 +15,6 @@ public class AccountCreationRequestedModel implements DTO, Event, Deserializer<A
 
     private EmailModel email;
     private UserModel user;
-    private Timestamp timestamp;
 
     public AccountCreationRequestedModel(){}
 
@@ -32,13 +31,10 @@ public class AccountCreationRequestedModel implements DTO, Event, Deserializer<A
         return user;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
 
     @Override
     public AccountCreationRequested domainObject() {
-        return new AccountCreationRequested(email.domainObject(), user.domainObject(), timestamp);
+        return new AccountCreationRequested(email.domainObject(), user.domainObject());
     }
 
     @Override

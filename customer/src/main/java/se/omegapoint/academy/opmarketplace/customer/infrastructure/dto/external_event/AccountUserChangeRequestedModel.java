@@ -20,7 +20,6 @@ public class AccountUserChangeRequestedModel implements DTO, Event, Deserializer
 
     private EmailModel email;
     private UserModel user;
-    private Timestamp timestamp;
 
     public AccountUserChangeRequestedModel() {}
 
@@ -38,16 +37,12 @@ public class AccountUserChangeRequestedModel implements DTO, Event, Deserializer
         return user;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
 
     @Override
     public AccountUserChangeRequested domainObject() {
         return new AccountUserChangeRequested(
                 new Email(email.getAddress()),
-                new User(user.getFirstName(), user.getLastName()),
-                timestamp);
+                new User(user.getFirstName(), user.getLastName()));
     }
 
     @Override

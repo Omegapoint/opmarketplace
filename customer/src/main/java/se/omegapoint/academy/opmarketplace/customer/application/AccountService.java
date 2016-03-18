@@ -72,7 +72,7 @@ public class AccountService implements Consumer<Event<DTO>> {
             Optional<Account> maybeAccount = accountRepository.account(request.email());
 
             if (maybeAccount.isPresent()) {
-                AccountObtained accountObtained = new AccountObtained(maybeAccount.get(), new Timestamp(System.currentTimeMillis()));
+                AccountObtained accountObtained = new AccountObtained(maybeAccount.get());
                 publisher.publish(accountObtained);
             } else {
                 AccountNotObtained accountNotObtained = new AccountNotObtained(request.email().address(), "Account does not exist.");

@@ -108,16 +108,14 @@ public class AccountServiceTest {
 
     private void addUser(String email, String firstName, String lastName) throws IOException {
         String inputData = "{\"email\":{\"address\":\"" + email +"\"}," +
-                "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}," +
-                "\"timestamp\":123456789}";
+                "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
 
         AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
         accountService.accept(Event.wrap(model));
     }
 
     private void getUser(String email) throws IOException {
-        String inputData = "{\"email\":{\"address\":\"" + email + "\"}," +
-                "\"timestamp\":123456789}";
+        String inputData = "{\"email\":{\"address\":\"" + email + "\"}}";
 
         AccountRequestedModel accountRequestedModel = objectMapper.readValue(inputData, AccountRequestedModel.class);
         accountService.accept(Event.wrap(accountRequestedModel));
@@ -125,8 +123,7 @@ public class AccountServiceTest {
 
     private void changeUser(String email, String firstName, String lastName) throws IOException {
         String inputData = "{\"email\":{\"address\":\"" + email +"\"}," +
-                "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}," +
-                "\"timestamp\":123456789}";
+                "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
 
         AccountUserChangeRequestedModel accountUserChangeRequestedModel = objectMapper.readValue(inputData, AccountUserChangeRequestedModel.class);
         accountService.accept(Event.wrap(accountUserChangeRequestedModel));

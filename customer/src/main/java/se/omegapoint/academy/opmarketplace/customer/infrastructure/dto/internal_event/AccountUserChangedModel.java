@@ -15,14 +15,12 @@ public class AccountUserChangedModel implements DTO, Event, Serializer {
 
     private EmailModel email;
     private UserModel user;
-    private Timestamp timestamp;
 
     public AccountUserChangedModel(){}
 
     public AccountUserChangedModel(AccountUserChanged accountUserChanged) {
         this.email = new EmailModel(accountUserChanged.email());
         this.user = new UserModel(accountUserChanged.user());
-        this.timestamp = accountUserChanged.timestamp();
     }
 
     public EmailModel getEmail() {
@@ -31,10 +29,6 @@ public class AccountUserChangedModel implements DTO, Event, Serializer {
 
     public UserModel getUser() {
         return user;
-    }
-
-    public Timestamp getTimestamp() {
-        return timestamp;
     }
 
     @Override

@@ -5,7 +5,6 @@ import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 
 import java.sql.Timestamp;
-import java.util.Objects;
 
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
@@ -21,13 +20,10 @@ public final class AccountCreated implements DomainEvent, PersistableEvent {
     }
 
     public AccountCreated(Email email, User user, Timestamp time){
-        notNull(email);
-        notNull(user);
-        notNull(time);
         isTrue(time.before(new Timestamp(System.currentTimeMillis() + 1)));
-        this.email = email;
-        this.user = user;
-        this.time = time;
+        this.email = notNull(email);
+        this.user = notNull(user);
+        this.time = notNull(time);
     }
 
     public Email email() {
