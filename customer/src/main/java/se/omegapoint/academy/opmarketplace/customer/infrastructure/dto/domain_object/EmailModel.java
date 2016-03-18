@@ -1,10 +1,11 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class EmailModel implements JsonModel {
+public class EmailModel implements DTO {
 
     private String address;
 

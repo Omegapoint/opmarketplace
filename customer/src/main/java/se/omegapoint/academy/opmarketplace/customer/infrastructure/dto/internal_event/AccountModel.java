@@ -1,6 +1,8 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserModel;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 

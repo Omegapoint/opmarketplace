@@ -1,10 +1,12 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserNotChanged;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountUserNotChangedModel implements JsonModel {
+public class AccountUserNotChangedModel implements DTO {
 
     public static final String TYPE = "AccountUserNotChanged";
 

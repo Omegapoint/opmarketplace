@@ -1,10 +1,12 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountNotObtained;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountNotObtainedModel implements JsonModel {
+public class AccountNotObtainedModel implements DTO {
 
     public static final String TYPE = "AccountNotObtained";
 

@@ -10,7 +10,8 @@ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.springframework.beans.factory.annotation.Value;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.*;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event.*;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

@@ -1,10 +1,13 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChanged;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserModel;
 
 import java.sql.Timestamp;
 
-public class AccountUserChangedModel implements JsonModel {
+public class AccountUserChangedModel implements DTO {
     public static final String TYPE = "AccountUserChanged";
 
     private EmailModel email;

@@ -7,6 +7,9 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.*;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedModel;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.sql.Timestamp;
@@ -14,7 +17,7 @@ import java.util.Optional;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountService implements Consumer<Event<JsonModel>> {
+public class AccountService implements Consumer<Event<DTO>> {
 
     private final AccountRepository accountRepository;
     private final EventPublisher publisher;
@@ -27,16 +30,16 @@ public class AccountService implements Consumer<Event<JsonModel>> {
     // TODO: 17/03/16 Discuss exception usage?
     // TODO: 17/03/16 Fail events are sent in two places.
     @Override
-    public void accept(Event<JsonModel> event) {
+    public void accept(Event<DTO> event) {
         notNull(event);
 
-        JsonModel jsonModel = event.getData();
-        if (jsonModel instanceof AccountCreationRequestedModel) {
-            accountCreationRequested((AccountCreationRequestedModel) jsonModel);
-        } else if (jsonModel instanceof AccountRequestedModel) {
-            accountRequested((AccountRequestedModel) jsonModel);
-        } else if (jsonModel instanceof  AccountUserChangeRequestedModel) {
-            accountUserChangeRequested((AccountUserChangeRequestedModel) jsonModel);
+        DTO DTO = event.getData();
+        if (DTO instanceof AccountCreationRequestedModel) {
+            accountCreationRequested((AccountCreationRequestedModel) DTO);
+        } else if (DTO instanceof AccountRequestedModel) {
+            accountRequested((AccountRequestedModel) DTO);
+        } else if (DTO instanceof AccountUserChangeRequestedModel) {
+            accountUserChangeRequested((AccountUserChangeRequestedModel) DTO);
         }
     }
 

@@ -1,7 +1,8 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 
 import java.sql.Timestamp;
 
@@ -15,7 +16,7 @@ public class RemoteEvent {
     private Timestamp timestamp;
 
     // TODO: 08/03/16 Fix factory method.
-//    public static RemoteEvent fromJsonModel(JsonModel data, String type) {
+//    public static RemoteEvent fromJsonModel(DTO data, String type) {
 //        try {
 //            return new RemoteEvent(new ObjectMapper().writeValueAsString(data), type)
 //        } catch (JsonProcessingException e) {
@@ -24,7 +25,7 @@ public class RemoteEvent {
 //        return new RemoteEvent(data, type);
 //    }
 
-    public RemoteEvent(JsonModel data, String type) {
+    public RemoteEvent(DTO data, String type) {
         try {
             this.type = notNull(type);
             this.data = new ObjectMapper().writeValueAsString(data);

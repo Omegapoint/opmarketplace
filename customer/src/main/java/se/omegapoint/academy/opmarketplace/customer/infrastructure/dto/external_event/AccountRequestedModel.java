@@ -1,13 +1,15 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
 
 import java.sql.Timestamp;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountRequestedModel implements JsonModel {
+public class AccountRequestedModel implements DTO {
 
     public static final String TYPE = "AccountRequested";
 
