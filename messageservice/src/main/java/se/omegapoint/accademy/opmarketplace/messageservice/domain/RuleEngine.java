@@ -5,8 +5,8 @@ import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
-import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.RemoteEvent;
 import se.omegapoint.accademy.opmarketplace.messageservice.domain.models.CommandEvent;
+import se.omegapoint.accademy.opmarketplace.messageservice.infrastructure.EventMetaData;
 
 import java.util.HashSet;
 
@@ -19,8 +19,8 @@ public class RuleEngine implements Consumer<Event<CommandEvent>> {
         prohibitedEvents = new HashSet<>();
     }
 
-    public boolean allow(RemoteEvent event) {
-        return !prohibitedEvents.contains(event.getType());
+    public boolean allow(EventMetaData event) {
+            return !prohibitedEvents.contains(event.type);
     }
 
     @Override

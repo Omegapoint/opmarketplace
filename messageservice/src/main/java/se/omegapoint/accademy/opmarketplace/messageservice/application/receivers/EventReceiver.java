@@ -30,7 +30,7 @@ public class EventReceiver {
     @RequestMapping(method = POST, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<RemoteEvent> receiveEvent(
             @RequestParam("channel") String channel,
-            @RequestBody RemoteEvent data) {
+            @RequestBody String data) {
 
         System.out.printf("Event received and published on channel %s...%n", channel);
         eventBus.notify(channel, Event.wrap(data));
