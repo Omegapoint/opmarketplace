@@ -1,10 +1,8 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.events;
 
-import java.sql.Timestamp;
-
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountUserNotChanged extends DomainEvent {
+public class AccountUserNotChanged implements DomainEvent {
 
     private final String email;
     private final String reason;
@@ -20,10 +18,5 @@ public class AccountUserNotChanged extends DomainEvent {
 
     public String reason() {
         return reason;
-    }
-
-    @Override
-    public Timestamp timestamp() {
-        return null;
     }
 }

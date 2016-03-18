@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountUserChangeRequested extends DomainEvent {
+public class AccountUserChangeRequested {
     private final Email email;
     private final User user;
     private final Timestamp timestamp;
@@ -24,10 +24,5 @@ public class AccountUserChangeRequested extends DomainEvent {
 
     public User user() {
         return user;
-    }
-
-    @Override
-    public Timestamp timestamp() {
-        return timestamp;
     }
 }

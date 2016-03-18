@@ -22,7 +22,6 @@ public class AccountCreationRequestedModel implements DTO, Event, Deserializer<A
     public AccountCreationRequestedModel(AccountCreationRequested accountCreationRequested) {
         this.email = new EmailModel(accountCreationRequested.email());
         this.user = new UserModel(accountCreationRequested.user());
-        this.timestamp = accountCreationRequested.timestamp();
     }
 
     public EmailModel getEmail() {

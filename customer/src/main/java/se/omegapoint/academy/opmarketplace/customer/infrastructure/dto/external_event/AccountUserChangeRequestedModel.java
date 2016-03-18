@@ -28,7 +28,6 @@ public class AccountUserChangeRequestedModel implements DTO, Event, Deserializer
         notNull(request);
         this.email = new EmailModel(request.email());
         this.user = new UserModel(request.user());
-        this.timestamp = request.timestamp();
     }
 
     public EmailModel getEmail() {

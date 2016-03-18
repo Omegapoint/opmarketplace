@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountObtained extends DomainEvent {
+public class AccountObtained implements DomainEvent {
 
     private final Account account;
     private final Timestamp timestamp;
@@ -18,10 +18,5 @@ public class AccountObtained extends DomainEvent {
 
     public Account account() {
         return account;
-    }
-
-    @Override
-    public Timestamp timestamp() {
-        return timestamp;
     }
 }

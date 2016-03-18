@@ -10,7 +10,7 @@ import java.util.Objects;
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountUserChanged extends DomainEvent implements PersistableEvent {
+public class AccountUserChanged implements DomainEvent, PersistableEvent {
 
     private final Email email;
     private final User user;

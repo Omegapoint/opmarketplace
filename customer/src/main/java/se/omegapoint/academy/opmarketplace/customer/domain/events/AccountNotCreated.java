@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountNotCreated extends DomainEvent {
+public class AccountNotCreated implements DomainEvent {
 
     // TODO: 16/03/16 Model as unsafe Email?
     private final String email;
@@ -24,10 +24,5 @@ public class AccountNotCreated extends DomainEvent {
 
     public String reason() {
         return reason;
-    }
-
-    @Override
-    public Timestamp timestamp() {
-        return null;
     }
 }

@@ -22,7 +22,6 @@ public class AccountObtainedModel implements DTO, Event, Serializer {
     public AccountObtainedModel(AccountObtained accountObtained) {
         notNull(accountObtained);
         this.account = new AccountModel(accountObtained.account());
-        this.timestamp = accountObtained.timestamp();
     }
 
     public AccountModel getAccount() {

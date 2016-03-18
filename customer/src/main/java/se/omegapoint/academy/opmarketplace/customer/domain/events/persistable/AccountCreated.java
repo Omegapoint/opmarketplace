@@ -10,7 +10,7 @@ import java.util.Objects;
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public final class AccountCreated extends DomainEvent implements PersistableEvent {
+public final class AccountCreated implements DomainEvent, PersistableEvent {
 
     private final Email email;
     private final User user;
@@ -41,21 +41,5 @@ public final class AccountCreated extends DomainEvent implements PersistableEven
     @Override
     public Timestamp timestamp() {
         return time;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AccountCreated that = (AccountCreated) o;
-        return Objects.equals(email, that.email) &&
-                Objects.equals(user, that.user) &&
-                Objects.equals(time, that.time);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(email, user, time);
     }
 }
