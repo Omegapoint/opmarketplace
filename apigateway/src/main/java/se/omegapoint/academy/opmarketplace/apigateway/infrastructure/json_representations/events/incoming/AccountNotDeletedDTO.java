@@ -14,17 +14,22 @@ public class AccountNotDeletedDTO implements Event{
     public static final String TYPE = "AccountNotDeleted";
 
     @JsonIgnore
-    public final EmailDTO email;
+    public final String requestId;
     public final String reason;
 
     @JsonCreator
-    public AccountNotDeletedDTO(@JsonProperty("email") EmailDTO email, @JsonProperty("reason") String reason) {
-        this.email = notNull(email);
+    public AccountNotDeletedDTO(@JsonProperty("requestId") String requestId, @JsonProperty("reason") String reason) {
+        this.requestId = notNull(requestId);
         this.reason = notNull(reason);
     }
 
     @Override
     public String type() {
         return TYPE;
+    }
+
+    @Override
+    public String requestId() {
+        return requestId;
     }
 }

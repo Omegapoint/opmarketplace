@@ -36,6 +36,7 @@ dependencies {
 	compile "io.projectreactor:reactor-bus:${reactorVersion}"
 	compile "io.projectreactor:reactor-core:${reactorVersion}"
 	compile "org.apache.httpcomponents:httpasyncclient:${apacheHttpAsyncClientVersion}"
+	compile "commons-lang:commons-lang:2.6"
 
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
 }

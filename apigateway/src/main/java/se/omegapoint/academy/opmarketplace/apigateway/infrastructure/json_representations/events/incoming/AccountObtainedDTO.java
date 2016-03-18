@@ -12,14 +12,21 @@ public class AccountObtainedDTO implements Event {
 
     public static final String TYPE = "AccountObtained";
 
+    public final String requestId;
     public final AccountDTO account;
 
-    public AccountObtainedDTO(@JsonProperty("account") AccountDTO account) {
+    public AccountObtainedDTO(@JsonProperty("requestId") String requestId, @JsonProperty("account") AccountDTO account) {
+        this.requestId = notNull(requestId);
         this.account = notNull(account);
     }
 
     @Override
     public String type() {
         return TYPE;
+    }
+
+    @Override
+    public String requestId() {
+        return requestId;
     }
 }

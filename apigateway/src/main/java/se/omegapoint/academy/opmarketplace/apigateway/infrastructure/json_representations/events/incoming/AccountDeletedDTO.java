@@ -1,5 +1,6 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
@@ -11,14 +12,20 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public class AccountDeletedDTO implements Event {
     public static final String TYPE = "AccountDeleted";
 
-    public final EmailDTO email;
+    public final String requestId;
 
-    public AccountDeletedDTO(@JsonProperty("email") EmailDTO email) {
-        this.email = notNull(email);
+    @JsonCreator
+    public AccountDeletedDTO(@JsonProperty("requestId") String requestId) {
+        this.requestId = notNull(requestId);
     }
 
     @Override
     public String type() {
         return TYPE;
+    }
+
+    @Override
+    public String requestId() {
+        return requestId;
     }
 }

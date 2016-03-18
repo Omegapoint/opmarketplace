@@ -12,14 +12,20 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public class AccountCreatedDTO implements Event {
     public static final String TYPE = "AccountCreated";
 
-    public final EmailDTO email;
+    public final String requestId;
+
     @JsonCreator
-    public AccountCreatedDTO(@JsonProperty("email") EmailDTO email) {
-        this.email = notNull(email);
+    public AccountCreatedDTO(@JsonProperty("requestId") String requestId) {
+        this.requestId = notNull(requestId);
     }
 
     @Override
     public String type() {
         return TYPE;
+    }
+
+    @Override
+    public String requestId() {
+        return requestId;
     }
 }

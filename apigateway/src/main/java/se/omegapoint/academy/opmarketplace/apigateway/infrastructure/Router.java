@@ -17,49 +17,38 @@ public class Router {
     }
 
     public void publish(AccountCreatedDTO model){
-        eventBus.notify(CHANNEL.ACCOUNTCREATION.NAME + model.email.address, Event.wrap(model));
+        eventBus.notify(model.requestId(), Event.wrap(model));
     }
 
     public void publish(AccountNotCreatedDTO model){
-        eventBus.notify(CHANNEL.ACCOUNTCREATION.NAME + model.email.address, Event.wrap(model));
+        eventBus.notify(model.requestId(), Event.wrap(model));
     }
 
     public void publish(AccountObtainedDTO model){
-        eventBus.notify(CHANNEL.ACCOUNTREQUEST.NAME + model.account.email.address, Event.wrap(model));
+        eventBus.notify(model.requestId(), Event.wrap(model));
     }
 
     public void publish(AccountNotObtainedDTO model){
-        eventBus.notify(CHANNEL.ACCOUNTREQUEST.NAME + model.email.address, Event.wrap(model));
+        eventBus.notify(model.requestId(), Event.wrap(model));
     }
 
     public void publish(AccountUserChangedDTO model) {
-        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.email.address, Event.wrap(model));
+        eventBus.notify(model.requestId(), Event.wrap(model));
     }
 
     public void publish(AccountUserNotChangedDTO model) {
-        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.email.address, Event.wrap(model));
+        eventBus.notify(model.requestId(), Event.wrap(model));
     }
 
     public void publish(AccountDeletedDTO model) {
-        eventBus.notify(CHANNEL.ACCOUNTDELETED.NAME + model.email.address, Event.wrap(model));
+        eventBus.notify(model.requestId(), Event.wrap(model));
     }
 
     public void publish(AccountNotDeletedDTO model) {
-        eventBus.notify(CHANNEL.ACCOUNTDELETED.NAME + model.email.address, Event.wrap(model));
+        eventBus.notify(model.requestId(), Event.wrap(model));
     }
 
-    public void subscribe(CHANNEL channel, String id, Consumer consumer){
-        eventBus.on(Selectors.regex(channel.NAME + "(\\s*)" + id + "(\\s*)"), consumer).cancelAfterUse();
-    }
-
-    public enum CHANNEL {
-        ACCOUNTCREATION("AccountCreation"), ACCOUNTREQUEST("AccountRequest"),
-        ACCOUNTUSERCHANGE("AccountUserChanged"), ACCOUNTDELETED("AccountDeleted");
-
-        public final String NAME;
-
-        CHANNEL(String name) {
-            this.NAME = name;
-        }
+    public void subscribe(String id, Consumer consumer){
+        eventBus.on(Selectors.object(id), consumer).cancelAfterUse();
     }
 }

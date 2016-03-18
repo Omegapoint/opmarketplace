@@ -2,4 +2,5 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repre
 
 public interface Event extends DTO{
     String type();
+    String requestId();
 }

@@ -52,12 +52,10 @@ public class EventReceiverServiceTest {
     @Test
     public void should_receive_account_creation_confirmation() throws Exception {
         Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTCREATION.NAME + "test@test.com"), event -> {}).cancelAfterUse();
+                eventBus.on(Selectors.object("test@test.com"), event -> {}).cancelAfterUse();
 
         AccountCreatedDTO model = json.readValue("{\n" +
-                "    \"email\":{\n" +
-                "        \"address\":\"test@test.com\"\n" +
-                "    }\n" +
+                "   \"requestId\":\"test@test.com\"\n" +
                 "}", AccountCreatedDTO.class);
 
         String content = json.writeValueAsString(new OutgoingRemoteEvent(model));
@@ -91,9 +89,10 @@ public class EventReceiverServiceTest {
     @Test
     public void should_receive_account_obtained() throws Exception {
         Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTREQUEST.NAME + "test@test.com"), event -> {}).cancelAfterUse();
+                eventBus.on(Selectors.object("test@test.com"), event -> {}).cancelAfterUse();
 
         AccountObtainedDTO model = json.readValue("{\n" +
+                "   \"requestId\":\"test@test.com\",\n" +
                 "    \"account\":{\n" +
                 "        \"email\":{\n" +
                 "            \"address\":\"test@test.com\"\n" +
@@ -137,12 +136,10 @@ public class EventReceiverServiceTest {
     @Test
     public void should_receive_account_user_changed_confirmation() throws Exception {
         Registration<Object, Consumer<? extends Event<?>>> registration =
-                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "test@test.com"), event -> {}).cancelAfterUse();
+                eventBus.on(Selectors.object("test@test.com"), event -> {}).cancelAfterUse();
 
         AccountUserChangedDTO model = json.readValue("{\n" +
-                "    \"email\":{\n" +
-                "        \"address\":\"test@test.com\"\n" +
-                "    }\n" +
+                "   \"requestId\":\"test@test.com\"\n" +
                 "}", AccountUserChangedDTO.class);
 
         String content = json.writeValueAsString(new OutgoingRemoteEvent(model));

@@ -56,16 +56,15 @@ public class TestDTO {
     @Test
     public void testAccountCreatedDTODeserialization() throws Exception{
         AccountCreatedDTO dto = json.readValue("{\n" +
-                "   \"email\":{\n" +
-                "       \"address\":\"test@test.com\"\n" +
-                "   }\n" +
+                "   \"requestId\":\"test@test.com\"\n" +
                 "}", AccountCreatedDTO.class);
-        assertEquals("test@test.com", dto.email.address);
+        assertEquals("test@test.com", dto.requestId());
     }
 
     @Test
     public void testAccountCreationRequestedDTODeserialization() throws Exception{
         AccountCreationRequestedDTO dto = json.readValue("{\n" +
+                "   \"requestId\":\"test@test.com\",\n" +
                 "   \"email\":{\n" +
                 "       \"address\":\"test@test.com\"\n" +
                 "   },\n" +
@@ -82,16 +81,15 @@ public class TestDTO {
     @Test
     public void testAccountDeletedDTODeserialization() throws Exception{
         AccountDeletedDTO dto = json.readValue("{\n" +
-                "   \"email\":{\n" +
-                "       \"address\":\"test@test.com\"\n" +
-                "   }\n" +
+                "   \"requestId\":\"test@test.com\"\n" +
                 "}", AccountDeletedDTO.class);
-        assertEquals("test@test.com", dto.email.address);
+        assertEquals("test@test.com", dto.requestId());
     }
 
     @Test
     public void testAccountDeletionRequestedDTODeserialization() throws Exception{
         AccountDeletionRequestedDTO dto = json.readValue("{\n" +
+                "   \"requestId\":\"test@test.com\",\n" +
                 "   \"email\":{\n" +
                 "       \"address\":\"test@test.com\"\n" +
                 "   }\n" +
@@ -102,42 +100,37 @@ public class TestDTO {
     @Test
     public void testAccountNotCreatedDTODeserialization() throws Exception{
         AccountNotCreatedDTO dto = json.readValue("{\n" +
-                "   \"email\":{\n" +
-                "       \"address\":\"test@test.com\"\n" +
-                "   },\n" +
+                "   \"requestId\":\"test@test.com\",\n" +
                 "   \"reason\":\"reason\"\n" +
                 "}", AccountNotCreatedDTO.class);
-        assertEquals("test@test.com", dto.email.address);
+        assertEquals("test@test.com", dto.requestId());
         assertEquals("reason", dto.reason);
     }
 
     @Test
     public void testAccountNotDeletedDTODeserialization() throws Exception{
         AccountNotDeletedDTO dto = json.readValue("{\n" +
-                "   \"email\":{\n" +
-                "       \"address\":\"test@test.com\"\n" +
-                "   },\n" +
+                "   \"requestId\":\"test@test.com\",\n" +
                 "   \"reason\":\"reason\"\n" +
                 "}", AccountNotDeletedDTO.class);
-        assertEquals("test@test.com", dto.email.address);
+        assertEquals("test@test.com", dto.requestId());
         assertEquals("reason", dto.reason);
     }
 
     @Test
     public void testAccountNotObtainedDTODeserialization() throws Exception{
         AccountNotObtainedDTO dto = json.readValue("{\n" +
-                "   \"email\":{\n" +
-                "       \"address\":\"test@test.com\"\n" +
-                "   },\n" +
+                "   \"requestId\":\"test@test.com\",\n" +
                 "   \"reason\":\"reason\"\n" +
                 "}", AccountNotObtainedDTO.class);
-        assertEquals("test@test.com", dto.email.address);
+        assertEquals("test@test.com", dto.requestId());
         assertEquals("reason", dto.reason);
     }
 
     @Test
     public void testAccountObtainedDTODeserialization() throws Exception{
         AccountObtainedDTO dto = json.readValue("{\n" +
+                "   \"requestId\":\"test@test.com\",\n" +
                 "   \"account\":{\n" +
                 "      \"email\":{\n" +
                 "           \"address\":\"test@test.com\"\n" +
@@ -156,26 +149,26 @@ public class TestDTO {
     @Test
     public void testAccountRequestedDTODeserialization() throws Exception{
         AccountRequestedDTO dto = json.readValue("{\n" +
+                "   \"requestId\":\"test@test.com\",\n" +
                 "   \"email\":{\n" +
                 "       \"address\":\"test@test.com\"\n" +
                 "   }\n" +
                 "}", AccountRequestedDTO.class);
-        assertEquals("test@test.com", dto.email.address);
+        assertEquals("test@test.com", dto.requestId());
     }
 
     @Test
     public void testAccountUserChangedDTODeserialization() throws Exception{
         AccountUserChangedDTO dto = json.readValue("{\n" +
-                "   \"email\":{\n" +
-                "       \"address\":\"test@test.com\"\n" +
-                "   }\n" +
+                "   \"requestId\":\"test@test.com\"\n" +
                 "}", AccountUserChangedDTO.class);
-        assertEquals("test@test.com", dto.email.address);
+        assertEquals("test@test.com", dto.requestId());
     }
 
     @Test
     public void testAccountUserChangeRequestedDTODeserialization() throws Exception{
         AccountUserChangeRequestedDTO dto = json.readValue("{\n" +
+                "   \"requestId\":\"test@test.com\",\n" +
                 "   \"email\":{\n" +
                 "       \"address\":\"test@test.com\"\n" +
                 "   },\n" +
@@ -184,7 +177,7 @@ public class TestDTO {
                 "       \"lastName\":\"last\"\n" +
                 "   }\n" +
                 "}", AccountUserChangeRequestedDTO.class);
-        assertEquals("test@test.com", dto.email.address);
+        assertEquals("test@test.com", dto.requestId());
         assertEquals("first", dto.user.firstName);
         assertEquals("last", dto.user.lastName);
     }
@@ -192,12 +185,10 @@ public class TestDTO {
     @Test
     public void testAccountUserNotChangedDTODeserialization() throws Exception{
         AccountUserNotChangedDTO dto = json.readValue("{\n" +
-                "   \"email\":{\n" +
-                "       \"address\":\"test@test.com\"\n" +
-                "   },\n" +
+                "   \"requestId\":\"test@test.com\",\n" +
                 "   \"reason\":\"reason\"\n" +
                 "}", AccountUserNotChangedDTO.class);
-        assertEquals("test@test.com", dto.email.address);
+        assertEquals("test@test.com", dto.requestId());
         assertEquals("reason", dto.reason);
     }
 
