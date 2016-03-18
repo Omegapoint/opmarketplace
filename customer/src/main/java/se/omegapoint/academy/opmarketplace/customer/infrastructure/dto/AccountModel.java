@@ -1,8 +1,6 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
-import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
-import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 

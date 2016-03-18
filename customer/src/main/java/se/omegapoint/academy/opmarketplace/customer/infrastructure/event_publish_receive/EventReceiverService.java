@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreationRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountUserChangeRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.AccountCreationRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.AccountRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.AccountUserChangeRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.RemoteEvent;
 
 import java.io.IOException;
 

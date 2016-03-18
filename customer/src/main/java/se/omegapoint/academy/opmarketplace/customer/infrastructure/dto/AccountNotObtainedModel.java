@@ -1,19 +1,19 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserNotChanged;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountNotObtained;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountUserNotChangedModel implements JsonModel {
+public class AccountNotObtainedModel implements JsonModel {
 
-    public static final String TYPE = "AccountUserNotChanged";
+    public static final String TYPE = "AccountNotObtained";
 
     private EmailModel email;
     private String reason;
 
-    public AccountUserNotChangedModel() {}
+    public AccountNotObtainedModel() {}
 
-    public AccountUserNotChangedModel(AccountUserNotChanged event) {
+    public AccountNotObtainedModel(AccountNotObtained event) {
         notNull(event);
         this.email = new EmailModel(event.email());
         this.reason = event.reason();
@@ -27,7 +27,7 @@ public class AccountUserNotChangedModel implements JsonModel {
         return reason;
     }
 
-    // TODO: 16/03/16 Not used
+    // TODO: 16/03/16 Never used
     @Override
     public <T> T domainObject() {
         return null;

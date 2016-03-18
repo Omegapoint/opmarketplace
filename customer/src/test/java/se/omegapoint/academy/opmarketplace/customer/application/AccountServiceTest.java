@@ -13,9 +13,9 @@ import reactor.bus.Event;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.TestConfiguration;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountCreationRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.AccountUserChangeRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.AccountCreationRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.AccountRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.AccountUserChangeRequestedModel;
 
 import java.io.IOException;
 

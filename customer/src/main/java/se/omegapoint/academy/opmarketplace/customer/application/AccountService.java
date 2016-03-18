@@ -6,7 +6,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.*;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.*;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.sql.Timestamp;

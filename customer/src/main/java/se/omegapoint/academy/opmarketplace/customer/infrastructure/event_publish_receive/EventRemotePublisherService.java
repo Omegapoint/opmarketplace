@@ -7,11 +7,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.springframework.beans.factory.annotation.Value;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.json_representations.*;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.*;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
