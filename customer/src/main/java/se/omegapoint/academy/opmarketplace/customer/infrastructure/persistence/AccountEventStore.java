@@ -5,7 +5,6 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.Pe
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_models.AccountCreatedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_models.AccountUserChangedModel;
@@ -35,18 +34,18 @@ public class AccountEventStore implements AccountRepository {
 
         notNull(email);
 
-        List<DomainEvent> domainEvents = new ArrayList<>();
+        List<PersistableEvent> events = new ArrayList<>();
 
         Optional<AccountCreated> maybeAccountCreated = retrieveCreatedEvent(email);
         if (maybeAccountCreated.isPresent()) {
-            domainEvents.add(maybeAccountCreated.get());
+            events.add(maybeAccountCreated.get());
         } else {
             return Optional.empty();
         }
 
-        domainEvents.addAll(retrieveUserChangedEvents(email));
+        events.addAll(retrieveUserChangedEvents(email));
 
-        return Optional.of(AccountFactory.fromDomainEvents(domainEvents));
+        return Optional.of(AccountFactory.fromPersistableEvents(events));
     }
 
     private Optional<AccountCreated> retrieveCreatedEvent(Email email) {

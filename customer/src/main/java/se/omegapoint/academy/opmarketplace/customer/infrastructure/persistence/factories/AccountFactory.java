@@ -4,6 +4,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
 
 import java.util.List;
 
@@ -15,9 +16,9 @@ public class AccountFactory {
 
     private AccountFactory() {}
 
-    public static Account fromDomainEvents(List<DomainEvent> events) {
+    public static Account fromPersistableEvents(List<PersistableEvent> events) {
         notEmpty(events);
-        for (DomainEvent e: events) {
+        for (PersistableEvent e: events) {
             notNull(e);
             if (e instanceof AccountCreated)
                 mutate((AccountCreated)e);
