@@ -5,7 +5,6 @@ import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.*;
@@ -14,9 +13,9 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedModel;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
-import java.sql.Timestamp;
 import java.util.Optional;
 
+import static se.omegapoint.academy.opmarketplace.customer.application.Validator.validate;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountService implements Consumer<Event<DTO>> {
@@ -29,8 +28,6 @@ public class AccountService implements Consumer<Event<DTO>> {
         this.publisher = publisher;
     }
 
-    // TODO: 17/03/16 Discuss exception usage?
-    // TODO: 17/03/16 Fail events are sent in two places.
     @Override
     public void accept(Event<DTO> event) {
         notNull(event);
@@ -45,20 +42,18 @@ public class AccountService implements Consumer<Event<DTO>> {
         }
     }
 
+    // TODO: 18/03/16 Method 1, discuss
     private void accountUserChangeRequested(AccountUserChangeRequestedModel model) {
         try {
             AccountUserChangeRequested request = model.domainObject();
             Optional<Account> maybeAccount = accountRepository.account(request.email());
 
-            if (maybeAccount.isPresent()) {
-                Account account = maybeAccount.get();
-                AccountUserChanged userChangedEvent = account.changeUser(request);
-                accountRepository.append(userChangedEvent);
-                publisher.publish(userChangedEvent);
-            } else {
-                AccountUserNotChanged accountUserNotChanged = new AccountUserNotChanged(request.email().address(), "User does not exist.");
-                publisher.publish(accountUserNotChanged);
-            }
+            DomainEvent event = maybeAccount
+                    .map(account -> (DomainEvent) account.changeUser(request))
+                    .orElse(new AccountUserNotChanged(request.email().address(), "User does not exist."));
+
+            publisher.publish(event);
+
         } catch (IllegalArgumentValidationException e) {
             AccountUserNotChanged accountUserNotChanged = new AccountUserNotChanged(model.getEmail().getAddress(), e.getMessage());
             publisher.publish(accountUserNotChanged);
@@ -66,26 +61,25 @@ public class AccountService implements Consumer<Event<DTO>> {
         }
     }
 
+    // TODO: 18/03/16 Method 2, discuss
     private void accountRequested(AccountRequestedModel model) {
-        try {
-            AccountRequested request = model.domainObject();
-            Optional<Account> maybeAccount = accountRepository.account(request.email());
+        DomainEvent obtainedEvent = validate(model)
+                .map(error -> (DomainEvent) new AccountNotObtained(model.getEmail().getAddress(), error))
+                .orElseGet(() -> validAccountObtainedEvent(model));
 
-            if (maybeAccount.isPresent()) {
-                AccountObtained accountObtained = new AccountObtained(maybeAccount.get());
-                publisher.publish(accountObtained);
-            } else {
-                AccountNotObtained accountNotObtained = new AccountNotObtained(request.email().address(), "Account does not exist.");
-                publisher.publish(accountNotObtained);
-            }
-
-        } catch (IllegalArgumentValidationException e) {
-            e.printStackTrace();
-            AccountNotObtained accountNotObtained = new AccountNotObtained(model.getEmail().getAddress(), e.getMessage());
-            publisher.publish(accountNotObtained);
-        }
+        publisher.publish(obtainedEvent);
     }
 
+    private DomainEvent validAccountObtainedEvent(AccountRequestedModel model) {
+        AccountRequested request = model.domainObject();
+        Optional<Account> maybeAccount = accountRepository.account(request.email());
+
+        return maybeAccount
+                .map((account) -> (DomainEvent) new AccountObtained(account))
+                .orElse(new AccountNotObtained(request.email().address(), "Account does not exist."));
+    }
+
+    // TODO: 18/03/16 Method 3, discuss
     private void accountCreationRequested(AccountCreationRequestedModel model){
         try {
             AccountCreationRequested request = model.domainObject();
