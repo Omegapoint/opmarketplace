@@ -2,10 +2,12 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_o
 
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Deserializer;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class UserModel implements DTO {
+public class UserModel implements DTO, Serializer, Deserializer<User> {
 
     private String firstName;
     private String lastName;

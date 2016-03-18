@@ -1,12 +1,17 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Deserializer;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserModel;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountModel {
+public class AccountModel implements DTO, Serializer, Deserializer<Account> {
     private EmailModel email;
     private UserModel user;
 
@@ -24,5 +29,10 @@ public class AccountModel {
 
     public UserModel getUser() {
         return user;
+    }
+
+    @Override
+    public Account domainObject() {
+        return new Account(email.domainObject(), user.domainObject());
     }
 }

@@ -10,7 +10,7 @@ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.springframework.beans.factory.annotation.Value;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.RemoteEvent;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event.*;
 
 import java.io.IOException;
@@ -37,32 +37,32 @@ public class EventRemotePublisherService implements EventPublisher {
 
     @Override
     public void publish(AccountCreated event) {
-        publish(new RemoteEvent(new AccountCreatedModel(event), AccountCreatedModel.TYPE));
+        publish(new RemoteEvent(new AccountCreatedModel(event)));
     }
 
     @Override
     public void publish(AccountNotCreated event) {
-        publish(new RemoteEvent(new AccountNotCreatedModel(event), AccountNotCreatedModel.TYPE));
+        publish(new RemoteEvent(new AccountNotCreatedModel(event)));
     }
 
     @Override
     public void publish(AccountObtained event) {
-        publish(new RemoteEvent(new AccountObtainedModel(event), AccountObtainedModel.TYPE));
+        publish(new RemoteEvent(new AccountObtainedModel(event)));
     }
 
     @Override
     public void publish(AccountUserChanged event) {
-        publish(new RemoteEvent(new AccountUserChangedModel(event), AccountUserChangedModel.TYPE));
+        publish(new RemoteEvent(new AccountUserChangedModel(event)));
     }
 
     @Override
     public void publish(AccountNotObtained event) {
-        publish(new RemoteEvent(new AccountNotObtainedModel(event), AccountNotObtainedModel.TYPE));
+        publish(new RemoteEvent(new AccountNotObtainedModel(event)));
     }
 
     @Override
     public void publish(AccountUserNotChanged event) {
-        publish(new RemoteEvent(new AccountUserNotChangedModel(event), AccountUserNotChangedModel.TYPE));
+        publish(new RemoteEvent(new AccountUserNotChangedModel(event)));
     }
 
     private void publish(RemoteEvent remoteEvent) {

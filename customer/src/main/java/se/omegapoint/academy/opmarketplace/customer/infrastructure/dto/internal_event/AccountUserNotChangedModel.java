@@ -2,11 +2,13 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserNotChanged;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountUserNotChangedModel implements DTO {
+public class AccountUserNotChangedModel implements DTO, Event, Serializer {
 
     public static final String TYPE = "AccountUserNotChanged";
 
@@ -29,9 +31,8 @@ public class AccountUserNotChangedModel implements DTO {
         return reason;
     }
 
-    // TODO: 16/03/16 Not used
     @Override
-    public <T> T domainObject() {
-        return null;
+    public String type() {
+        return TYPE;
     }
 }

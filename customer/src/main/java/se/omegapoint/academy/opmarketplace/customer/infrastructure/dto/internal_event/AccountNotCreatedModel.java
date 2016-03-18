@@ -1,13 +1,16 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountNotCreated;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 
-public class AccountNotCreatedModel implements DTO {
+public class AccountNotCreatedModel implements DTO, Event, Serializer {
+
     public static final String TYPE = "AccountNotCreated";
 
     private EmailModel email;
@@ -29,10 +32,9 @@ public class AccountNotCreatedModel implements DTO {
         return reason;
     }
 
-    // TODO: 16/03/16 No use for this method
     @Override
-    public <T> T domainObject() {
-        return null;
+    public String type() {
+        return TYPE;
     }
 }
 

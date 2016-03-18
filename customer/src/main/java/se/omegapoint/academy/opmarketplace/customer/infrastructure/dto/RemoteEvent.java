@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,9 +25,10 @@ public class RemoteEvent {
 //        return new RemoteEvent(data, type);
 //    }
 
-    public RemoteEvent(DTO data, String type) {
+    public RemoteEvent(Event data) {
+        notNull(data);
         try {
-            this.type = notNull(type);
+            this.type = data.type();
             this.data = new ObjectMapper().writeValueAsString(data);
         } catch (JsonProcessingException e) {
             // TODO: 17/03/16 HJÄLP

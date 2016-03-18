@@ -10,7 +10,7 @@ import reactor.bus.EventBus;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.RemoteEvent;
 
 import java.io.IOException;
 

@@ -2,10 +2,12 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_o
 
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Deserializer;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class EmailModel implements DTO {
+public class EmailModel implements DTO, Serializer, Deserializer<Email> {
 
     private String address;
 
