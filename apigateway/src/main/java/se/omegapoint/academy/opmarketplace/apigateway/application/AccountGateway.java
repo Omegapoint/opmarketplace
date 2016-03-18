@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountCreatedListener;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountDeletionListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountObtainedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.AccountUserChangedListener;
@@ -17,9 +18,7 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailModel;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @RestController
@@ -62,6 +61,16 @@ public class AccountGateway {
         publisher.publish(new RemoteEvent(change, AccountUserChangeRequestedModel.TYPE));
         AccountUserChangedListener listener =  new AccountUserChangedListener(result);
         router.subscribe(Router.CHANNEL.ACCOUNTUSERCHANGE, change.getEmail().getAddress(), listener);
+        return result;
+    }
+
+    @RequestMapping(method = DELETE, produces = APPLICATION_JSON_VALUE)
+    public DeferredResult<ResponseEntity<String>> deleteAccount(@RequestParam("email") final EmailModel email) {
+        AccountDeletionRequestedModel accountDeletionRequested = new AccountDeletionRequestedModel(notNull(email));
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
+        publisher.publish(new RemoteEvent(accountDeletionRequested, AccountDeletionRequestedModel.TYPE));
+        AccountDeletionListener listener =  new AccountDeletionListener(result);
+        router.subscribe(Router.CHANNEL.ACCOUNTREQUEST, accountDeletionRequested.getEmail().getAddress(), listener);
         return result;
     }
 }

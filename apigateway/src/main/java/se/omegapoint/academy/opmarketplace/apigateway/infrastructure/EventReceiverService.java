@@ -45,6 +45,12 @@ public class EventReceiverService {
                 case AccountUserNotChangedModel.TYPE:
                     router.publish(json.readValue(event.getData(), AccountUserNotChangedModel.class));
                     break;
+                case AccountDeletedModel.TYPE:
+                    router.publish(json.readValue(event.getData(), AccountDeletedModel.class));
+                    break;
+                case AccountNotDeletedModel.TYPE:
+                    router.publish(json.readValue(event.getData(), AccountNotDeletedModel.class));
+                    break;
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (IllegalArgumentValidationException e) {

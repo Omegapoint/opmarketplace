@@ -174,4 +174,43 @@ public class EventReceiverServiceTest {
         assertTrue(registration.isCancelled());
     }
 
+    @Test
+    public void should_receive_account_deleted_confirmation() throws Exception {
+        Registration<Object, Consumer<? extends Event<?>>> registration =
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "test@test.com"), event -> {}).cancelAfterUse();
+
+        AccountDeletedModel model = json.readValue("{\n" +
+                "    \"email\":{\n" +
+                "        \"address\":\"test@test.com\"\n" +
+                "    }\n" +
+                "}", AccountDeletedModel.class);
+
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountDeletedModel.TYPE));
+        mockMvc.perform(post("/event")
+                .contentType(APPLICATION_JSON)
+                .content(content));
+        Thread.sleep(50);
+        assertTrue(registration.isCancelled());
+    }
+
+    @Test
+    public void should_receive_account_not_deleted_confirmation() throws Exception {
+        Registration<Object, Consumer<? extends Event<?>>> registration =
+                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
+
+        AccountNotDeletedModel model = json.readValue("{\n" +
+                "    \"email\":{\n" +
+                "        \"address\":\"@invalid.com\"\n" +
+                "    },\n" +
+                "    \"reason\":\"Invalid Email\"\n" +
+                "}", AccountNotDeletedModel.class);
+
+        String content = json.writeValueAsString(new RemoteEvent(model, AccountNotDeletedModel.TYPE));
+        mockMvc.perform(post("/event")
+                .contentType(APPLICATION_JSON)
+                .content(content));
+        Thread.sleep(50);
+        assertTrue(registration.isCancelled());
+    }
+
 }

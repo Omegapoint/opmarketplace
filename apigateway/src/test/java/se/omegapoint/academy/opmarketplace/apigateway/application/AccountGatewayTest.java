@@ -23,9 +23,7 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 
 import static org.junit.Assert.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -102,6 +100,17 @@ public class AccountGatewayTest {
         JsonModel latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountRequestedModel requestedModel = (AccountRequestedModel) latestEvent;
+        assertEquals("test@test.com" , requestedModel.getEmail().getAddress());
+    }
+
+    @Test
+    public void should_request_account_deletion() throws Exception {
+        mockMvc.perform(delete("/accounts")
+                .contentType(APPLICATION_JSON)
+                .param("email", "test@test.com"));
+        JsonModel latestEvent = testPublisher.getLatestEvent();
+        assertNotNull(latestEvent);
+        AccountDeletionRequestedModel requestedModel = (AccountDeletionRequestedModel) latestEvent;
         assertEquals("test@test.com" , requestedModel.getEmail().getAddress());
     }
 }

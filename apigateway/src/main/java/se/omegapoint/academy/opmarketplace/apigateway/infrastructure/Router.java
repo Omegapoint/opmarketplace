@@ -40,12 +40,21 @@ public class Router {
         eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
     }
 
+    public void publish(AccountDeletedModel model) {
+        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
+    }
+
+    public void publish(AccountNotDeletedModel model) {
+        eventBus.notify(CHANNEL.ACCOUNTUSERCHANGE.NAME + model.getEmail().getAddress(), Event.wrap(model));
+    }
+
     public void subscribe(CHANNEL channel, String id, Consumer consumer){
         eventBus.on(Selectors.regex(channel.NAME + "(\\s*)" + id + "(\\s*)"), consumer).cancelAfterUse();
     }
 
     public enum CHANNEL {
-        ACCOUNTCREATION("AccountCreation"), ACCOUNTREQUEST("AccountRequest"), ACCOUNTUSERCHANGE("AccountUserChanged");
+        ACCOUNTCREATION("AccountCreation"), ACCOUNTREQUEST("AccountRequest"),
+        ACCOUNTUSERCHANGE("AccountUserChanged"), ACCOUNTDELETED("AccountDeleted");
 
         public final String NAME;
 

@@ -5,10 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountCreationRequestedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountRequestedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.AccountUserChangeRequestedModel;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.RemoteEvent;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.JsonModel;
 
 import java.io.IOException;
@@ -37,6 +34,9 @@ public class TestConfiguration {
                         break;
                     case AccountUserChangeRequestedModel.TYPE:
                         lastestEvent = json.readValue(remoteEvent.getData(), AccountUserChangeRequestedModel.class);
+                        break;
+                    case AccountDeletionRequestedModel.TYPE:
+                        lastestEvent = json.readValue(remoteEvent.getData(), AccountDeletionRequestedModel.class);
                         break;
                 }
             }catch (IOException e){
