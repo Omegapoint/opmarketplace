@@ -13,12 +13,13 @@ public class AccountRequestedModel implements DTO, Event, Deserializer<AccountRe
 
     public static final String TYPE = "AccountRequested";
 
+    private String requestId;
     private EmailModel email;
 
     public AccountRequestedModel() {}
 
-    public AccountRequestedModel(EmailModel email) {
-        this.email = notNull(email);
+    public String getRequestId() {
+        return requestId;
     }
 
     public EmailModel getEmail() {
@@ -33,5 +34,10 @@ public class AccountRequestedModel implements DTO, Event, Deserializer<AccountRe
     @Override
     public String type() {
         return TYPE;
+    }
+
+    @Override
+    public String requestId() {
+        return requestId;
     }
 }

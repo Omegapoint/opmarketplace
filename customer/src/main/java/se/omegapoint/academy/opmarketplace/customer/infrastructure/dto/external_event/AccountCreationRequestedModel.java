@@ -11,14 +11,14 @@ public class AccountCreationRequestedModel implements DTO, Event, Deserializer<A
 
     public static final String TYPE = "AccountCreationRequested";
 
+    private String requestId;
     private EmailModel email;
     private UserModel user;
 
     public AccountCreationRequestedModel(){}
 
-    public AccountCreationRequestedModel(AccountCreationRequested accountCreationRequested) {
-        this.email = new EmailModel(accountCreationRequested.email());
-        this.user = new UserModel(accountCreationRequested.user());
+    public String getRequestId() {
+        return requestId;
     }
 
     public EmailModel getEmail() {
@@ -38,5 +38,10 @@ public class AccountCreationRequestedModel implements DTO, Event, Deserializer<A
     @Override
     public String type() {
         return TYPE;
+    }
+
+    @Override
+    public String requestId() {
+        return requestId;
     }
 }

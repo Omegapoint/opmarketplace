@@ -12,13 +12,19 @@ public class AccountObtainedModel implements DTO, Event, Serializer {
 
     public static final String TYPE = "AccountObtained";
 
+    private String requestId;
     private AccountModel account;
 
     public AccountObtainedModel() {}
 
-    public AccountObtainedModel(AccountObtained accountObtained) {
+    public AccountObtainedModel(AccountObtained accountObtained, String requestId) {
         notNull(accountObtained);
+        this.requestId = notNull(requestId);
         this.account = new AccountModel(accountObtained.account());
+    }
+
+    public String getRequestId() {
+        return requestId;
     }
 
     public AccountModel getAccount() {
@@ -28,5 +34,10 @@ public class AccountObtainedModel implements DTO, Event, Serializer {
     @Override
     public String type() {
         return TYPE;
+    }
+
+    @Override
+    public String requestId() {
+        return requestId;
     }
 }

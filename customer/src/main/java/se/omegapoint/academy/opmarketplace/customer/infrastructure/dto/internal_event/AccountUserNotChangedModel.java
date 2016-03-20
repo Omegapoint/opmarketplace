@@ -12,15 +12,21 @@ public class AccountUserNotChangedModel implements DTO, Event, Serializer {
 
     public static final String TYPE = "AccountUserNotChanged";
 
+    private String requestId;
     private EmailModel email;
     private String reason;
 
     public AccountUserNotChangedModel() {}
 
-    public AccountUserNotChangedModel(AccountUserNotChanged event) {
+    public AccountUserNotChangedModel(AccountUserNotChanged event, String requestId) {
         notNull(event);
+        this.requestId = notNull(requestId);
         this.email = new EmailModel(event.email());
         this.reason = event.reason();
+    }
+
+    public String getRequestId() {
+        return requestId;
     }
 
     public EmailModel getEmail() {
@@ -34,5 +40,10 @@ public class AccountUserNotChangedModel implements DTO, Event, Serializer {
     @Override
     public String type() {
         return TYPE;
+    }
+
+    @Override
+    public String requestId() {
+        return requestId;
     }
 }

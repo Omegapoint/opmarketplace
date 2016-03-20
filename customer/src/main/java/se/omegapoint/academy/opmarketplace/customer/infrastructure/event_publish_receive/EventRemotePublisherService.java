@@ -39,20 +39,20 @@ public class EventRemotePublisherService implements EventPublisher {
     }
 
     @Override
-    public void publish(DomainEvent event) {
+    public void publish(DomainEvent event, String requestId) {
 
         if (event instanceof AccountCreated) {
-            dispatch(new AccountCreatedModel((AccountCreated) event));
+            dispatch(new AccountCreatedModel((AccountCreated) event, requestId));
         } else if (event instanceof AccountNotCreated) {
-            dispatch(new AccountNotCreatedModel((AccountNotCreated) event));
+            dispatch(new AccountNotCreatedModel((AccountNotCreated) event, requestId));
         } else if (event instanceof AccountObtained) {
-            dispatch(new AccountObtainedModel((AccountObtained) event));
+            dispatch(new AccountObtainedModel((AccountObtained) event, requestId));
         } else if (event instanceof AccountNotObtained) {
-            dispatch(new AccountNotObtainedModel((AccountNotObtained) event));
+            dispatch(new AccountNotObtainedModel((AccountNotObtained) event, requestId));
         } else if (event instanceof AccountUserChanged) {
-            dispatch(new AccountUserChangedModel((AccountUserChanged) event));
+            dispatch(new AccountUserChangedModel((AccountUserChanged) event, requestId));
         } else if (event instanceof AccountUserNotChanged) {
-            dispatch(new AccountUserNotChangedModel((AccountUserNotChanged) event));
+            dispatch(new AccountUserNotChangedModel((AccountUserNotChanged) event, requestId));
         } else {
             throw new IllegalStateException("Domain Event not recognized.");
         }

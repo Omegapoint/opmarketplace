@@ -13,15 +13,21 @@ public class AccountCreatedModel implements DTO, Event, Serializer {
 
     public static final String TYPE = "AccountCreated";
 
+    private String requestId;
     private EmailModel email;
     private UserModel user;
 
     public AccountCreatedModel(){}
 
-    public AccountCreatedModel(AccountCreated accountCreated) {
+    public AccountCreatedModel(AccountCreated accountCreated, String requestId) {
         notNull(accountCreated);
+        this.requestId = notNull(requestId);
         this.email = new EmailModel(accountCreated.email());
         this.user = new UserModel(accountCreated.user());
+    }
+
+    public String getRequestId() {
+        return requestId;
     }
 
     public EmailModel getEmail() {
@@ -35,5 +41,10 @@ public class AccountCreatedModel implements DTO, Event, Serializer {
     @Override
     public String type() {
         return TYPE;
+    }
+
+    @Override
+    public String requestId() {
+        return requestId;
     }
 }

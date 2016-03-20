@@ -16,15 +16,14 @@ public class AccountUserChangeRequestedModel implements DTO, Event, Deserializer
 
     public static final String TYPE = "AccountUserChangeRequested";
 
+    private String requestId;
     private EmailModel email;
     private UserModel user;
 
     public AccountUserChangeRequestedModel() {}
 
-    public AccountUserChangeRequestedModel(AccountUserChangeRequested request) {
-        notNull(request);
-        this.email = new EmailModel(request.email());
-        this.user = new UserModel(request.user());
+    public String getRequestId() {
+        return requestId;
     }
 
     public EmailModel getEmail() {
@@ -34,7 +33,6 @@ public class AccountUserChangeRequestedModel implements DTO, Event, Deserializer
     public UserModel getUser() {
         return user;
     }
-
 
     @Override
     public AccountUserChangeRequested domainObject() {
@@ -46,5 +44,10 @@ public class AccountUserChangeRequestedModel implements DTO, Event, Deserializer
     @Override
     public String type() {
         return TYPE;
+    }
+
+    @Override
+    public String requestId() {
+        return requestId;
     }
 }

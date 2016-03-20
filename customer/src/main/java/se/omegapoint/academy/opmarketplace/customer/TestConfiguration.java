@@ -23,7 +23,7 @@ public class TestConfiguration {
         HashMap<String, Integer> seenDomainEvents = new HashMap<>();
 
         @Override
-        public void publish(DomainEvent event) {
+        public void publish(DomainEvent event, String requestId) {
             String eventName = event.getClass().getName();
             seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
         }

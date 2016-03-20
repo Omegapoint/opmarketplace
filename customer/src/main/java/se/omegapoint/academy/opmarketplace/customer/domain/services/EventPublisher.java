@@ -5,5 +5,5 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.Ac
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 
 public interface EventPublisher {
-    void publish(DomainEvent event);
+    void publish(DomainEvent event, String requestId);
 }

@@ -57,11 +57,11 @@ public class AccountService implements Consumer<Event<DTO>> {
                 accountRepository.append((PersistableEvent) event);
             }
 
-            publisher.publish(event);
+            publisher.publish(event, model.requestId());
 
         } catch (IllegalArgumentValidationException e) {
             AccountUserNotChanged accountUserNotChanged = new AccountUserNotChanged(model.getEmail().getAddress(), e.getMessage());
-            publisher.publish(accountUserNotChanged);
+            publisher.publish(accountUserNotChanged, model.requestId());
             e.printStackTrace();
         }
     }
@@ -72,7 +72,7 @@ public class AccountService implements Consumer<Event<DTO>> {
                 .map(error -> (DomainEvent) new AccountNotObtained(model.getEmail().getAddress(), error))
                 .orElseGet(() -> validAccountObtainedEvent(model));
 
-        publisher.publish(obtainedEvent);
+        publisher.publish(obtainedEvent, model.requestId());
     }
 
     private DomainEvent validAccountObtainedEvent(AccountRequestedModel model) {
@@ -92,16 +92,16 @@ public class AccountService implements Consumer<Event<DTO>> {
             if (!accountRepository.accountInExistence(request.email())){
                 AccountCreated accountCreated = Account.createAccount(request);
                 accountRepository.append(accountCreated);
-                publisher.publish(accountCreated);
+                publisher.publish(accountCreated, model.requestId());
             } else {
                 AccountNotCreated accountNotCreated = new AccountNotCreated(request.email().address(), "Account already exists.");
-                publisher.publish(accountNotCreated);
+                publisher.publish(accountNotCreated, model.requestId());
             }
 
         } catch (IllegalArgumentValidationException e) {
             e.printStackTrace();
             AccountNotCreated accountNotCreated = new AccountNotCreated(model.getEmail().getAddress(), e.getMessage());
-            publisher.publish(accountNotCreated);
+            publisher.publish(accountNotCreated, model.requestId());
         }
     }
 }

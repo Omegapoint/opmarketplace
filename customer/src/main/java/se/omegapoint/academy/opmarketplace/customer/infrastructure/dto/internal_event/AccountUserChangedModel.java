@@ -7,18 +7,27 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serialize
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserModel;
 
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 public class AccountUserChangedModel implements DTO, Event, Serializer {
 
     public static final String TYPE = "AccountUserChanged";
 
+    private String requestId;
     private EmailModel email;
     private UserModel user;
 
     public AccountUserChangedModel(){}
 
-    public AccountUserChangedModel(AccountUserChanged accountUserChanged) {
+    public AccountUserChangedModel(AccountUserChanged accountUserChanged, String requestId) {
+        notNull(accountUserChanged);
+        this.requestId = notNull(requestId);
         this.email = new EmailModel(accountUserChanged.email());
         this.user = new UserModel(accountUserChanged.user());
+    }
+
+    public String getRequestId() {
+        return requestId;
     }
 
     public EmailModel getEmail() {
@@ -32,5 +41,10 @@ public class AccountUserChangedModel implements DTO, Event, Serializer {
     @Override
     public String type() {
         return TYPE;
+    }
+
+    @Override
+    public String requestId() {
+        return requestId;
     }
 }
