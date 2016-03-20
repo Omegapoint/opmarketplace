@@ -2,12 +2,10 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repre
 
 import org.apache.commons.lang.RandomStringUtils;
 
-import java.util.UUID;
-
 public class StringRandomizer {
     private static final int STRING_LENGTH = 30;
 
     public static String randomString() {
-        return RandomStringUtils.random(STRING_LENGTH);
+        return RandomStringUtils.randomAlphabetic(STRING_LENGTH);
     }
 }
