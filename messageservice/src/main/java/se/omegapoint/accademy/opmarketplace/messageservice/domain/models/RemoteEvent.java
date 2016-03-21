@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 public class RemoteEvent {
 
+    // TODO: 21/03/16 Remove class
     private String type;
     private String data;
     private Timestamp timestamp;

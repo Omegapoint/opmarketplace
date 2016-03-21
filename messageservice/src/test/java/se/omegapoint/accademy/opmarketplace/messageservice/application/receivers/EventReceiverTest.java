@@ -38,15 +38,6 @@ public class EventReceiverTest {
     }
 
     @Test
-    public void testGetExampleEvent() throws Exception {
-        RemoteEvent domainEvent = getExampleDomainEvent();
-
-        mockMvc.perform(get("/event"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(domainEvent)));
-    }
-
-    @Test
     public void testReceiveEvent() throws Exception {
         RemoteEvent domainEvent = getExampleDomainEvent();
         String postContent = new ObjectMapper().writeValueAsString(domainEvent);

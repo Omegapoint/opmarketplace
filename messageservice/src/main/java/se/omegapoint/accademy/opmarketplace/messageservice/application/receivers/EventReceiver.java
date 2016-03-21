@@ -20,13 +20,6 @@ public class EventReceiver {
     @Autowired
     EventBus eventBus;
 
-    @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<RemoteEvent> getExampleEvent() {
-        RemoteEvent data = new RemoteEvent("typ1", "some data", new Timestamp(1337));
-
-        return ResponseEntity.ok(data);
-    }
-
     @RequestMapping(method = POST, consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<RemoteEvent> receiveEvent(
             @RequestParam("channel") String channel,

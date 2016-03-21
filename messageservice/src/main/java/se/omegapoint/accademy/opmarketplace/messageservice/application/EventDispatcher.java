@@ -32,11 +32,12 @@ public class EventDispatcher implements Consumer<Event<String>> {
     public void accept(Event<String> event) {
         String domainEvent = event.getData();
 
-        EventMetaData metaData = new EventMetaData("UnknownType");
+        EventMetaData metaData;
         try {
              metaData = new ObjectMapper().readValue(domainEvent, EventMetaData.class);
         }catch (Exception e) {
-            System.err.println("Could not extract type from event.");
+            System.err.println("Could not extract type from event. " + domainEvent);
+            throw new IllegalStateException("Could not extract type from event");
         }
 
         if (ruleEngine.allow(metaData)) {
