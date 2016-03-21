@@ -13,4 +13,4 @@ script:
   - gradle check
 notifications:
   email: false
-#  slack: opchat:QiLB2Ww1XEfz5WHhoiZTQr0T#exjobb2016
+  slack: opchat:QiLB2Ww1XEfz5WHhoiZTQr0T#exjobb2016
