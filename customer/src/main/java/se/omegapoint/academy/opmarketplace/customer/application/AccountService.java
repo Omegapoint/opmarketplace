@@ -5,11 +5,13 @@ import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountDeleted;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.*;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountDeletionRequestedDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedDTO;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
@@ -33,13 +35,15 @@ public class AccountService implements Consumer<Event<DTO>> {
     public void accept(Event<DTO> event) {
         notNull(event);
 
-        DTO DTO = event.getData();
-        if (DTO instanceof AccountCreationRequestedDTO) {
-            accountCreationRequested((AccountCreationRequestedDTO) DTO);
-        } else if (DTO instanceof AccountRequestedDTO) {
-            accountRequested((AccountRequestedDTO) DTO);
-        } else if (DTO instanceof AccountUserChangeRequestedDTO) {
-            accountUserChangeRequested((AccountUserChangeRequestedDTO) DTO);
+        DTO dto = event.getData();
+        if (dto instanceof AccountCreationRequestedDTO) {
+            accountCreationRequested((AccountCreationRequestedDTO) dto);
+        } else if (dto instanceof AccountRequestedDTO) {
+            accountRequested((AccountRequestedDTO) dto);
+        } else if (dto instanceof AccountUserChangeRequestedDTO) {
+            accountUserChangeRequested((AccountUserChangeRequestedDTO) dto);
+        } else if (dto instanceof AccountDeletionRequestedDTO) {
+            accountDeletionRequested((AccountDeletionRequestedDTO) dto);
         }
     }
 
@@ -102,6 +106,28 @@ public class AccountService implements Consumer<Event<DTO>> {
             e.printStackTrace();
             AccountNotCreated accountNotCreated = new AccountNotCreated(model.email.address, e.getMessage());
             publisher.publish(accountNotCreated, model.requestId());
+        }
+    }
+
+    private void accountDeletionRequested(AccountDeletionRequestedDTO dto) {
+        try {
+            AccountDeletionRequested request = dto.domainObject();
+
+            Optional<Account> maybeAccount = accountRepository.account(request.email());
+
+            if (maybeAccount.isPresent()) {
+                Account account = maybeAccount.get();
+                AccountDeleted accountDeleted = account.deleteAccount(request);
+                accountRepository.append(accountDeleted);
+                publisher.publish(accountDeleted, dto.requestId());
+            } else {
+                AccountNotDeleted accountNotDeleted = new AccountNotDeleted("Account does not exist.");
+                publisher.publish(accountNotDeleted, dto.requestId());
+            }
+        } catch (IllegalArgumentValidationException e) {
+            e.printStackTrace();
+            AccountNotDeleted accountNotDeleted = new AccountNotDeleted(e.getMessage());
+            publisher.publish(accountNotDeleted, dto.requestId());
         }
     }
 }

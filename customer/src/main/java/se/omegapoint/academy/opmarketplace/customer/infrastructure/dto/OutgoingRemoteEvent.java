@@ -11,7 +11,7 @@ public class OutgoingRemoteEvent {
 
     public OutgoingRemoteEvent(Event data) {
         notNull(data);
-        this.type = data.type();
+        this.type = notNull(data.type());
         this.data = data;
     }
 }

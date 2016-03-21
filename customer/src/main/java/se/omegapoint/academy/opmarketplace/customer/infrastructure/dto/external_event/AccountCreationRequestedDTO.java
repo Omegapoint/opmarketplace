@@ -8,6 +8,8 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserDTO;
 
+import static se.sawano.java.commons.lang.validate.Validate.notNull;
+
 public class AccountCreationRequestedDTO implements Event, Deserializer<AccountCreationRequested> {
 
     public static final String TYPE = "AccountCreationRequested";
@@ -21,9 +23,9 @@ public class AccountCreationRequestedDTO implements Event, Deserializer<AccountC
             @JsonProperty("requestId") String requestId,
             @JsonProperty("email") EmailDTO email,
             @JsonProperty("user") UserDTO user){
-        this.requestId = requestId;
-        this.email = email;
-        this.user = user;
+        this.requestId = notNull(requestId);
+        this.email = notNull(email);
+        this.user = notNull(user);
     }
 
 

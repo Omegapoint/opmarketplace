@@ -10,6 +10,7 @@ import reactor.bus.selector.Selectors;
 import se.omegapoint.academy.opmarketplace.customer.application.AccountService;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountDeletedJPA;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_models.EntityMarker;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountCreatedJPA;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountUserChangedJPA;
@@ -40,7 +41,9 @@ public class MainConfiguration {
     }
 
     @Bean
-    AccountEventStore createAccountEventStore(AccountCreatedJPA accountCreatedRepository, AccountUserChangedJPA accountUserChangedRepository){
-        return new AccountEventStore(accountCreatedRepository, accountUserChangedRepository);
+    AccountEventStore createAccountEventStore(AccountCreatedJPA accountCreatedRepository,
+                                              AccountUserChangedJPA accountUserChangedRepository,
+                                              AccountDeletedJPA accountDeletedRepository){
+        return new AccountEventStore(accountCreatedRepository, accountUserChangedRepository, accountDeletedRepository);
     }
 }

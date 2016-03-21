@@ -26,14 +26,15 @@ public class AccountUserChangeRequestedDTO implements Event, Deserializer<Accoun
             @JsonProperty("requestId") String requestId,
             @JsonProperty("email") EmailDTO email,
             @JsonProperty("user") UserDTO user){
-        this.requestId = requestId;
-        this.email = email;
-        this.user = user;
+        this.requestId = notNull(requestId);
+        this.email = notNull(email);
+        this.user = notNull(user);
     }
 
     @Override
     public AccountUserChangeRequested domainObject() {
         return new AccountUserChangeRequested(
+                // TODO: 21/03/16 change to email.domainObject and user.domainObject
                 new Email(email.address),
                 new User(user.firstName, user.lastName));
     }

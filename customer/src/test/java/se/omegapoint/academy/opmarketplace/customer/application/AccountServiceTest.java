@@ -14,8 +14,10 @@ import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.TestConfiguration;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountDeleted;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountDeletionRequestedDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedDTO;
 
@@ -106,8 +108,36 @@ public class AccountServiceTest {
         Assert.assertEquals(1, testPublisher.seenEvents(AccountUserNotChanged.class.getName()));
     }
 
+    @Test
+    public void should_delete_user() throws Exception {
+        addUser("test7@email.com", "first", "last");
+        deleteUser("test7@email.com");
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountDeleted.class.getName()));
+    }
+
+    @Test
+    public void should_not_delete_non_existing_user() throws Exception {
+        deleteUser("test8@email.com");
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountNotDeleted.class.getName()));
+    }
+
+    @Test
+    public void should_not_delete_already_deleted_user() throws Exception {
+        addUser("test9@email.com", "first", "last");
+        deleteUser("test9@email.com");
+        deleteUser("test9@email.com");
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountDeleted.class.getName()));
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountNotDeleted.class.getName()));
+    }
+
+    @Test
+    public void should_not_delete_non_user_with_ill_formatted_email() throws Exception {
+        deleteUser("@email.com");
+        Assert.assertEquals(1, testPublisher.seenEvents(AccountNotDeleted.class.getName()));
+    }
+
     private void addUser(String email, String firstName, String lastName) throws IOException {
-        String inputData = "{\"email\":{\"address\":\"" + email +"\"}," +
+        String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email +"\"}," +
                 "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
 
         AccountCreationRequestedDTO model = objectMapper.readValue(inputData, AccountCreationRequestedDTO.class);
@@ -115,17 +145,24 @@ public class AccountServiceTest {
     }
 
     private void getUser(String email) throws IOException {
-        String inputData = "{\"email\":{\"address\":\"" + email + "\"}}";
+        String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email + "\"}}";
 
         AccountRequestedDTO accountRequestedDTO = objectMapper.readValue(inputData, AccountRequestedDTO.class);
         accountService.accept(Event.wrap(accountRequestedDTO));
     }
 
     private void changeUser(String email, String firstName, String lastName) throws IOException {
-        String inputData = "{\"email\":{\"address\":\"" + email +"\"}," +
+        String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email +"\"}," +
                 "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
 
         AccountUserChangeRequestedDTO accountUserChangeRequestedDTO = objectMapper.readValue(inputData, AccountUserChangeRequestedDTO.class);
         accountService.accept(Event.wrap(accountUserChangeRequestedDTO));
+    }
+
+    private void deleteUser(String email) throws Exception {
+        String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email + "\"}}";
+
+        AccountDeletionRequestedDTO accountDeletionRequestedDTO = objectMapper.readValue(inputData, AccountDeletionRequestedDTO.class);
+        accountService.accept(Event.wrap(accountDeletionRequestedDTO));
     }
 }
