@@ -1,2 +1,5 @@
 language: java
-script: cd customer && ./gradlew check
+script:
+  - cd customer
+  - gradle wrapper
+  - ./gradlew check
