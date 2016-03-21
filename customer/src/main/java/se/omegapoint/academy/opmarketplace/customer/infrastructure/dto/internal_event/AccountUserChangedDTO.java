@@ -12,29 +12,15 @@ public class AccountUserChangedDTO implements Event, Serializer {
 
     public static final String TYPE = "AccountUserChanged";
 
-    private String requestId;
-    private EmailDTO email;
-    private UserDTO user;
-
-    public AccountUserChangedDTO(){}
+    public final String requestId;
+    public final EmailDTO email;
+    public final UserDTO user;
 
     public AccountUserChangedDTO(AccountUserChanged accountUserChanged, String requestId) {
         notNull(accountUserChanged);
         this.requestId = notNull(requestId);
         this.email = new EmailDTO(accountUserChanged.email());
         this.user = new UserDTO(accountUserChanged.user());
-    }
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public EmailDTO getEmail() {
-        return email;
-    }
-
-    public UserDTO getUser() {
-        return user;
     }
 
     @Override

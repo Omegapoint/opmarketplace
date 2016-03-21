@@ -1,5 +1,7 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChangeRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
@@ -15,29 +17,25 @@ public class AccountUserChangeRequestedDTO implements Event, Deserializer<Accoun
 
     public static final String TYPE = "AccountUserChangeRequested";
 
-    private String requestId;
-    private EmailDTO email;
-    private UserDTO user;
+    public final String requestId;
+    public final EmailDTO email;
+    public final UserDTO user;
 
-    public AccountUserChangeRequestedDTO() {}
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public EmailDTO getEmail() {
-        return email;
-    }
-
-    public UserDTO getUser() {
-        return user;
+    @JsonCreator
+    public AccountUserChangeRequestedDTO(
+            @JsonProperty("requestId") String requestId,
+            @JsonProperty("email") EmailDTO email,
+            @JsonProperty("user") UserDTO user){
+        this.requestId = requestId;
+        this.email = email;
+        this.user = user;
     }
 
     @Override
     public AccountUserChangeRequested domainObject() {
         return new AccountUserChangeRequested(
-                new Email(email.getAddress()),
-                new User(user.getFirstName(), user.getLastName()));
+                new Email(email.address),
+                new User(user.firstName, user.lastName));
     }
 
     @Override

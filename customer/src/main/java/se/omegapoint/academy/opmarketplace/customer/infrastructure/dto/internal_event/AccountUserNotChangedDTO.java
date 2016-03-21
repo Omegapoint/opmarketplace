@@ -11,29 +11,15 @@ public class AccountUserNotChangedDTO implements Event, Serializer {
 
     public static final String TYPE = "AccountUserNotChanged";
 
-    private String requestId;
-    private EmailDTO email;
-    private String reason;
-
-    public AccountUserNotChangedDTO() {}
+    public final String requestId;
+    public final EmailDTO email;
+    public final String reason;
 
     public AccountUserNotChangedDTO(AccountUserNotChanged event, String requestId) {
         notNull(event);
         this.requestId = notNull(requestId);
         this.email = new EmailDTO(event.email());
         this.reason = event.reason();
-    }
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public EmailDTO getEmail() {
-        return email;
-    }
-
-    public String getReason() {
-        return reason;
     }
 
     @Override

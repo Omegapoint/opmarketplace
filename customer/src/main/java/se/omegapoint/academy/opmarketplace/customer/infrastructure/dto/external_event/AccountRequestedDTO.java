@@ -1,10 +1,13 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -12,22 +15,20 @@ public class AccountRequestedDTO implements Event, Deserializer<AccountRequested
 
     public static final String TYPE = "AccountRequested";
 
-    private String requestId;
-    private EmailDTO email;
+    public final String requestId;
+    public final EmailDTO email;
 
-    public AccountRequestedDTO() {}
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public EmailDTO getEmail() {
-        return email;
+    @JsonCreator
+    public AccountRequestedDTO(
+            @JsonProperty("requestId") String requestId,
+            @JsonProperty("email") EmailDTO email){
+        this.requestId = requestId;
+        this.email = email;
     }
 
     @Override
     public AccountRequested domainObject() {
-        return new AccountRequested(new Email(email.getAddress()));
+        return new AccountRequested(new Email(email.address));
     }
 
     @Override

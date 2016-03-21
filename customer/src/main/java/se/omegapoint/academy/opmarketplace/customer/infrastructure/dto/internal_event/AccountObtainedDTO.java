@@ -11,23 +11,13 @@ public class AccountObtainedDTO implements Event, Serializer {
 
     public static final String TYPE = "AccountObtained";
 
-    private String requestId;
-    private AccountDTO account;
-
-    public AccountObtainedDTO() {}
+    public final String requestId;
+    public final AccountDTO account;
 
     public AccountObtainedDTO(AccountObtained accountObtained, String requestId) {
         notNull(accountObtained);
         this.requestId = notNull(requestId);
         this.account = new AccountDTO(accountObtained.account());
-    }
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public AccountDTO getAccount() {
-        return account;
     }
 
     @Override

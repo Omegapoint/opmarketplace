@@ -8,23 +8,13 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serialize
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountDTO implements DTO, Serializer, Deserializer<Account> {
-    private EmailDTO email;
-    private UserDTO user;
-
-    public AccountDTO(){}
+    public final EmailDTO email;
+    public final UserDTO user;
 
     public AccountDTO(Account account) {
         notNull(account);
         this.email = new EmailDTO(account.email());
         this.user = new UserDTO(account.user());
-    }
-
-    public EmailDTO getEmail() {
-        return email;
-    }
-
-    public UserDTO getUser() {
-        return user;
     }
 
     @Override

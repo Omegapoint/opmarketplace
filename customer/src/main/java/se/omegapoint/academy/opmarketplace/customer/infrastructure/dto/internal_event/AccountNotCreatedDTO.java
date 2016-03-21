@@ -12,29 +12,15 @@ public class AccountNotCreatedDTO implements Event, Serializer {
 
     public static final String TYPE = "AccountNotCreated";
 
-    private String requestId;
-    private EmailDTO email;
-    private String reason;
-
-    public AccountNotCreatedDTO() {}
+    public final String requestId;
+    public final EmailDTO email;
+    public final String reason;
 
     public AccountNotCreatedDTO(AccountNotCreated accountNotCreated, String requestId) {
         notNull(accountNotCreated);
         this.requestId = notNull(requestId);
         this.email = new EmailDTO(accountNotCreated.email());
         this.reason = accountNotCreated.reason();
-    }
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public EmailDTO getEmail() {
-        return email;
-    }
-
-    public String getReason(){
-        return reason;
     }
 
     @Override

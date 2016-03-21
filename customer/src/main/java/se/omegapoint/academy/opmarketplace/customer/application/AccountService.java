@@ -60,7 +60,7 @@ public class AccountService implements Consumer<Event<DTO>> {
             publisher.publish(event, model.requestId());
 
         } catch (IllegalArgumentValidationException e) {
-            AccountUserNotChanged accountUserNotChanged = new AccountUserNotChanged(model.getEmail().getAddress(), e.getMessage());
+            AccountUserNotChanged accountUserNotChanged = new AccountUserNotChanged(model.email.address, e.getMessage());
             publisher.publish(accountUserNotChanged, model.requestId());
             e.printStackTrace();
         }
@@ -69,7 +69,7 @@ public class AccountService implements Consumer<Event<DTO>> {
     // TODO: 18/03/16 Method 2, discuss
     private void accountRequested(AccountRequestedDTO model) {
         DomainEvent obtainedEvent = validate(model)
-                .map(error -> (DomainEvent) new AccountNotObtained(model.getEmail().getAddress(), error))
+                .map(error -> (DomainEvent) new AccountNotObtained(model.email.address, error))
                 .orElseGet(() -> validAccountObtainedEvent(model));
 
         publisher.publish(obtainedEvent, model.requestId());
@@ -100,7 +100,7 @@ public class AccountService implements Consumer<Event<DTO>> {
 
         } catch (IllegalArgumentValidationException e) {
             e.printStackTrace();
-            AccountNotCreated accountNotCreated = new AccountNotCreated(model.getEmail().getAddress(), e.getMessage());
+            AccountNotCreated accountNotCreated = new AccountNotCreated(model.email.address, e.getMessage());
             publisher.publish(accountNotCreated, model.requestId());
         }
     }
