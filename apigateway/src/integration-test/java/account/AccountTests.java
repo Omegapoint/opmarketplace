@@ -1,5 +1,6 @@
 package se.omegapoint.academy.opmarketplace.apigateway.integration_tests;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,7 @@ public class AccountTests {
     private MockMvc mockMvc;
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         mockMvc = webAppContextSetup(wac).build();
     }
 
@@ -96,12 +97,21 @@ public class AccountTests {
 
     @Test
     public void should_delete_user() throws Exception {
-        // TODO: 21/03/16 Implement
+        createUser("test5@test.com", "fistName", "lastName");
+        deleteUser("test5@test.com")
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
+        getUser("test5@test.com")
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
     }
 
     @Test
     public void should_not_delete_non_existing_user() throws Exception {
-        // TODO: 21/03/16 Implement
+        deleteUser("test6@test.com")
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
     }
 
     private ResultActions createUser(String email, String firstName, String lastName) throws Exception {
@@ -113,30 +123,35 @@ public class AccountTests {
                 .andExpect(request().asyncStarted())
                 .andReturn();
 
-        // TODO: 21/03/16 Maybe include this line?
-        // mvcResult.getAsyncResult();
-
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
     private ResultActions getUser(String email) throws Exception {
-        MvcResult getUserResult = mockMvc.perform(get("/accounts")
+        MvcResult mvcResult = mockMvc.perform(get("/accounts")
                 .param("email", email))
                 .andReturn();
 
-        return mockMvc.perform(asyncDispatch(getUserResult));
+        return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
     private ResultActions changeUser(String email, String firstName, String lastName) throws Exception {
         String content = userJson(email, firstName, lastName);
-        MvcResult changeUserResult = mockMvc.perform(put("/accounts")
+        MvcResult mvcResult = mockMvc.perform(put("/accounts")
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )
                 .andExpect(request().asyncStarted())
                 .andReturn();
 
-        return mockMvc.perform(asyncDispatch(changeUserResult));
+        return mockMvc.perform(asyncDispatch(mvcResult));
+    }
+
+    private ResultActions deleteUser(String email) throws Exception {
+        MvcResult mvcResult = mockMvc.perform(delete("/accounts")
+                .param("email", email))
+                .andReturn();
+
+        return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
     private String userJson(String email, String firstName, String lastName) {
@@ -150,15 +165,4 @@ public class AccountTests {
                     "}" +
                 "}";
     }
-
-//    @Test
-//    public void should_request_account_deletion() throws Exception {
-//        mockMvc.perform(delete("/accounts")
-//                .contentType(APPLICATION_JSON)
-//                .param("email", "test@test.com"));
-//        Event latestEvent = testPublisher.getLatestEvent();
-//        assertNotNull(latestEvent);
-//        AccountDeletionRequestedDTO requestedModel = (AccountDeletionRequestedDTO) latestEvent;
-//        assertEquals("test@test.com" , requestedModel.email.address);
-//    }
 }
