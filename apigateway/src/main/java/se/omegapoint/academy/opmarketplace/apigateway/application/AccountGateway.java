@@ -38,9 +38,9 @@ public class AccountGateway {
     public DeferredResult<ResponseEntity<String>> createAccount(@RequestBody final AccountCreationRequestedDTO newAccount) {
         notNull(newAccount);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
-        publisher.publish(new OutgoingRemoteEvent(newAccount));
         AccountCreatedListener listener =  new AccountCreatedListener(result);
         router.subscribe(newAccount.requestId(), listener);
+        publisher.publish(new OutgoingRemoteEvent(newAccount));
         return result;
     }
 
@@ -48,9 +48,9 @@ public class AccountGateway {
     public DeferredResult<ResponseEntity<String>> account(@RequestParam("email") final EmailDTO email) {
         AccountRequestedDTO accountRequested = new AccountRequestedDTO(notNull(email));
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
-        publisher.publish(new OutgoingRemoteEvent(accountRequested));
         AccountObtainedListener listener =  new AccountObtainedListener(result);
         router.subscribe(accountRequested.requestId(), listener);
+        publisher.publish(new OutgoingRemoteEvent(accountRequested));
         return result;
     }
 
@@ -58,9 +58,9 @@ public class AccountGateway {
     public DeferredResult<ResponseEntity<String>> changeUser(@RequestBody final AccountUserChangeRequestedDTO change) {
         notNull(change);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
-        publisher.publish(new OutgoingRemoteEvent(change));
         AccountUserChangedListener listener =  new AccountUserChangedListener(result);
         router.subscribe(change.requestId(), listener);
+        publisher.publish(new OutgoingRemoteEvent(change));
         return result;
     }
 
@@ -68,9 +68,9 @@ public class AccountGateway {
     public DeferredResult<ResponseEntity<String>> deleteAccount(@RequestParam("email") final EmailDTO email) {
         AccountDeletionRequestedDTO accountDeletionRequested = new AccountDeletionRequestedDTO(notNull(email));
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
-        publisher.publish(new OutgoingRemoteEvent(accountDeletionRequested));
         AccountDeletionListener listener =  new AccountDeletionListener(result);
         router.subscribe(accountDeletionRequested.requestId(), listener);
+        publisher.publish(new OutgoingRemoteEvent(accountDeletionRequested));
         return result;
     }
 }
