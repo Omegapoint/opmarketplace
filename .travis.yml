@@ -1,2 +1,2 @@
 language: java
-script: cd customer && gradle build
+script: cd customer && ./gradle check
