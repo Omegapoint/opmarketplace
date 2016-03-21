@@ -1,0 +1,5 @@
+language: java
+env:
+  - TEST_DIR=customer
+  - TEST_DIR=apigateway
+script: cd $TEST_DIR && gradle build
