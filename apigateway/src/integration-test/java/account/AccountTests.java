@@ -42,9 +42,9 @@ public class AccountTests {
 
     @Test
     public void should_not_create_duplicate_account() throws Exception {
-        createUser("test4@test.com", "fistName", "lastName")
+        createUser("test2@test.com", "fistName", "lastName")
                 .andExpect(status().isOk());
-        createUser("test3@test.com", "fistName", "lastName")
+        createUser("test2@test.com", "fistName", "lastName")
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("{\"reason\":\"Account already exists.\"}"));
 
@@ -59,10 +59,10 @@ public class AccountTests {
 
     @Test
     public void should_get_correct_account() throws Exception {
-        createUser("test2@test.com", "firstName", "lastName");
+        createUser("test3@test.com", "firstName", "lastName");
 
-        String expectedResult = userJson("test2@test.com", "firstName", "lastName");
-        getUser("test2@test.com")
+        String expectedResult = userJson("test3@test.com", "firstName", "lastName");
+        getUser("test3@test.com")
                 .andExpect(status().isOk())
                 .andExpect(content().string(expectedResult));
     }
@@ -83,13 +83,13 @@ public class AccountTests {
 
     @Test
     public void should_change_user() throws Exception {
-        createUser("test3@test.com", "fistName", "lastName");
-        changeUser("test3@test.com", "changedFistName", "changedLastName")
+        createUser("test4@test.com", "fistName", "lastName");
+        changeUser("test4@test.com", "changedFistName", "changedLastName")
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
-        String expectedResult = userJson("test3@test.com", "changedFistName", "changedLastName");
-        getUser("test3@test.com")
+        String expectedResult = userJson("test4@test.com", "changedFistName", "changedLastName");
+        getUser("test4@test.com")
                 .andExpect(status().isOk())
                 .andExpect(content().string(expectedResult));
     }
