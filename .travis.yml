@@ -3,4 +3,4 @@ jdk:
   - oraclejdk8
 script:
   - cd customer
-  - gradle check
+  - ./gradlew check
