@@ -11,6 +11,12 @@ before_script:
   - cd $TEST_DIR
 script:
   - gradle check
+before_cache:
+  - rm -f $TEST_DIR/.gradle/caches/modules-2/modules-2.lock
+cache:
+  directories:
+    - $TEST_DIR/.gradle/caches/
+    - $TEST_DIR/.gradle/wrapper/
 notifications:
   email: false
-  slack: opchat:QiLB2Ww1XEfz5WHhoiZTQr0T#exjobb2016
+#  slack: opchat:QiLB2Ww1XEfz5WHhoiZTQr0T#exjobb2016
