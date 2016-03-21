@@ -7,8 +7,7 @@ env:
   - TEST_DIR=customer
   - TEST_DIR=apigateway
   - TEST_DIR=messageservice
-script:
-  - cd $TEST-DIR && gradle check
+script: cd $TEST-DIR && gradle check
 notifications:
   email: false
 #  slack: opchat:QiLB2Ww1XEfz5WHhoiZTQr0T#exjobb2016
