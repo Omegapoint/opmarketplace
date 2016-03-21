@@ -1,10 +1,14 @@
 language: java
 jdk:
   - oraclejdk8
-before_install:
-  - cd customer && chmod +x gradlew && gradle wrapper
-install:
-  - ./gradlew assemble
+#before_install:
+#  - cd customer && chmod +x gradlew && gradle wrapper && cd ..
+env:
+  - TEST_DIR=customer
+  - TEST_DIR=apigateway
+  - TEST_DIR=messageservice
 script:
-  - cd customer
-  - ./gradlew check
+  - cd $TEST-DIR && gradle check && cd ..
+notifications:
+  email: false
+  slack: opchat:QiLB2Ww1XEfz5WHhoiZTQr0T#exjobb2016
