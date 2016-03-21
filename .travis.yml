@@ -7,7 +7,7 @@ env:
   - TEST_DIR=customer
   - TEST_DIR=apigateway
   - TEST_DIR=messageservice
-before_build:
+before_script:
   - cd $TEST_DIR
 script:
   - gradle check
