@@ -1,5 +1,4 @@
 language: java
 script:
   - cd customer
-  - gradle wrapper
   - ./gradlew check
