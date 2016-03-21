@@ -63,7 +63,7 @@ public class EventReceiverServiceTest {
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
-        Thread.sleep(100);
+        Thread.sleep(1000);
         assertTrue(registration.isCancelled());
     }
 
@@ -89,7 +89,7 @@ public class EventReceiverServiceTest {
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
-        Thread.sleep(100);
+        Thread.sleep(1000);
         assertTrue(registration.isCancelled());
     }
 
@@ -106,7 +106,7 @@ public class EventReceiverServiceTest {
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
-        Thread.sleep(100);
+        Thread.sleep(1000);
         assertTrue(registration.isCancelled());
     }
 
