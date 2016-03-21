@@ -18,6 +18,7 @@ import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.AccountCreatedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.AccountNotCreatedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.AccountObtainedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.AccountUserChangedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.OutgoingRemoteEvent;
@@ -54,121 +55,61 @@ public class EventReceiverServiceTest {
         Registration<Object, Consumer<? extends Event<?>>> registration =
                 eventBus.on(Selectors.object("test@test.com"), event -> {}).cancelAfterUse();
 
-        AccountCreatedDTO model = json.readValue("{\n" +
-                "   \"requestId\":\"test@test.com\"\n" +
+        AccountCreatedDTO model = json.readValue("{" +
+                "   \"requestId\":\"test@test.com\"" +
                 "}", AccountCreatedDTO.class);
 
         String content = json.writeValueAsString(new OutgoingRemoteEvent(model));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
-        Thread.sleep(50);
+        Thread.sleep(100);
         assertTrue(registration.isCancelled());
     }
 
-//    @Test
-//    public void should_receive_account_not_created_confirmation() throws Exception {
-//        Registration<Object, Consumer<? extends Event<?>>> registration =
-//                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTCREATION.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
-//
-//        AccountNotCreatedDTO model = json.readValue("{\n" +
-//                "    \"email\":{\n" +
-//                "        \"address\":\"@invalid.com\"\n" +
-//                "    },\n" +
-//                "    \"reason\":\"Invalid Email\"\n" +
-//                "}", AccountNotCreatedDTO.class);
-//
-//        String content = json.writeValueAsString(new OutgoingRemoteEvent(model, AccountNotCreatedDTO.TYPE));
-//        mockMvc.perform(post("/event")
-//                .contentType(APPLICATION_JSON)
-//                .content(content));
-//        Thread.sleep(50);
-//        assertTrue(registration.isCancelled());
-//    }
-
     @Test
-    public void should_receive_account_obtained() throws Exception {
+    public void should_receive_account_obtained_confirmation() throws Exception {
         Registration<Object, Consumer<? extends Event<?>>> registration =
                 eventBus.on(Selectors.object("test@test.com"), event -> {}).cancelAfterUse();
 
-        AccountObtainedDTO model = json.readValue("{\n" +
-                "   \"requestId\":\"test@test.com\",\n" +
-                "    \"account\":{\n" +
-                "        \"email\":{\n" +
-                "            \"address\":\"test@test.com\"\n" +
-                "        },\n" +
-                "        \"user\":{\n" +
-                "            \"firstName\":\"testFirst\",\n" +
-                "            \"lastName\":\"testLast\"\n" +
-                "        }\n" +
-                "    }\n" +
+        AccountObtainedDTO model = json.readValue("{" +
+                "   \"requestId\":\"test@test.com\"," +
+                "    \"account\":{" +
+                "        \"email\":{" +
+                "            \"address\":\"test@test.com\"" +
+                "        }," +
+                "        \"user\":{" +
+                "            \"firstName\":\"testFirst\"," +
+                "            \"lastName\":\"testLast\"" +
+                "        }" +
+                "    }" +
                 "}", AccountObtainedDTO.class);
 
         String content = json.writeValueAsString(new OutgoingRemoteEvent(model));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
-        Thread.sleep(50);
+        Thread.sleep(100);
         assertTrue(registration.isCancelled());
     }
-
-//    @Test
-//    public void should_receive_account_not_obtained() throws Exception {
-//        Registration<Object, Consumer<? extends Event<?>>> registration =
-//                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTREQUEST.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
-//
-//        String content = "{" +
-//                "   \"type\":\"AccountNotObtained\"," +
-//                "   \"data\":{" +
-//                "       \"email\":{" +
-//                "           \"address\":\"@invalid.com\"" +
-//                "       }," +
-//                "       \"reason\":\"Invalid Email\"" +
-//                "   }" +
-//                "}";
-//        mockMvc.perform(post("/event")
-//                .contentType(APPLICATION_JSON)
-//                .content(content)).andExpect(status().isOk());
-//        Thread.sleep(50);
-//        assertTrue(registration.isCancelled());
-//    }
 
     @Test
     public void should_receive_account_user_changed_confirmation() throws Exception {
         Registration<Object, Consumer<? extends Event<?>>> registration =
                 eventBus.on(Selectors.object("test@test.com"), event -> {}).cancelAfterUse();
 
-        AccountUserChangedDTO model = json.readValue("{\n" +
-                "   \"requestId\":\"test@test.com\"\n" +
+        AccountUserChangedDTO model = json.readValue("{" +
+                "   \"requestId\":\"test@test.com\"" +
                 "}", AccountUserChangedDTO.class);
 
         String content = json.writeValueAsString(new OutgoingRemoteEvent(model));
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_JSON)
                 .content(content));
-        Thread.sleep(50);
+        Thread.sleep(100);
         assertTrue(registration.isCancelled());
     }
 
-//    @Test
-//    public void should_receive_account_user_not_changed_confirmation() throws Exception {
-//        Registration<Object, Consumer<? extends Event<?>>> registration =
-//                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
-//
-//        AccountUserNotChangedDTO model = json.readValue("{\n" +
-//                "    \"email\":{\n" +
-//                "        \"address\":\"@invalid.com\"\n" +
-//                "    },\n" +
-//                "    \"reason\":\"Invalid Email\"\n" +
-//                "}", AccountUserNotChangedDTO.class);
-//
-//        String content = json.writeValueAsString(new OutgoingRemoteEvent(model, AccountUserNotChangedDTO.TYPE));
-//        mockMvc.perform(post("/event")
-//                .contentType(APPLICATION_JSON)
-//                .content(content));
-//        Thread.sleep(50);
-//        assertTrue(registration.isCancelled());
-//    }
 
 //    @Test
 //    public void should_receive_account_deleted_confirmation() throws Exception {
@@ -182,26 +123,6 @@ public class EventReceiverServiceTest {
 //        mockMvc.perform(post("/event")
 //                .contentType(APPLICATION_JSON)
 //                .content(content)).andExpect(status().isOk());
-//        Thread.sleep(50);
-//        assertTrue(registration.isCancelled());
-//    }
-
-//    @Test
-//    public void should_receive_account_not_deleted_confirmation() throws Exception {
-//        Registration<Object, Consumer<? extends Event<?>>> registration =
-//                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "@invalid.com"), event -> {}).cancelAfterUse();
-//
-//        AccountNotDeletedDTO model = json.readValue("{\n" +
-//                "    \"email\":{\n" +
-//                "        \"address\":\"@invalid.com\"\n" +
-//                "    },\n" +
-//                "    \"reason\":\"Invalid Email\"\n" +
-//                "}", AccountNotDeletedDTO.class);
-//
-//        String content = json.writeValueAsString(new OutgoingRemoteEvent(model, AccountNotDeletedDTO.TYPE));
-//        mockMvc.perform(post("/event")
-//                .contentType(APPLICATION_JSON)
-//                .content(content));
 //        Thread.sleep(50);
 //        assertTrue(registration.isCancelled());
 //    }
