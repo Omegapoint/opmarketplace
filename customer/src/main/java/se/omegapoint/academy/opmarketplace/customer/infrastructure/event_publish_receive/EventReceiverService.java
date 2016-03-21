@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedDTO;
 
 import java.io.IOException;
 
@@ -34,14 +34,14 @@ public class EventReceiverService {
                 eventJson.get("data").toString());
         try {
             switch (event.type) {
-                case AccountCreationRequestedModel.TYPE:
-                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountCreationRequestedModel.class)));
+                case AccountCreationRequestedDTO.TYPE:
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountCreationRequestedDTO.class)));
                     break;
-                case AccountRequestedModel.TYPE:
-                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountRequestedModel.class)));
+                case AccountRequestedDTO.TYPE:
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountRequestedDTO.class)));
                     break;
-                case AccountUserChangeRequestedModel.TYPE:
-                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountUserChangeRequestedModel.class)));
+                case AccountUserChangeRequestedDTO.TYPE:
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountUserChangeRequestedDTO.class)));
                     break;
                 default:
                     System.err.printf("Received unknown event; %s%n", event.type);

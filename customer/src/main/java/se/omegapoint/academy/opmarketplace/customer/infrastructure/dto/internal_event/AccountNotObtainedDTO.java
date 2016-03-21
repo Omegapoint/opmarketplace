@@ -1,27 +1,26 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserNotChanged;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountNotObtained;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountUserNotChangedModel implements DTO, Event, Serializer {
+public class AccountNotObtainedDTO implements Event, Serializer {
 
-    public static final String TYPE = "AccountUserNotChanged";
+    public static final String TYPE = "AccountNotObtained";
 
     private String requestId;
-    private EmailModel email;
+    private EmailDTO email;
     private String reason;
 
-    public AccountUserNotChangedModel() {}
+    public AccountNotObtainedDTO() {}
 
-    public AccountUserNotChangedModel(AccountUserNotChanged event, String requestId) {
+    public AccountNotObtainedDTO(AccountNotObtained event, String requestId) {
         notNull(event);
         this.requestId = notNull(requestId);
-        this.email = new EmailModel(event.email());
+        this.email = new EmailDTO(event.email());
         this.reason = event.reason();
     }
 
@@ -29,7 +28,7 @@ public class AccountUserNotChangedModel implements DTO, Event, Serializer {
         return requestId;
     }
 
-    public EmailModel getEmail() {
+    public EmailDTO getEmail() {
         return email;
     }
 

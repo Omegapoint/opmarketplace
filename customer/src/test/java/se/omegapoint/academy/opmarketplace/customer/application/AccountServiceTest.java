@@ -15,9 +15,9 @@ import se.omegapoint.academy.opmarketplace.customer.TestConfiguration;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedDTO;
 
 import java.io.IOException;
 
@@ -110,22 +110,22 @@ public class AccountServiceTest {
         String inputData = "{\"email\":{\"address\":\"" + email +"\"}," +
                 "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
 
-        AccountCreationRequestedModel model = objectMapper.readValue(inputData, AccountCreationRequestedModel.class);
+        AccountCreationRequestedDTO model = objectMapper.readValue(inputData, AccountCreationRequestedDTO.class);
         accountService.accept(Event.wrap(model));
     }
 
     private void getUser(String email) throws IOException {
         String inputData = "{\"email\":{\"address\":\"" + email + "\"}}";
 
-        AccountRequestedModel accountRequestedModel = objectMapper.readValue(inputData, AccountRequestedModel.class);
-        accountService.accept(Event.wrap(accountRequestedModel));
+        AccountRequestedDTO accountRequestedDTO = objectMapper.readValue(inputData, AccountRequestedDTO.class);
+        accountService.accept(Event.wrap(accountRequestedDTO));
     }
 
     private void changeUser(String email, String firstName, String lastName) throws IOException {
         String inputData = "{\"email\":{\"address\":\"" + email +"\"}," +
                 "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
 
-        AccountUserChangeRequestedModel accountUserChangeRequestedModel = objectMapper.readValue(inputData, AccountUserChangeRequestedModel.class);
-        accountService.accept(Event.wrap(accountUserChangeRequestedModel));
+        AccountUserChangeRequestedDTO accountUserChangeRequestedDTO = objectMapper.readValue(inputData, AccountUserChangeRequestedDTO.class);
+        accountService.accept(Event.wrap(accountUserChangeRequestedDTO));
     }
 }

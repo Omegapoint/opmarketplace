@@ -1,31 +1,30 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserDTO;
 
-public class AccountCreationRequestedModel implements DTO, Event, Deserializer<AccountCreationRequested> {
+public class AccountCreationRequestedDTO implements Event, Deserializer<AccountCreationRequested> {
 
     public static final String TYPE = "AccountCreationRequested";
 
     private String requestId;
-    private EmailModel email;
-    private UserModel user;
+    private EmailDTO email;
+    private UserDTO user;
 
-    public AccountCreationRequestedModel(){}
+    public AccountCreationRequestedDTO(){}
 
     public String getRequestId() {
         return requestId;
     }
 
-    public EmailModel getEmail() {
+    public EmailDTO getEmail() {
         return email;
     }
 
-    public UserModel getUser() {
+    public UserDTO getUser() {
         return user;
     }
 

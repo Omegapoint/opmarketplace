@@ -1,28 +1,27 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountNotCreated;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 
-public class AccountNotCreatedModel implements DTO, Event, Serializer {
+public class AccountNotCreatedDTO implements Event, Serializer {
 
     public static final String TYPE = "AccountNotCreated";
 
     private String requestId;
-    private EmailModel email;
+    private EmailDTO email;
     private String reason;
 
-    public AccountNotCreatedModel() {}
+    public AccountNotCreatedDTO() {}
 
-    public AccountNotCreatedModel(AccountNotCreated accountNotCreated, String requestId) {
+    public AccountNotCreatedDTO(AccountNotCreated accountNotCreated, String requestId) {
         notNull(accountNotCreated);
         this.requestId = notNull(requestId);
-        this.email = new EmailModel(accountNotCreated.email());
+        this.email = new EmailDTO(accountNotCreated.email());
         this.reason = accountNotCreated.reason();
     }
 
@@ -30,7 +29,7 @@ public class AccountNotCreatedModel implements DTO, Event, Serializer {
         return requestId;
     }
 
-    public EmailModel getEmail() {
+    public EmailDTO getEmail() {
         return email;
     }
 

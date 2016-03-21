@@ -7,18 +7,18 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serialize
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class UserModel implements DTO, Serializer, Deserializer<User> {
+public class UserDTO implements DTO, Serializer, Deserializer<User> {
 
     private String firstName;
     private String lastName;
 
-    public UserModel(User user){
+    public UserDTO(User user){
         notNull(user);
         firstName = user.firstName();
         lastName = user.lastName();
     }
 
-    public UserModel(){}
+    public UserDTO(){}
 
     public String getFirstName() {
         return firstName;

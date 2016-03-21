@@ -1,40 +1,39 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountUserChangedModel implements DTO, Event, Serializer {
+public class AccountUserChangedDTO implements Event, Serializer {
 
     public static final String TYPE = "AccountUserChanged";
 
     private String requestId;
-    private EmailModel email;
-    private UserModel user;
+    private EmailDTO email;
+    private UserDTO user;
 
-    public AccountUserChangedModel(){}
+    public AccountUserChangedDTO(){}
 
-    public AccountUserChangedModel(AccountUserChanged accountUserChanged, String requestId) {
+    public AccountUserChangedDTO(AccountUserChanged accountUserChanged, String requestId) {
         notNull(accountUserChanged);
         this.requestId = notNull(requestId);
-        this.email = new EmailModel(accountUserChanged.email());
-        this.user = new UserModel(accountUserChanged.user());
+        this.email = new EmailDTO(accountUserChanged.email());
+        this.user = new UserDTO(accountUserChanged.user());
     }
 
     public String getRequestId() {
         return requestId;
     }
 
-    public EmailModel getEmail() {
+    public EmailDTO getEmail() {
         return email;
     }
 
-    public UserModel getUser() {
+    public UserDTO getUser() {
         return user;
     }
 

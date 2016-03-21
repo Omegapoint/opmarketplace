@@ -9,9 +9,9 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.Pe
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.*;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedModel;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedDTO;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.util.Optional;
@@ -34,17 +34,17 @@ public class AccountService implements Consumer<Event<DTO>> {
         notNull(event);
 
         DTO DTO = event.getData();
-        if (DTO instanceof AccountCreationRequestedModel) {
-            accountCreationRequested((AccountCreationRequestedModel) DTO);
-        } else if (DTO instanceof AccountRequestedModel) {
-            accountRequested((AccountRequestedModel) DTO);
-        } else if (DTO instanceof AccountUserChangeRequestedModel) {
-            accountUserChangeRequested((AccountUserChangeRequestedModel) DTO);
+        if (DTO instanceof AccountCreationRequestedDTO) {
+            accountCreationRequested((AccountCreationRequestedDTO) DTO);
+        } else if (DTO instanceof AccountRequestedDTO) {
+            accountRequested((AccountRequestedDTO) DTO);
+        } else if (DTO instanceof AccountUserChangeRequestedDTO) {
+            accountUserChangeRequested((AccountUserChangeRequestedDTO) DTO);
         }
     }
 
     // TODO: 18/03/16 Method 1, discuss
-    private void accountUserChangeRequested(AccountUserChangeRequestedModel model) {
+    private void accountUserChangeRequested(AccountUserChangeRequestedDTO model) {
         try {
             AccountUserChangeRequested request = model.domainObject();
             Optional<Account> maybeAccount = accountRepository.account(request.email());
@@ -67,7 +67,7 @@ public class AccountService implements Consumer<Event<DTO>> {
     }
 
     // TODO: 18/03/16 Method 2, discuss
-    private void accountRequested(AccountRequestedModel model) {
+    private void accountRequested(AccountRequestedDTO model) {
         DomainEvent obtainedEvent = validate(model)
                 .map(error -> (DomainEvent) new AccountNotObtained(model.getEmail().getAddress(), error))
                 .orElseGet(() -> validAccountObtainedEvent(model));
@@ -75,7 +75,7 @@ public class AccountService implements Consumer<Event<DTO>> {
         publisher.publish(obtainedEvent, model.requestId());
     }
 
-    private DomainEvent validAccountObtainedEvent(AccountRequestedModel model) {
+    private DomainEvent validAccountObtainedEvent(AccountRequestedDTO model) {
         AccountRequested request = model.domainObject();
         Optional<Account> maybeAccount = accountRepository.account(request.email());
 
@@ -85,7 +85,7 @@ public class AccountService implements Consumer<Event<DTO>> {
     }
 
     // TODO: 18/03/16 Method 3, discuss
-    private void accountCreationRequested(AccountCreationRequestedModel model){
+    private void accountCreationRequested(AccountCreationRequestedDTO model){
         try {
             AccountCreationRequested request = model.domainObject();
 

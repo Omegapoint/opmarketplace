@@ -7,22 +7,22 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serialize
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class EmailModel implements DTO, Serializer, Deserializer<Email> {
+public class EmailDTO implements DTO, Serializer, Deserializer<Email> {
 
     private String address;
 
-    public EmailModel(Email email){
+    public EmailDTO(Email email){
         notNull(email);
         this.address = email.address();
     }
 
     // TODO: 16/03/16 Used for unsafe events, maybe remove?
-    public EmailModel(String email) {
+    public EmailDTO(String email) {
         notNull(email);
         this.address = email;
     }
 
-    public EmailModel(){}
+    public EmailDTO(){}
 
     public String getAddress() {
         return address;
