@@ -108,7 +108,6 @@ public class EventReceiverServiceTest {
                 .content(content));
         Thread.sleep(1000);
         assertTrue(registration.isCancelled());
-        assertTrue(false);
     }
 
 
