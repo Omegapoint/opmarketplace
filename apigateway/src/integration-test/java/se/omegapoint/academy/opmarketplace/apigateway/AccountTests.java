@@ -106,12 +106,12 @@ public class AccountTests {
                 .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
     }
 
-//    @Test
-//    public void should_not_delete_non_existing_user() throws Exception {
-//        deleteUser("test6@test.com")
-//                .andExpect(status().isBadRequest())
-//                .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
-//    }
+    @Test
+    public void should_not_delete_non_existing_user() throws Exception {
+        deleteUser("nonexistent@test.com")
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
+    }
 
     private ResultActions createUser(String email, String firstName, String lastName) throws Exception {
         String content = userJson(email, firstName, lastName);
