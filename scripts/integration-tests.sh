@@ -5,7 +5,7 @@ set -ev
 DIRS=(messageservice customer)
 PIDS=()
 for DIR in ${DIRS[@]}; do
-  echo Starting build of $DIR
+  echo -------------------------Starting build of $DIR-------------------------
   cd ../$DIR
   chmod +x gradlew
   ./gradlew build --info
@@ -13,11 +13,13 @@ for DIR in ${DIRS[@]}; do
   PIDS+=($!)
   cd ../scripts
 done
-echo Starting Apigateway
+
+echo -------------------------Starting build of apigateway-------------------------
 cd ../apigateway
 chmod +x gradlew
 ./gradlew integrationTest
 cd ../scripts
+
 echo -------------------------CleanUp-------------------------
 for PID in ${PIDS[@]}; do
   echo Killing process: $PID...
