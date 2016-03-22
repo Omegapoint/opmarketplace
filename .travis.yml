@@ -2,9 +2,9 @@ language: java
 jdk:
   - oraclejdk8
 env:
-  - DIR=customer/ SCRIPT=unit_tests.sh
-  - DIR=apigateway/ SCRIPT=unit_tests.sh
-  - DIR=messageservice/ SCRIPT=unit_tests.sh
+  - DIR=customer/ SCRIPT=unit-tests.sh
+  - DIR=apigateway/ SCRIPT=unit-tests.sh
+  - DIR=messageservice/ SCRIPT=unit-tests.sh
 before_script:
   - cd $DIR && chmod +x gradlew
 script:
