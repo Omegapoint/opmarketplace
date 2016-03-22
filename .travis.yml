@@ -2,13 +2,13 @@ language: java
 jdk:
   - oraclejdk8
 env:
-  - DIR=customer/ SCRIPT=unit-tests.sh
-  - DIR=apigateway/ SCRIPT=unit-tests.sh
-  - DIR=messageservice/ SCRIPT=unit-tests.sh
+#  - DIR=customer/ SCRIPT=unit-tests.sh
+#  - DIR=apigateway/ SCRIPT=unit-tests.sh
+#  - DIR=messageservice/ SCRIPT=unit-tests.sh
   - SCRIPT=integration-tests.sh
 script:
   - chmod ugo+x scripts/$SCRIPT
-  - scripts/$SCRIPT
+  - cd scripts && ./$SCRIPT && cd..
 notifications:
   email: false
 #  slack: opchat:QiLB2Ww1XEfz5WHhoiZTQr0T#exjobb2016
