@@ -46,6 +46,7 @@ public class EventReceiverService {
                     break;
                 case AccountDeletionRequestedDTO.TYPE:
                     eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountDeletionRequestedDTO.class)));
+                    break;
                 default:
                     System.err.printf("Received unknown event; %s%n", event.type);
             }

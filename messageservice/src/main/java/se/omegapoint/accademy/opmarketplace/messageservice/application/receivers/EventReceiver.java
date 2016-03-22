@@ -25,7 +25,7 @@ public class EventReceiver {
             @RequestParam("channel") String channel,
             @RequestBody String data) {
 
-        System.out.printf("Event received and published on channel %s...%n", channel);
+        System.out.printf("Event: %s received and published on channel %s...%n", data, channel);
         eventBus.notify(channel, Event.wrap(data));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }

@@ -152,8 +152,8 @@ public class AccountTests {
 
         try {
             return mockMvc.perform(asyncDispatch(mvcResult));
-        }catch (IllegalStateException e){
-            System.out.println(e.getMessage());
+        }catch (Exception e){
+            System.err.println(e.getMessage());
         }
         return null;
     }
