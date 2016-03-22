@@ -6,6 +6,7 @@ env:
   - DIR=apigateway/ SCRIPT=unit-tests.sh
   - DIR=messageservice/ SCRIPT=unit-tests.sh
 script:
+  - chmod ugo+x scripts/$SCRIPT
   - scripts/$SCRIPT
 notifications:
   email: false
