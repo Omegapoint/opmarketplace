@@ -7,8 +7,7 @@ env:
 #  - DIR=messageservice/ SCRIPT=unit-tests.sh
   - SCRIPT=integration-tests.sh
 script:
-  - chmod ugo+x scripts/$SCRIPT
-  - cd scripts && ./$SCRIPT && cd..
+  - cd scripts && chmod ugo+x $SCRIPT && ./$SCRIPT && cd ..
 notifications:
   email: false
 #  slack: opchat:QiLB2Ww1XEfz5WHhoiZTQr0T#exjobb2016
