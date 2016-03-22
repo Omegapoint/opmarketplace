@@ -5,8 +5,6 @@ env:
   - DIR=customer/ SCRIPT=unit-tests.sh
   - DIR=apigateway/ SCRIPT=unit-tests.sh
   - DIR=messageservice/ SCRIPT=unit-tests.sh
-before_script:
-  - cd $DIR && chmod +x gradlew
 script:
   - scripts/$SCRIPT
 notifications:
