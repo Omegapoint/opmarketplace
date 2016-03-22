@@ -5,6 +5,7 @@ env:
   - DIR=customer/ SCRIPT=unit-tests.sh
   - DIR=apigateway/ SCRIPT=unit-tests.sh
   - DIR=messageservice/ SCRIPT=unit-tests.sh
+  - SCRIPT=integration-tests.sh
 script:
   - chmod ugo+x scripts/$SCRIPT
   - scripts/$SCRIPT
