@@ -154,6 +154,8 @@ public class AccountTests {
                 .andExpect(request().asyncStarted())
                 .andReturn();
 
+        mvcResult.getAsyncResult();
+
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
