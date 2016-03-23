@@ -41,7 +41,7 @@ public class EventRemotePublisherService implements EventPublisher {
 
     @Override
     public void publish(DomainEvent event, String requestId) {
-
+        System.out.println("Publish");
         if (event instanceof AccountCreated) {
             dispatch(new AccountCreatedDTO((AccountCreated) event, requestId));
         } else if (event instanceof AccountNotCreated) {
@@ -58,6 +58,7 @@ public class EventRemotePublisherService implements EventPublisher {
             dispatch(new AccountDeletedDTO((AccountDeleted) event, requestId));
         } else if (event instanceof AccountNotDeleted) {
             dispatch(new AccountNotDeletedDTO((AccountNotDeleted) event, requestId));
+            System.out.println("Dispatch: " + ((AccountNotDeleted) event).reason());
         } else {
             throw new IllegalStateException("Domain Event not recognized.");
         }
