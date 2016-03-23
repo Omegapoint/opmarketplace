@@ -30,8 +30,7 @@ public class AccountRequestedDTO implements Event, Deserializer<AccountRequested
 
     @Override
     public AccountRequested domainObject() {
-        // TODO: 21/03/16 Change to email.domainObject()
-        return new AccountRequested(new Email(email.address));
+        return new AccountRequested(email.domainObject());
     }
 
     @Override
