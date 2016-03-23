@@ -110,7 +110,7 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
     }
 
     private void accountDeletionRequested(AccountDeletionRequestedDTO dto) {
-        System.out.println("Handling account deleted: " + dto.email);
+        System.out.println("Handling account deleted: " + dto.email.address);
         try {
             AccountDeletionRequested request = dto.domainObject();
 

@@ -58,6 +58,25 @@ public class AccountTests {
     }
 
     @Test
+    public void should_delete_user() throws Exception {
+        createUser("test5@test.com", "fistName", "lastName");
+        deleteUser("test5@test.com")
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
+        getUser("test5@test.com")
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
+    }
+
+    @Test
+    public void should_not_delete_non_existing_user() throws Exception {
+        deleteUser("nonexistent@test.com")
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
+    }
+
+    @Test
     public void should_get_correct_account() throws Exception {
         createUser("test3@test.com", "firstName", "lastName");
 
@@ -94,23 +113,14 @@ public class AccountTests {
                 .andExpect(content().string(expectedResult));
     }
 
-    @Test
-    public void should_delete_user() throws Exception {
-        createUser("test5@test.com", "fistName", "lastName");
-        deleteUser("test5@test.com")
-                .andExpect(status().isOk())
-                .andExpect(content().string(""));
+    private ResultActions deleteUser(String email) throws Exception {
+        MvcResult mvcResult = mockMvc.perform(delete("/accounts")
+                .param("email", email)
+        )
+                .andExpect(request().asyncStarted())
+                .andReturn();
 
-        getUser("test5@test.com")
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
-    }
-
-    @Test
-    public void should_not_delete_non_existing_user() throws Exception {
-        deleteUser("nonexistent@test.com")
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
+        return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
     private ResultActions createUser(String email, String firstName, String lastName) throws Exception {
@@ -143,18 +153,6 @@ public class AccountTests {
         )
                 .andExpect(request().asyncStarted())
                 .andReturn();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    private ResultActions deleteUser(String email) throws Exception {
-        MvcResult mvcResult = mockMvc.perform(delete("/accounts")
-                .param("email", email)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
 
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
