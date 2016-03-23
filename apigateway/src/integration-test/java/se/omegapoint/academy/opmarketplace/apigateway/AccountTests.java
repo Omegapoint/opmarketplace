@@ -1,6 +1,7 @@
 package se.omegapoint.academy.opmarketplace.apigateway;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -30,6 +32,14 @@ public class AccountTests {
     private WebApplicationContext wac;
 
     private MockMvc mockMvc;
+
+    public AccountTests(){
+        mockMvc = webAppContextSetup(wac).build();
+        try{
+            createUser("init@init,com", "init", "init")
+                    .andExpect(status().isOk());
+        } catch (Exception e) {}
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -86,10 +96,10 @@ public class AccountTests {
 
     @Test
     public void should_change_user() throws Exception {
-        try {
-            createUser("test4@test.com", "fistName", "lastName");
-        } catch (IllegalStateException e){}
-        Thread.sleep(2000);
+//        try {
+            createUser("test4@test.com", "fistName", "lastName")
+                    .andExpect(status().isOk());
+//        } catch (IllegalStateException e){}
         changeUser("test4@test.com", "changedFistName", "changedLastName")
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
