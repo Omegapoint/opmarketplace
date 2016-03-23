@@ -1,5 +1,7 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.items;
 
+import java.util.Objects;
+
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notBlank;
 
@@ -37,15 +39,12 @@ public final class Price {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Price price = (Price) o;
-
         return amount == price.amount;
-
     }
 
     @Override
     public int hashCode() {
-        return (int) (amount ^ (amount >>> 32));
+        return Objects.hash(amount);
     }
 }

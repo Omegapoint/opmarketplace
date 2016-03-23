@@ -1,15 +1,13 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.items;
 
-import java.util.List;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.items.events.persistable.PersistableEvent;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface ItemRepository {
-    void addItem(Item item);
+    Optional<Item> item(String id);
 
-    void deleteItem(String id);
+    boolean itemInExistence(String id);
 
-    void updateItem(Item item);
-
-    Item item(String id);
-
-    List<Item> findByTitle(Title title);
+    void append(PersistableEvent event);
 }

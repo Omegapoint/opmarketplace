@@ -1,5 +1,7 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.items;
 
+import java.util.Objects;
+
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notBlank;
 
@@ -26,15 +28,12 @@ public final class Title {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Title title = (Title) o;
-
-        return text != null ? text.equals(title.text) : title.text == null;
-
+        return Objects.equals(text, title.text);
     }
 
     @Override
     public int hashCode() {
-        return text != null ? text.hashCode() : 0;
+        return Objects.hash(text);
     }
 }

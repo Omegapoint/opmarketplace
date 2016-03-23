@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.marketplace.web;
+package se.omegapoint.academy.opmarketplace.marketplace.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
