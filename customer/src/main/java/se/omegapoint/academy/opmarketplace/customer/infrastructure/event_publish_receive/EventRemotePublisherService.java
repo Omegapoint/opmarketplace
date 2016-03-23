@@ -41,7 +41,6 @@ public class EventRemotePublisherService implements EventPublisher {
 
     @Override
     public void publish(DomainEvent event, String requestId) {
-        System.out.println("Publish");
         if (event instanceof AccountCreated) {
             dispatch(new AccountCreatedDTO((AccountCreated) event, requestId));
         } else if (event instanceof AccountNotCreated) {
