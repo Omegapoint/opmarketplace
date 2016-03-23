@@ -4,12 +4,10 @@ import reactor.bus.Event;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountDeleted;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.*;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountDeletionRequestedDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedDTO;
@@ -18,7 +16,6 @@ import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.util.Optional;
 
-import static se.omegapoint.academy.opmarketplace.customer.application.Validator.validate;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class AccountService implements Consumer<Event<se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event>> {
@@ -47,40 +44,51 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
         }
     }
 
-    // TODO: 18/03/16 Method 1, discuss
-    private void accountUserChangeRequested(AccountUserChangeRequestedDTO model) {
-        try {
-            AccountUserChangeRequested request = model.domainObject();
-            Optional<Account> maybeAccount = accountRepository.account(request.email());
+    private void accountCreationRequested(AccountCreationRequestedDTO dto){
+        DomainEvent event = DomainObjectResult.of(AccountCreationRequestedDTO::domainObject, dto)
+                .map(this::createAccount)
+                .orElseError(error -> new AccountNotCreated(dto.email.address, error));
 
-            DomainEvent event = maybeAccount
-                    .map(account -> (DomainEvent) account.changeUser(request))
-                    .orElse(new AccountUserNotChanged(request.email().address(), "User does not exist."));
-
-            if (event instanceof PersistableEvent) {
-                accountRepository.append((PersistableEvent) event);
-            }
-
-            publisher.publish(event, model.requestId());
-
-        } catch (IllegalArgumentValidationException e) {
-            AccountUserNotChanged accountUserNotChanged = new AccountUserNotChanged(model.email.address, e.getMessage());
-            publisher.publish(accountUserNotChanged, model.requestId());
-            e.printStackTrace();
-        }
+        publisher.publish(event, dto.requestId());
     }
 
-    // TODO: 18/03/16 Method 2, discuss
-    private void accountRequested(AccountRequestedDTO model) {
-        DomainEvent obtainedEvent = validate(model)
-                .map(error -> (DomainEvent) new AccountNotObtained(model.email.address, error))
-                .orElseGet(() -> validAccountObtainedEvent(model));
+    private void accountRequested(AccountRequestedDTO dto) {
+        DomainEvent event = DomainObjectResult.of(AccountRequestedDTO::domainObject, dto)
+                .map(this::obtainAccount)
+                .orElseError(error -> new AccountNotObtained(dto.email.address, error));
 
-        publisher.publish(obtainedEvent, model.requestId());
+        publisher.publish(event, dto.requestId());
     }
 
-    private DomainEvent validAccountObtainedEvent(AccountRequestedDTO model) {
-        AccountRequested request = model.domainObject();
+    private void accountUserChangeRequested(AccountUserChangeRequestedDTO dto) {
+        DomainEvent event = DomainObjectResult.of(AccountUserChangeRequestedDTO::domainObject, dto)
+                .map(this::changeUserOfAccount)
+                .orElseError(error -> new AccountUserNotChanged(dto.email.address, error));
+
+        publisher.publish(event, dto.requestId());
+    }
+
+    private void accountDeletionRequested(AccountDeletionRequestedDTO dto) {
+        DomainEvent event = DomainObjectResult.of(AccountDeletionRequestedDTO::domainObject, dto)
+                .map(this::deleteAccount)
+                .orElseError(AccountNotDeleted::new);
+
+        publisher.publish(event, dto.requestId());
+    }
+
+    private DomainEvent createAccount(AccountCreationRequested request) {
+        Optional<Account> maybeAccount = accountRepository.account(request.email());
+
+        return maybeAccount
+                .map(account -> (DomainEvent) new AccountNotCreated(request.email().address(), "Account already exists."))
+                .orElseGet(() -> {
+                    PersistableEvent persistableEvent = Account.createAccount(request);
+                    accountRepository.append(persistableEvent);
+                    return persistableEvent;
+                });
+    }
+
+    private DomainEvent obtainAccount(AccountRequested request) {
         Optional<Account> maybeAccount = accountRepository.account(request.email());
 
         return maybeAccount
@@ -88,46 +96,27 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
                 .orElse(new AccountNotObtained(request.email().address(), "Account does not exist."));
     }
 
-    // TODO: 18/03/16 Method 3, discuss
-    private void accountCreationRequested(AccountCreationRequestedDTO model){
-        try {
-            AccountCreationRequested request = model.domainObject();
+    private DomainEvent changeUserOfAccount(AccountUserChangeRequested request) {
+        Optional<Account> maybeAccount = accountRepository.account(request.email());
 
-            if (!accountRepository.accountInExistence(request.email())){
-                AccountCreated accountCreated = Account.createAccount(request);
-                accountRepository.append(accountCreated);
-                publisher.publish(accountCreated, model.requestId());
-            } else {
-                AccountNotCreated accountNotCreated = new AccountNotCreated(request.email().address(), "Account already exists.");
-                publisher.publish(accountNotCreated, model.requestId());
-            }
-
-        } catch (IllegalArgumentValidationException e) {
-            e.printStackTrace();
-            AccountNotCreated accountNotCreated = new AccountNotCreated(model.email.address, e.getMessage());
-            publisher.publish(accountNotCreated, model.requestId());
-        }
+        return maybeAccount
+                .map(account -> {
+                    PersistableEvent persistableEvent = account.changeUser(request);
+                    accountRepository.append(persistableEvent);
+                    return (DomainEvent) persistableEvent;
+                })
+                .orElse(new AccountUserNotChanged(request.email().address(), "Account does not exist."));
     }
 
-    private void accountDeletionRequested(AccountDeletionRequestedDTO dto) {
-        try {
-            AccountDeletionRequested request = dto.domainObject();
+    private DomainEvent deleteAccount(AccountDeletionRequested request) {
+        Optional<Account> maybeAccount = accountRepository.account(request.email());
 
-            Optional<Account> maybeAccount = accountRepository.account(request.email());
-
-            if (maybeAccount.isPresent()) {
-                Account account = maybeAccount.get();
-                AccountDeleted accountDeleted = account.deleteAccount(request);
-                accountRepository.append(accountDeleted);
-                publisher.publish(accountDeleted, dto.requestId());
-            } else {
-                AccountNotDeleted accountNotDeleted = new AccountNotDeleted("Account does not exist.");
-                publisher.publish(accountNotDeleted, dto.requestId());
-            }
-        } catch (IllegalArgumentValidationException e) {
-            e.printStackTrace();
-            AccountNotDeleted accountNotDeleted = new AccountNotDeleted(e.getMessage());
-            publisher.publish(accountNotDeleted, dto.requestId());
-        }
+        return maybeAccount
+                .map(account -> {
+                    PersistableEvent persistableEvent = account.deleteAccount(request);
+                    accountRepository.append(persistableEvent);
+                    return (DomainEvent) persistableEvent;
+                })
+                .orElse(new AccountNotDeleted("Account does not exist."));
     }
 }
