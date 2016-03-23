@@ -150,12 +150,7 @@ public class AccountTests {
                 .param("email", email))
                 .andReturn();
 
-        try {
-            return mockMvc.perform(asyncDispatch(mvcResult));
-        }catch (Exception e){
-            System.err.println(e.getMessage());
-        }
-        return null;
+        return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
     private String userJson(String email, String firstName, String lastName) {
