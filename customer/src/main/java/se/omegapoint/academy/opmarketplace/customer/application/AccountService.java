@@ -21,7 +21,7 @@ import java.util.Optional;
 import static se.omegapoint.academy.opmarketplace.customer.application.Validator.validate;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountService implements Consumer<Event<DTO>> {
+public class AccountService implements Consumer<Event<se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event>> {
 
     private final AccountRepository accountRepository;
     private final EventPublisher publisher;
@@ -32,10 +32,10 @@ public class AccountService implements Consumer<Event<DTO>> {
     }
 
     @Override
-    public void accept(Event<DTO> event) {
+    public void accept(Event<se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event> event) {
         notNull(event);
 
-        DTO dto = event.getData();
+        se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event dto = event.getData();
         if (dto instanceof AccountCreationRequestedDTO) {
             accountCreationRequested((AccountCreationRequestedDTO) dto);
         } else if (dto instanceof AccountRequestedDTO) {

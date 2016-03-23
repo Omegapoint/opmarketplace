@@ -127,7 +127,9 @@ public class AccountTests {
 
     private ResultActions getUser(String email) throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/accounts")
-                .param("email", email))
+                .param("email", email)
+        )
+                .andExpect(request().asyncStarted())
                 .andReturn();
 
         return mockMvc.perform(asyncDispatch(mvcResult));
@@ -147,7 +149,9 @@ public class AccountTests {
 
     private ResultActions deleteUser(String email) throws Exception {
         MvcResult mvcResult = mockMvc.perform(delete("/accounts")
-                .param("email", email))
+                .param("email", email)
+        )
+                .andExpect(request().asyncStarted())
                 .andReturn();
 
         return mockMvc.perform(asyncDispatch(mvcResult));
