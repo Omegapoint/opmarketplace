@@ -86,6 +86,7 @@ public class AccountTests {
 
     @Test
     public void should_change_user() throws Exception {
+        Thread.sleep(10000);
         createUser("test4@test.com", "fistName", "lastName");
         changeUser("test4@test.com", "changedFistName", "changedLastName")
                 .andExpect(status().isOk())
@@ -116,12 +117,15 @@ public class AccountTests {
                 .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
     }
 
+    /// HELPER METHODS ///
     private ResultActions deleteUser(String email) throws Exception {
         MvcResult mvcResult = mockMvc.perform(delete("/accounts")
                 .param("email", email)
         )
                 .andExpect(request().asyncStarted())
                 .andReturn();
+
+        mvcResult.getAsyncResult();
 
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
@@ -135,6 +139,8 @@ public class AccountTests {
                 .andExpect(request().asyncStarted())
                 .andReturn();
 
+        mvcResult.getAsyncResult();
+
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
@@ -144,6 +150,8 @@ public class AccountTests {
         )
                 .andExpect(request().asyncStarted())
                 .andReturn();
+
+        mvcResult.getAsyncResult();
 
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
@@ -156,6 +164,8 @@ public class AccountTests {
         )
                 .andExpect(request().asyncStarted())
                 .andReturn();
+
+        mvcResult.getAsyncResult();
 
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
