@@ -28,12 +28,13 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AccountTests {
 
-    @Autowired
     private WebApplicationContext wac;
 
     private MockMvc mockMvc;
 
-    public AccountTests(){
+    @Autowired
+    public AccountTests(WebApplicationContext wac){
+        this.wac = wac;
         mockMvc = webAppContextSetup(wac).build();
         try{
             createUser("init@init,com", "init", "init")
