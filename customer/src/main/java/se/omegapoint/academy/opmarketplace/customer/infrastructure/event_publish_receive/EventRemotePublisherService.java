@@ -58,7 +58,6 @@ public class EventRemotePublisherService implements EventPublisher {
             dispatch(new AccountDeletedDTO((AccountDeleted) event, requestId));
         } else if (event instanceof AccountNotDeleted) {
             dispatch(new AccountNotDeletedDTO((AccountNotDeleted) event, requestId));
-            System.out.println("Dispatch: " + ((AccountNotDeleted) event).reason());
         } else {
             throw new IllegalStateException("Domain Event not recognized.");
         }

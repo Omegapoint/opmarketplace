@@ -45,7 +45,6 @@ public class EventReceiverService {
                     eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountUserChangeRequestedDTO.class)));
                     break;
                 case AccountDeletionRequestedDTO.TYPE:
-                    System.out.println("Deletion requested. Published internally to: " + channel);
                     eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountDeletionRequestedDTO.class)));
                     break;
                 default:

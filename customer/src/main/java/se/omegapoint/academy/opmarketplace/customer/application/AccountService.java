@@ -110,7 +110,6 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
     }
 
     private void accountDeletionRequested(AccountDeletionRequestedDTO dto) {
-        System.out.println("Handling account deleted: " + dto.email.address);
         try {
             AccountDeletionRequested request = dto.domainObject();
 
@@ -122,7 +121,6 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
                 accountRepository.append(accountDeleted);
                 publisher.publish(accountDeleted, dto.requestId());
             } else {
-                System.out.println("Account does not exist.");
                 AccountNotDeleted accountNotDeleted = new AccountNotDeleted("Account does not exist.");
                 publisher.publish(accountNotDeleted, dto.requestId());
             }
