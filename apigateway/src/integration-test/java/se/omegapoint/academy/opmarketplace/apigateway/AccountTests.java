@@ -1,8 +1,10 @@
 package se.omegapoint.academy.opmarketplace.apigateway;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
@@ -21,6 +23,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ApigatewayApplication.class)
 @WebIntegrationTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AccountTests {
 
     @Autowired
@@ -58,25 +61,6 @@ public class AccountTests {
     }
 
     @Test
-    public void should_delete_user() throws Exception {
-        createUser("test5@test.com", "fistName", "lastName");
-        deleteUser("test5@test.com")
-                .andExpect(status().isOk())
-                .andExpect(content().string(""));
-
-        getUser("test5@test.com")
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
-    }
-
-    @Test
-    public void should_not_delete_non_existing_user() throws Exception {
-        deleteUser("nonexistent@test.com")
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
-    }
-
-    @Test
     public void should_get_correct_account() throws Exception {
         createUser("test3@test.com", "firstName", "lastName");
 
@@ -111,6 +95,25 @@ public class AccountTests {
         getUser("test4@test.com")
                 .andExpect(status().isOk())
                 .andExpect(content().string(expectedResult));
+    }
+
+    @Test
+    public void should_delete_user() throws Exception {
+        createUser("test5@test.com", "fistName", "lastName");
+        deleteUser("test5@test.com")
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
+        getUser("test5@test.com")
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
+    }
+
+    @Test
+    public void should_not_delete_non_existing_user() throws Exception {
+        deleteUser("nonexistent@test.com")
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
     }
 
     private ResultActions deleteUser(String email) throws Exception {
