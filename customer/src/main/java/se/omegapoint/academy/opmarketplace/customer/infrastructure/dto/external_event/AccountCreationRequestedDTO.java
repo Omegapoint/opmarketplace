@@ -1,6 +1,7 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Deserializer;
@@ -10,6 +11,7 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_ob
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountCreationRequestedDTO implements Event, Deserializer<AccountCreationRequested> {
 
     public static final String TYPE = "AccountCreationRequested";
