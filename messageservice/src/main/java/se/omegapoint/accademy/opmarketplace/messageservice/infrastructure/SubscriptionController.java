@@ -6,6 +6,7 @@ import se.omegapoint.accademy.opmarketplace.messageservice.application.EventDisp
 import se.omegapoint.accademy.opmarketplace.messageservice.domain.RuleEngine;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -37,6 +38,9 @@ public class SubscriptionController {
             return true;
         } else {
             System.out.printf("Endpoint %s is already subscribed to channel %s%n", endpoint, selector.getObject().toString());
+            for (URL url : subscriptions.keySet()) {
+                System.out.printf("    URL %s subscribed to %s%n", url, Arrays.toString(subscriptions.get(url).toArray()));
+            }
             return false;
         }
     }
