@@ -2,15 +2,10 @@ package se.omegapoint.academy.opmarketplace.marketplace.domain.items;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import se.omegapoint.academy.opmarketplace.marketplace.application.Application;
-import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
-
-import java.util.ArrayList;
-import java.util.UUID;
+import se.omegapoint.academy.opmarketplace.marketplace.Application;
 
 import static org.junit.Assert.*;
 

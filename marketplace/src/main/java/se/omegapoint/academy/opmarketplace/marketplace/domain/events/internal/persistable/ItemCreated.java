@@ -1,6 +1,6 @@
-package se.omegapoint.academy.opmarketplace.marketplace.domain.items.events.persistable;
+package se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable;
 
-import se.omegapoint.academy.opmarketplace.marketplace.domain.items.Item;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 
 import java.sql.Timestamp;
 
@@ -17,7 +17,7 @@ public class ItemCreated implements PersistableEvent {
     }
 
     public ItemCreated(Item item, Timestamp timestamp){
-        isTrue(timestamp.before(new Timestamp(System.currentTimeMillis() + 1)));
+        isTrue(notNull(timestamp).before(new Timestamp(System.currentTimeMillis() + 1)));
         this.item = notNull(item);
         this.timestamp = notNull(timestamp);
     }

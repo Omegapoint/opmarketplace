@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.marketplace.domain.items;
+package se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects;
 
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notBlank;

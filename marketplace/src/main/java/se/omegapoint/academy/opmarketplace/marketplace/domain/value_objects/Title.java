@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.marketplace.domain.items;
+package se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects;
 
 import java.util.Objects;
 
@@ -14,10 +14,10 @@ public final class Title {
     private final String text;
 
     public Title(String text) {
-        notBlank(text);
-        isTrue(text.length() <= MAX_LENGTH, ILLEGAL_LENGTH);
-        isTrue(text.matches("(\\w+\\s*\\.*)+"), ILLEGAL_CHARACTERS);
-        this.text = text;
+        String trimmedText = notBlank(text).trim();
+        isTrue(trimmedText.length() <= MAX_LENGTH, ILLEGAL_LENGTH);
+        isTrue(trimmedText.matches("(\\w+\\s*\\.*)+"), ILLEGAL_CHARACTERS);
+        this.text = trimmedText;
     }
 
     public String text(){

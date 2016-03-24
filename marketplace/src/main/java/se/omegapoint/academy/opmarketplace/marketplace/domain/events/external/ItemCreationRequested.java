@@ -1,9 +1,9 @@
-package se.omegapoint.academy.opmarketplace.marketplace.domain.items.events;
+package se.omegapoint.academy.opmarketplace.marketplace.domain.events.external;
 
 
-import se.omegapoint.academy.opmarketplace.marketplace.domain.items.Description;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.items.Price;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.items.Title;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Price;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 

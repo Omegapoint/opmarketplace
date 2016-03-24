@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.marketplace.domain.items;
+package se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects;
 
 import java.util.Objects;
 

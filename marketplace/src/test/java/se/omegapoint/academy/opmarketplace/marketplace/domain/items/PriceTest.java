@@ -1,6 +1,7 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.items;
 
 import org.junit.Test;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Price;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
