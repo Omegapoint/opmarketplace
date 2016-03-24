@@ -7,33 +7,33 @@ import java.util.function.Function;
 
 public class DomainObjectResult<T>{
     private Optional<T> value;
-    private String error;
+    private String reason;
 
     private DomainObjectResult(T value){
         this.value = Optional.of(value);
-        this.error = "";
+        this.reason = "";
     }
 
 
-    private DomainObjectResult(String error){
+    private DomainObjectResult(String reason){
         this.value = Optional.empty();
-        this.error = error;
+        this.reason = reason;
     }
 
     public<U> DomainObjectResult<U> map(Function<? super T, ? extends U> mapper) {
         if (value.isPresent()) {
             return new DomainObjectResult<>(value.map(mapper).get());
         }
-        return new DomainObjectResult<>(error);
+        return new DomainObjectResult<>(reason);
     }
 
-    public T orElseError(Function<String, ? extends T> other) {
-        return value.isPresent() ? value.get() : other.apply(error);
+    public T orElseReason(Function<String, ? extends T> other) {
+        return value.isPresent() ? value.get() : other.apply(reason);
     }
 
-    public static <U, V> DomainObjectResult<U> of(Function<V, U> mapper, V input){
+    public static <U, V> DomainObjectResult<U> of(Function<V, U> conversion, V input){
         try {
-            return new DomainObjectResult<>(mapper.apply(input));
+            return new DomainObjectResult<>(conversion.apply(input));
         } catch (IllegalArgumentValidationException e){
             return new DomainObjectResult<>(e.getMessage());
         }

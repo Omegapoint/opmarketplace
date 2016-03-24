@@ -4,7 +4,6 @@ import reactor.bus.Event;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountDeleted;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
@@ -12,7 +11,6 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountDeletionRequestedDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedDTO;
-import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.util.Optional;
 
@@ -47,7 +45,7 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
     private void accountCreationRequested(AccountCreationRequestedDTO dto){
         DomainEvent event = DomainObjectResult.of(AccountCreationRequestedDTO::domainObject, dto)
                 .map(this::createAccount)
-                .orElseError(AccountNotCreated::new);
+                .orElseReason(AccountNotCreated::new);
 
         publisher.publish(event, dto.requestId());
     }
@@ -55,7 +53,7 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
     private void accountRequested(AccountRequestedDTO dto) {
         DomainEvent event = DomainObjectResult.of(AccountRequestedDTO::domainObject, dto)
                 .map(this::obtainAccount)
-                .orElseError(AccountNotObtained::new);
+                .orElseReason(AccountNotObtained::new);
 
         publisher.publish(event, dto.requestId());
     }
@@ -63,7 +61,7 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
     private void accountUserChangeRequested(AccountUserChangeRequestedDTO dto) {
         DomainEvent event = DomainObjectResult.of(AccountUserChangeRequestedDTO::domainObject, dto)
                 .map(this::changeUserOfAccount)
-                .orElseError(AccountUserNotChanged::new);
+                .orElseReason(AccountUserNotChanged::new);
 
         publisher.publish(event, dto.requestId());
     }
@@ -71,7 +69,7 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
     private void accountDeletionRequested(AccountDeletionRequestedDTO dto) {
         DomainEvent event = DomainObjectResult.of(AccountDeletionRequestedDTO::domainObject, dto)
                 .map(this::deleteAccount)
-                .orElseError(AccountNotDeleted::new);
+                .orElseReason(AccountNotDeleted::new);
 
         publisher.publish(event, dto.requestId());
     }
