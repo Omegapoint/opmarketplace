@@ -5,7 +5,9 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 
 import java.util.List;
 
-public interface ItemCreatedJPARepository extends JpaRepository<ItemCreatedEntity, String>{
+public interface ItemCreatedJPARepository extends JpaRepository<ItemCreatedEntity, Long>{
 
     List<ItemCreatedEntity> findByTitle(String title);
+
+    List<ItemCreatedEntity> findById(String id);
 }
