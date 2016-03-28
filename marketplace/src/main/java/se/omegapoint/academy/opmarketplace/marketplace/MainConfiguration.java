@@ -21,7 +21,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 public class MainConfiguration {
 
     @Bean
-    ItemService createAccountService(ItemRepository accountRepository, EventPublisher eventPublisher) {
+    ItemService createItemService(ItemRepository accountRepository, EventPublisher eventPublisher) {
         return new ItemService(accountRepository, eventPublisher);
     }
 

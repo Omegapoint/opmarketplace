@@ -1,6 +1,9 @@
 package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance;
 
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotObtained;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemObtained;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEvent;
@@ -11,10 +14,13 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class ItemEventStore implements ItemRepository {
+
+    public static final String ITEM_DOES_NOT_EXIST = "Item does not exist.";
 
     private final ItemCreatedJPARepository itemCreatedRepository;
 
@@ -23,15 +29,17 @@ public class ItemEventStore implements ItemRepository {
     }
 
     @Override
-    public Optional<Item> item(String id) {
-        notNull(id);
+    public DomainEvent item(UUID id) {
+        String itemId = notNull(id).toString();
 
         List<PersistableEvent> events = new ArrayList<>();
-        retrieveCreatedEvent(id)
+        retrieveCreatedEvent(itemId)
                 .map(events::add)
                 .orElse(false);
-
-        return Optional.of(ItemFactory.fromPersistableEvents(events));
+        if (events.isEmpty()){
+            return new ItemNotObtained(ITEM_DOES_NOT_EXIST);
+        }
+        return new ItemObtained(ItemFactory.fromPersistableEvents(events));
     }
 
     private Optional<ItemCreated> retrieveCreatedEvent(String id) {
@@ -40,15 +48,16 @@ public class ItemEventStore implements ItemRepository {
     }
 
     @Override
-    public boolean itemInExistence(String id) {
-        return !itemCreatedRepository.findById(notNull(id)).isEmpty();
+    public boolean itemInExistence(UUID id) {
+        return !itemCreatedRepository.findById(notNull(id).toString()).isEmpty();
     }
 
     @Override
-    public void append(PersistableEvent event) {
+    public DomainEvent append(PersistableEvent event) {
         if (notNull(event) instanceof ItemCreated){
             add((ItemCreated) event);
         }
+        return event;
     }
 
     private void add(ItemCreated itemCreated){

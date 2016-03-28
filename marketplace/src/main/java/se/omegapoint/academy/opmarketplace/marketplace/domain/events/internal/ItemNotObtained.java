@@ -4,11 +4,11 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class ItemNotCreated implements DomainEvent{
+public class ItemNotObtained implements DomainEvent {
 
     private final String reason;
 
-    public ItemNotCreated(String reason) {
+    public ItemNotObtained(String reason) {
         this.reason = notNull(reason);
     }
 

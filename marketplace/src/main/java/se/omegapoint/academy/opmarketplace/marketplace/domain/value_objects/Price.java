@@ -9,7 +9,7 @@ public final class Price {
 
     protected static final int EXPONENT_LIMIT = 9;
 
-    protected static final String ILLEGAL_FORMAT = "Price can only contain digits and one '.'. It can be no larger than 1 000 000 000 and have no more than 2 decimal places.";
+    public static final String ILLEGAL_FORMAT = "Price can only contain digits and one '.'. It can be no larger than 1 000 000 000 and have no more than 2 decimal places.";
 
     private final long amount;
 

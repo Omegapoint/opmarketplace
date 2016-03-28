@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemCreationRequestedDTO;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemRequestedDTO;
 
 import java.io.IOException;
 
@@ -34,6 +35,9 @@ public class EventReceiverService {
             switch (event.type) {
                 case ItemCreationRequestedDTO.TYPE:
                     eventBus.notify(channel, Event.wrap(json.readValue(event.data, ItemCreationRequestedDTO.class)));
+                    break;
+                case ItemRequestedDTO.TYPE:
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, ItemRequestedDTO.class)));
                     break;
                 default:
                     System.err.printf("Received unknown event; %s%n", event.type);

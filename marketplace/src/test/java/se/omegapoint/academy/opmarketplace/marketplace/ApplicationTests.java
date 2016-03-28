@@ -12,9 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @WebAppConfiguration
 @ActiveProfiles("test")
 public class ApplicationTests {
-
 	@Test
 	public void contextLoads() {
 	}
-
 }
