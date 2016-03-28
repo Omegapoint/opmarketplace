@@ -19,7 +19,8 @@ public class AccountCreationRequestedDTO implements Event {
     public final UserDTO user;
 
     @JsonCreator
-    public AccountCreationRequestedDTO(@JsonProperty("email") EmailDTO email, @JsonProperty("user") UserDTO user) {
+    public AccountCreationRequestedDTO(@JsonProperty("email") EmailDTO email,
+                                       @JsonProperty("user") UserDTO user) {
         this.requestId = randomString();
         this.email = notNull(email);
         this.user = notNull(user);

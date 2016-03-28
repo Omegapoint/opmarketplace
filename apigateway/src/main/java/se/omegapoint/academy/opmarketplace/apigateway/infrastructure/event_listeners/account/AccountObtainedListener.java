@@ -2,6 +2,7 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_list
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 import reactor.bus.Event;
@@ -32,6 +33,7 @@ public class AccountObtainedListener implements Consumer<Event<se.omegapoint.aca
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            result.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
 }

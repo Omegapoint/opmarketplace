@@ -8,12 +8,14 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.PriceDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.TitleDTO;
 
+import static se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.StringRandomizer.randomString;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ItemCreationRequestedDTO implements Event {
 
     public static final String TYPE = "ItemCreationRequested";
+
     public final String requestId;
     public final TitleDTO title;
     public final DescriptionDTO description;
@@ -21,11 +23,10 @@ public class ItemCreationRequestedDTO implements Event {
 
     @JsonCreator
     public ItemCreationRequestedDTO(
-            @JsonProperty("requestId") String requestId,
             @JsonProperty("title") TitleDTO title,
             @JsonProperty("description") DescriptionDTO description,
             @JsonProperty("price") PriceDTO price) {
-        this.requestId = notNull(requestId);
+        this.requestId = randomString();
         this.title = notNull(title);
         this.description = notNull(description);
         this.price = notNull(price);

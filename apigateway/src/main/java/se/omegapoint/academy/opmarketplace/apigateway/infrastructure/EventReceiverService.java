@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.ItemCreatedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.ItemNotCreatedDTO;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 import java.io.IOException;
 
@@ -30,6 +32,7 @@ public class EventReceiverService {
                 eventJson.get("data").toString());
         try {
             switch(event.type){
+                // Account events
                 case AccountCreatedDTO.TYPE:
                     router.publish(json.readValue(event.data, AccountCreatedDTO.class));
                     break;
@@ -53,6 +56,13 @@ public class EventReceiverService {
                     break;
                 case AccountNotDeletedDTO.TYPE:
                     router.publish(json.readValue(event.data, AccountNotDeletedDTO.class));
+                    break;
+                // Item Events
+                case ItemCreatedDTO.TYPE:
+                    router.publish(json.readValue(event.data, ItemCreatedDTO.class));
+                    break;
+                case ItemNotCreatedDTO.TYPE:
+                    router.publish(json.readValue(event.data, ItemNotCreatedDTO.class));
                     break;
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();

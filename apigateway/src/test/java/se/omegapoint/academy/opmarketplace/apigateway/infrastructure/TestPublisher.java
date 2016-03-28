@@ -7,7 +7,7 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 public class TestPublisher implements RemoteEventPublisher {
     private Event lastestEvent;
     @Override
-    public void publish(OutgoingRemoteEvent outgoingRemoteEvent) {
+    public void publish(OutgoingRemoteEvent outgoingRemoteEvent, String channel) {
         lastestEvent = outgoingRemoteEvent.data;
     }
 

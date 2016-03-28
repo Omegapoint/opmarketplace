@@ -31,11 +31,11 @@ public class RemoteEventPublisherService implements RemoteEventPublisher {
     }
 
     @Override
-    public void publish(OutgoingRemoteEvent outgoingRemoteEvent) {
+    public void publish(OutgoingRemoteEvent outgoingRemoteEvent, String channel) {
         notNull(outgoingRemoteEvent);
         try {
             StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(outgoingRemoteEvent));
-            HttpPost httpPost = new HttpPost(PUBLISH_URL + "?channel=Account");
+            HttpPost httpPost = new HttpPost(PUBLISH_URL + "?channel=" + channel);
             httpPost.addHeader("Content-Type", "application/json");
             httpPost.setEntity(eventJson);
             httpClient.execute(httpPost, IGNORE_CALLBACK);

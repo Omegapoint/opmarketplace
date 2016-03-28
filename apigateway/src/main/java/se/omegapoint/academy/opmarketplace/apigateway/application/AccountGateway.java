@@ -44,7 +44,7 @@ public class AccountGateway {
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         AccountCreatedListener listener =  new AccountCreatedListener(result);
         router.subscribe(newAccount.requestId(), listener);
-        publisher.publish(new OutgoingRemoteEvent(newAccount));
+        publisher.publish(new OutgoingRemoteEvent(newAccount), "Account");
         return result;
     }
 
@@ -54,7 +54,7 @@ public class AccountGateway {
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         AccountObtainedListener listener =  new AccountObtainedListener(result);
         router.subscribe(accountRequested.requestId(), listener);
-        publisher.publish(new OutgoingRemoteEvent(accountRequested));
+        publisher.publish(new OutgoingRemoteEvent(accountRequested), "Account");
         return result;
     }
 
@@ -64,7 +64,7 @@ public class AccountGateway {
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         AccountUserChangedListener listener =  new AccountUserChangedListener(result);
         router.subscribe(change.requestId(), listener);
-        publisher.publish(new OutgoingRemoteEvent(change));
+        publisher.publish(new OutgoingRemoteEvent(change), "Account");
         return result;
     }
 
@@ -74,7 +74,7 @@ public class AccountGateway {
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         AccountDeletionListener listener =  new AccountDeletionListener(result);
         router.subscribe(accountDeletionRequested.requestId(), listener);
-        publisher.publish(new OutgoingRemoteEvent(accountDeletionRequested));
+        publisher.publish(new OutgoingRemoteEvent(accountDeletionRequested), "Account");
         return result;
     }
 }

@@ -5,6 +5,8 @@ import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.ItemCreatedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.ItemNotCreatedDTO;
 
 import java.util.HashMap;
 
@@ -47,6 +49,14 @@ public class Router {
     }
 
     public void publish(AccountNotDeletedDTO model) {
+        eventBus.notify(model.requestId(), Event.wrap(model));
+    }
+
+    public void publish(ItemCreatedDTO model) {
+        eventBus.notify(model.requestId(), Event.wrap(model));
+    }
+
+    public void publish(ItemNotCreatedDTO model) {
         eventBus.notify(model.requestId(), Event.wrap(model));
     }
 

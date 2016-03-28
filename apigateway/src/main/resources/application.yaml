@@ -5,7 +5,7 @@ spring:
     active: dev
 subscription:
   url: http://localhost:8000/subscribe
-  channels: Account
+  channels: Account,Item
 event:
   receiver:
     url: http://localhost:8002/event
