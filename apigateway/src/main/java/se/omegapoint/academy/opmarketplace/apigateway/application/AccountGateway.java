@@ -1,6 +1,5 @@
 package se.omegapoint.academy.opmarketplace.apigateway.application;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,13 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.account.AccountCreatedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.account.AccountDeletionListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.account.AccountObtainedListener;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.account.AccountUserChangedListener;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.OutgoingRemoteEvent;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountCreationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountDeletionRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountRequestedDTO;
@@ -32,11 +31,13 @@ public class AccountGateway {
     private final long TIMEOUT = 2000;
     private final ResponseEntity<String> TIMEOUT_RESPONSE = ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("");
 
-    @Autowired
-    private Router router;
+    private final Router router;
+    private final RemoteEventPublisher publisher;
 
-    @Autowired
-    private RemoteEventPublisher publisher;
+    public AccountGateway(Router router, RemoteEventPublisher publisher) {
+        this.router = notNull(router);
+        this.publisher = notNull(publisher);
+    }
 
     @RequestMapping(method = POST, produces = APPLICATION_JSON_VALUE)
     public DeferredResult<ResponseEntity<String>> createAccount(@RequestBody final AccountCreationRequestedDTO newAccount) {

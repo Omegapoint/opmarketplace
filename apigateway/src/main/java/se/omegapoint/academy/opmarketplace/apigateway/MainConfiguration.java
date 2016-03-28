@@ -4,7 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import reactor.Environment;
 import reactor.bus.EventBus;
+import se.omegapoint.academy.opmarketplace.apigateway.application.AccountGateway;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.EventReceiverService;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account.*;
 
@@ -31,17 +33,12 @@ public class MainConfiguration {
 
     @Bean
     EventReceiverService createEventReceiverService(Router router){
-        HashMap<String, Class> eventTypes = new HashMap<>();
-        eventTypes.put(AccountCreatedDTO.TYPE, AccountCreatedDTO.class);
-        eventTypes.put(AccountNotCreatedDTO.TYPE, AccountNotCreatedDTO.class);
-        eventTypes.put(AccountDeletedDTO.TYPE, AccountDeletedDTO.class);
-        eventTypes.put(AccountNotDeletedDTO.TYPE, AccountNotDeletedDTO.class);
-        eventTypes.put(AccountObtainedDTO.TYPE, AccountObtainedDTO.class);
-        eventTypes.put(AccountNotObtainedDTO.TYPE, AccountNotObtainedDTO.class);
-        eventTypes.put(AccountUserChangedDTO.TYPE, AccountUserChangedDTO.class);
-        eventTypes.put(AccountUserNotChangedDTO.TYPE, AccountUserNotChangedDTO.class);
+        return new EventReceiverService(router);
+    }
 
-        return new EventReceiverService(router, eventTypes);
+    @Bean
+    AccountGateway createAccountGateway(Router router, RemoteEventPublisher publisher){
+        return new AccountGateway(router, publisher);
     }
 
 }
