@@ -1,5 +1,7 @@
 package se.omegapoint.academy.opmarketplace.marketplace.application;
 
+import reactor.bus.Event;
+import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
@@ -11,7 +13,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.extern
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class ItemService {
+public class ItemService implements Consumer<Event<se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event>> {
 
     private final ItemRepository repository;
     private final EventPublisher publisher;
@@ -19,6 +21,16 @@ public class ItemService {
     public ItemService(ItemRepository repository, EventPublisher publisher) {
         this.repository = notNull(repository);
         this.publisher = notNull(publisher);
+    }
+
+    @Override
+    public void accept(Event<se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event> event) {
+        notNull(event);
+
+        se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event dto = notNull(event.getData());
+        if (dto instanceof ItemCreationRequestedDTO) {
+            itemCreationRequested((ItemCreationRequestedDTO) dto);
+        }
     }
 
     public void itemCreationRequested(ItemCreationRequestedDTO dto){
@@ -33,4 +45,5 @@ public class ItemService {
         repository.append(persistableEvent);
         return persistableEvent;
     }
+
 }
