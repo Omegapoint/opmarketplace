@@ -1,22 +1,21 @@
 package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.internal_events;
 
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotCreated;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemObtained;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Serializer;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.ItemDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
+public class ItemObtainedDTO implements Event, Serializer {
 
-public class ItemNotCreatedDTO implements Event, Serializer{
-
-    public static final String TYPE = "ItemNotCreated";
-
+    public static final String TYPE = "ItemObtained";
     public final String requestId;
-    public final String reason;
+    public final ItemDTO item;
 
-    public ItemNotCreatedDTO(ItemNotCreated itemNotCreated, String requestId) {
+    public ItemObtainedDTO(ItemObtained event, String requestId){
         this.requestId = notNull(requestId);
-        this.reason = notNull(itemNotCreated).reason();
+        this.item = new ItemDTO(event.item());
     }
 
     @Override
@@ -29,4 +28,3 @@ public class ItemNotCreatedDTO implements Event, Serializer{
         return requestId;
     }
 }
-

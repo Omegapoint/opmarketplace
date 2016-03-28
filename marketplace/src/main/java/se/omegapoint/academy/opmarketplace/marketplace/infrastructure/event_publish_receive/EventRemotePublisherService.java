@@ -10,12 +10,12 @@ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.springframework.beans.factory.annotation.Value;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotCreated;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotObtained;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemObtained;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.internal_events.ItemCreatedDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.internal_events.ItemNotCreatedDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.internal_events.OutgoingRemoteEvent;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.internal_events.*;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -46,6 +46,10 @@ public class EventRemotePublisherService implements EventPublisher {
             dispatch(new ItemCreatedDTO((ItemCreated) event, requestId));
         } else if (event instanceof ItemNotCreated) {
             dispatch(new ItemNotCreatedDTO((ItemNotCreated) event, requestId));
+        } else if (event instanceof ItemObtained) {
+            dispatch(new ItemObtainedDTO((ItemObtained) event, requestId));
+        } else if (event instanceof ItemNotObtained) {
+            dispatch(new ItemNotObtainedDTO((ItemNotObtained) event, requestId));
         } else {
             throw new IllegalStateException("Domain Event not recognized.");
         }
