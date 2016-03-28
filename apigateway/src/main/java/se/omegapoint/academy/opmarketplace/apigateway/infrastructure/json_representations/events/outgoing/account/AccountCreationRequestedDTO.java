@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,17 +11,15 @@ import static se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccountUserChangeRequestedDTO implements Event {
-
-    public static final String TYPE = "AccountUserChangeRequested";
+public class AccountCreationRequestedDTO implements Event {
+    public static final String TYPE = "AccountCreationRequested";
 
     public final String requestId;
     public final EmailDTO email;
     public final UserDTO user;
 
-
     @JsonCreator
-    public AccountUserChangeRequestedDTO(@JsonProperty("email") EmailDTO email, @JsonProperty("user") UserDTO user) {
+    public AccountCreationRequestedDTO(@JsonProperty("email") EmailDTO email, @JsonProperty("user") UserDTO user) {
         this.requestId = randomString();
         this.email = notNull(email);
         this.user = notNull(user);
@@ -37,4 +35,3 @@ public class AccountUserChangeRequestedDTO implements Event {
         return requestId;
     }
 }
-

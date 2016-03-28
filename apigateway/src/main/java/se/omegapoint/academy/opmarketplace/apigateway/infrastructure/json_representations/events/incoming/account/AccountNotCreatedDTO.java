@@ -1,26 +1,26 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailDTO;
 
-import static se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.StringRandomizer.randomString;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccountRequestedDTO implements Event {
+public class AccountNotCreatedDTO implements Event {
+    public static final String TYPE = "AccountNotCreated";
 
-    public static final String TYPE = "AccountRequested";
-
+    @JsonIgnore
     public final String requestId;
-    public final EmailDTO email;
+    public final String reason;
 
     @JsonCreator
-    public AccountRequestedDTO(@JsonProperty("email") EmailDTO email) {
-        this.requestId = randomString();
-        this.email = notNull(email);
+    public AccountNotCreatedDTO(@JsonProperty("requestId") String requestId, @JsonProperty("reason") String reason) {
+        this.requestId = notNull(requestId);
+        this.reason = notNull(reason);
     }
 
     @Override

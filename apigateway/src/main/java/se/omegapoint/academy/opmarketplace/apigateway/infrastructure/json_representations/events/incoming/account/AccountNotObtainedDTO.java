@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;

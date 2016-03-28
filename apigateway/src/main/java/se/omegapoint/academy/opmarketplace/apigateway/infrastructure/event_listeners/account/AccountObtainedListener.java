@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.account;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 import reactor.bus.Event;
 import reactor.fn.Consumer;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.AccountNotObtainedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.AccountObtainedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account.AccountNotObtainedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account.AccountObtainedDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 

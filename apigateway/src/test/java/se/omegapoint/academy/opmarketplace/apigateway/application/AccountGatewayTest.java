@@ -13,10 +13,10 @@ import org.springframework.web.context.WebApplicationContext;
 import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.TestPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.AccountCreationRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.AccountDeletionRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.AccountRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.AccountUserChangeRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountCreationRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountDeletionRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountUserChangeRequestedDTO;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

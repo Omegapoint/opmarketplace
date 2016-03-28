@@ -3,8 +3,11 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.*;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountCreationRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountDeletionRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountUserChangeRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.*;
 
 import static org.junit.Assert.assertEquals;
