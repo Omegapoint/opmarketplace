@@ -31,14 +31,4 @@ public class MainConfiguration {
         return new Router(eventBus);
     }
 
-    @Bean
-    EventReceiverService createEventReceiverService(Router router){
-        return new EventReceiverService(router);
-    }
-
-    @Bean
-    AccountGateway createAccountGateway(Router router, RemoteEventPublisher publisher){
-        return new AccountGateway(router, publisher);
-    }
-
 }

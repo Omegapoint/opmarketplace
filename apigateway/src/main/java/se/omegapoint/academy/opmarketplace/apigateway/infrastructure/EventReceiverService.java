@@ -2,6 +2,7 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +17,10 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 @RequestMapping("/event")
 public class EventReceiverService {
 
+    @Autowired
+    private Router router;
 
-    private final ObjectMapper json;
-    private final Router router;
-
-    public EventReceiverService(Router router) {
-        this.router = notNull(router);
-        this.json = new ObjectMapper();
-    }
+    private final ObjectMapper json = new ObjectMapper();
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> eventInput(@RequestBody JsonNode eventJson) {
