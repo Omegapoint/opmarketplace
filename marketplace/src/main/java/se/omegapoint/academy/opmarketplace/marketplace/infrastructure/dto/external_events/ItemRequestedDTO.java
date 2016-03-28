@@ -38,6 +38,6 @@ public class ItemRequestedDTO implements Event, Deserializer<ItemRequested> {
 
     @Override
     public String requestId() {
-        return null;
+        return requestId;
     }
 }
