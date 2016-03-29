@@ -8,7 +8,7 @@ for DIR in ${DIRS[@]}; do
   echo -------------------------Starting build of $DIR-------------------------
   cd ../$DIR
   chmod +x gradlew
-  ./gradlew build --info
+  ./gradlew clean build --info
   java -jar build/libs/$DIR-0.0.1-SNAPSHOT.jar &
   PIDS+=($!)
   cd ../scripts
