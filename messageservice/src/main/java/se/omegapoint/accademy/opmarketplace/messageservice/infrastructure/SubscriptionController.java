@@ -27,19 +27,22 @@ public class SubscriptionController {
             subscribedEndpoints.put(endpoint, new EventDispatcher(ruleEngine, endpoint));
         }
 
-        if (subscriptions.get(endpoint) == null)
+        if (!subscriptions.containsKey(endpoint)) {
             subscriptions.put(endpoint, new HashSet<>());
+        }
 
         // Check if the endpoint is already subscribed to the channel
-        if (!subscriptions.get(endpoint).contains(selector.getObject().toString())) {
-            subscriptions.get(endpoint).add(selector.getObject().toString());
+        String channel = selector.getObject().toString();
+        System.out.printf("DEBUG: Hashcode = %d for endpoint %s and channel %s %n", endpoint.hashCode(), endpoint, channel);
+        if (!subscriptions.get(endpoint).contains(channel)) {
+            subscriptions.get(endpoint).add(channel);
             eventBus.on(selector, subscribedEndpoints.get(endpoint));
-            System.out.printf("Subscribed endpoint %s to channel %s%n", endpoint, selector.getObject().toString());
+            System.out.printf("DEBUG: Subscribed endpoint %s to channel %s%n", endpoint, channel);
             return true;
         } else {
-            System.out.printf("Endpoint %s is already subscribed to channel %s%n", endpoint, selector.getObject().toString());
+            System.out.printf("DEBUG: Endpoint %s is already subscribed to channel %s%n", endpoint, channel);
             for (URL url : subscriptions.keySet()) {
-                System.out.printf("    URL %s subscribed to %s%n", url, Arrays.toString(subscriptions.get(url).toArray()));
+                System.out.printf("    DEBUG: URL %s subscribed to %s%n", url, Arrays.toString(subscriptions.get(url).toArray()));
             }
             return false;
         }
