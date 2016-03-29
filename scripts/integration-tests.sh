@@ -2,7 +2,7 @@
 set -ev
 # messageservice has to be first in array to enable
 # other services to subscribe on startup!
-DIRS=(messageservice customer)
+DIRS=(messageservice customer marketplace)
 PIDS=()
 for DIR in ${DIRS[@]}; do
   echo -------------------------Starting build of $DIR-------------------------
