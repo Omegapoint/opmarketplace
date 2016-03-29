@@ -39,7 +39,7 @@ public class ItemTests {
 
 
     @Test
-    public void should_create_an_account() throws Exception {
+    public void should_create_an_item() throws Exception {
         createItem("Create", "Create", "100")
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
