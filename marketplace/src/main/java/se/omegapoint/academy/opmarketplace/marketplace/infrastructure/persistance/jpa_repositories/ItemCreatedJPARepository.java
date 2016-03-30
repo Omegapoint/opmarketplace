@@ -9,5 +9,7 @@ public interface ItemCreatedJPARepository extends JpaRepository<ItemCreatedEntit
 
     List<ItemCreatedEntity> findByTitle(String title);
 
+    List<ItemCreatedEntity> findByTitleContainingOrDescriptionContainingAllIgnoreCase(String titleQuery, String descriptionQuery);
+
     List<ItemCreatedEntity> findById(String id);
 }

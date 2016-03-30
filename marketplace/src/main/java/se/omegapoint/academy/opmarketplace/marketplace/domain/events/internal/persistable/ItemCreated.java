@@ -3,6 +3,7 @@ package se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.p
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
@@ -24,6 +25,10 @@ public class ItemCreated implements PersistableEvent {
 
     public Item item() {
         return item;
+    }
+
+    public String itemId(){
+        return item.id();
     }
 
     @Override

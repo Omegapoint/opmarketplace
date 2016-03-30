@@ -4,17 +4,17 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotObtained;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemObtained;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemSearchResult;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEvent;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEventComarator;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.factories.ItemFactory;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemCreatedEntity;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemCreatedJPARepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -42,9 +42,23 @@ public class ItemEventStore implements ItemRepository {
         return new ItemObtained(ItemFactory.fromPersistableEvents(events));
     }
 
-    private Optional<ItemCreated> retrieveCreatedEvent(String id) {
-        return itemCreatedRepository.findById(notNull(id)).stream()
-                .map(ItemCreatedEntity::domainEvent).findAny();
+    @Override
+    public ItemSearchResult findItems(String query) {
+        HashMap<String, List<PersistableEvent>> matches = new HashMap<>();
+
+        searchCreatedEvents(query).stream().forEach(itemCreated -> {
+            if (!matches.containsKey(itemCreated.itemId())){
+                matches.put(itemCreated.itemId(), new ArrayList<>());
+            }
+            matches.get(itemCreated.itemId()).add(itemCreated);
+        });
+
+        List<Item> items = new ArrayList<>();
+        for (String id : matches.keySet()){
+            Collections.sort(matches.get(id), new PersistableEventComarator());
+            items.add(ItemFactory.fromPersistableEvents(matches.get(id)));
+        }
+        return new ItemSearchResult(items);
     }
 
     @Override
@@ -58,6 +72,16 @@ public class ItemEventStore implements ItemRepository {
             add((ItemCreated) event);
         }
         return event;
+    }
+
+    private List<ItemCreated> searchCreatedEvents(String query){
+        return itemCreatedRepository.findByTitleContainingOrDescriptionContainingAllIgnoreCase(query, query).stream()
+                .map(ItemCreatedEntity::domainEvent).collect(Collectors.toList());
+    }
+
+    private Optional<ItemCreated> retrieveCreatedEvent(String id) {
+        return itemCreatedRepository.findById(notNull(id)).stream()
+                .map(ItemCreatedEntity::domainEvent).findAny();
     }
 
     private void add(ItemCreated itemCreated){
