@@ -7,10 +7,10 @@ import java.util.List;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class ItemSearchResult implements DomainEvent {
+public class ItemSearchCompleted implements DomainEvent {
     private final List<Item> items;
 
-    public ItemSearchResult(List<Item> items) {
+    public ItemSearchCompleted(List<Item> items) {
         this.items = notNull(items);
     }
 

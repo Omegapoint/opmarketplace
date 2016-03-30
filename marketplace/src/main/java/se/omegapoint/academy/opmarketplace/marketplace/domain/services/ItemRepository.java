@@ -1,16 +1,14 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.services;
 
-import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemSearchResult;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEvent;
-import java.util.Optional;
+
 import java.util.UUID;
 
 public interface ItemRepository {
     DomainEvent item(UUID id);
 
-    ItemSearchResult findItems(String query);
+    DomainEvent search(String query);
 
     boolean itemInExistence(UUID id);
 

@@ -6,11 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import se.omegapoint.academy.opmarketplace.marketplace.Application;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemSearchResult;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemSearchCompleted;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Price;
@@ -49,7 +48,7 @@ public class ItemEventStoreTest {
         itemRepository.append(Item.createItem(match3));
         itemRepository.append(Item.createItem(noMatch));
 
-        ItemSearchResult searchResult = itemRepository.findItems("hej");
+        ItemSearchCompleted searchResult = (ItemSearchCompleted) itemRepository.search("hej");
         assertEquals(3, searchResult.items().size());
     }
 }

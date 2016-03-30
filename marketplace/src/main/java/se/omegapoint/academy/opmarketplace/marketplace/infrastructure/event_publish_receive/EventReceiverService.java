@@ -10,6 +10,7 @@ import reactor.bus.Event;
 import reactor.bus.EventBus;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemCreationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemRequestedDTO;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemSearchRequestedDTO;
 
 import java.io.IOException;
 
@@ -38,6 +39,9 @@ public class EventReceiverService {
                     break;
                 case ItemRequestedDTO.TYPE:
                     eventBus.notify(channel, Event.wrap(json.readValue(event.data, ItemRequestedDTO.class)));
+                    break;
+                case ItemSearchRequestedDTO.TYPE:
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, ItemSearchRequestedDTO.class)));
                     break;
                 default:
                     System.err.printf("Received unknown event; %s%n", event.type);

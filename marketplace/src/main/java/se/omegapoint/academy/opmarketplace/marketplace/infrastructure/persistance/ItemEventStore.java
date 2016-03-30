@@ -4,7 +4,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotObtained;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemObtained;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemSearchResult;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemSearchCompleted;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEvent;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEventComarator;
@@ -43,7 +43,7 @@ public class ItemEventStore implements ItemRepository {
     }
 
     @Override
-    public ItemSearchResult findItems(String query) {
+    public ItemSearchCompleted search(String query) {
         HashMap<String, List<PersistableEvent>> matches = new HashMap<>();
 
         searchCreatedEvents(query).stream().forEach(itemCreated -> {
@@ -58,7 +58,7 @@ public class ItemEventStore implements ItemRepository {
             Collections.sort(matches.get(id), new PersistableEventComarator());
             items.add(ItemFactory.fromPersistableEvents(matches.get(id)));
         }
-        return new ItemSearchResult(items);
+        return new ItemSearchCompleted(items);
     }
 
     @Override

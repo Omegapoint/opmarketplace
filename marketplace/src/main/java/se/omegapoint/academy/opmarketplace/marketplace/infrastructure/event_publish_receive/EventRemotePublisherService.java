@@ -9,9 +9,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.springframework.beans.factory.annotation.Value;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotCreated;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotObtained;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemObtained;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
@@ -50,6 +48,10 @@ public class EventRemotePublisherService implements EventPublisher {
             dispatch(new ItemObtainedDTO((ItemObtained) event, requestId));
         } else if (event instanceof ItemNotObtained) {
             dispatch(new ItemNotObtainedDTO((ItemNotObtained) event, requestId));
+        } else if (event instanceof ItemSearchCompleted) {
+            dispatch(new ItemSearchCompletedDTO((ItemSearchCompleted) event, requestId));
+        } else if (event instanceof ItemsNotSearched) {
+            dispatch(new ItemsNotSearchedDTO((ItemsNotSearched) event, requestId));
         } else {
             throw new IllegalStateException("Domain Event not recognized.");
         }
