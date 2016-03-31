@@ -18,7 +18,7 @@ public class ItemSearchCompletedDTO implements Event, Serializer {
     public final List<ItemDTO> items;
 
     public ItemSearchCompletedDTO(ItemSearchCompleted event, String requestId) {
-        this.requestId = requestId;
+        this.requestId = notNull(requestId);
         this.items = notNull(event).items().stream()
                 .map(ItemDTO::new)
                 .collect(Collectors.toList());
