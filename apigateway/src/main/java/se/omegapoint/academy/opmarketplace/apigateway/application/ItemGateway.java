@@ -12,9 +12,12 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEvent
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.item.ItemCreatedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.item.ItemObtainedListener;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.item.ItemsSearchedListener;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.ItemsNotSearchedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.OutgoingRemoteEvent;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemCreationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemSearchRequestedDTO;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -35,7 +38,7 @@ public class ItemGateway {
     private RemoteEventPublisher publisher;
 
     @RequestMapping(method = POST, produces = APPLICATION_JSON_VALUE)
-    public DeferredResult<ResponseEntity<String>> createAccount(@RequestBody final ItemCreationRequestedDTO newItem) {
+    public DeferredResult<ResponseEntity<String>> createItem(@RequestBody final ItemCreationRequestedDTO newItem) {
         notNull(newItem);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         ItemCreatedListener listener =  new ItemCreatedListener(result);
@@ -45,12 +48,22 @@ public class ItemGateway {
     }
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
-    public DeferredResult<ResponseEntity<String>> account(@RequestParam("itemId") final String itemId) {
-        ItemRequestedDTO itemRequested = new ItemRequestedDTO(notNull(itemId));
+    public DeferredResult<ResponseEntity<String>> item(@RequestParam("itemId") final ItemRequestedDTO request) {
+        notNull(request);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         ItemObtainedListener listener =  new ItemObtainedListener(result);
-        router.subscribe(itemRequested.requestId(), listener);
-        publisher.publish(new OutgoingRemoteEvent(itemRequested), "Item");
+        router.subscribe(request.requestId(), listener);
+        publisher.publish(new OutgoingRemoteEvent(request), "Item");
+        return result;
+    }
+
+    @RequestMapping(value = "/search", method = GET, produces = APPLICATION_JSON_VALUE)
+    public DeferredResult<ResponseEntity<String>> searchItems(@RequestParam("query") final ItemSearchRequestedDTO request) {
+        notNull(request);
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
+        ItemsSearchedListener listener =  new ItemsSearchedListener(result);
+        router.subscribe(request.requestId(), listener);
+        publisher.publish(new OutgoingRemoteEvent(request), "Item");
         return result;
     }
 

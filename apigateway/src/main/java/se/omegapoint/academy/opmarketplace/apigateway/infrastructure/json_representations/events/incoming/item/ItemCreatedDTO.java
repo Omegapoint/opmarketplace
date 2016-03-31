@@ -1,5 +1,6 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
@@ -14,6 +15,7 @@ public class ItemCreatedDTO implements Event {
 
     public final String requestId;
 
+    @JsonCreator
     public ItemCreatedDTO(@JsonProperty("requestId") String requestId){
         this.requestId = notNull(requestId);
     }

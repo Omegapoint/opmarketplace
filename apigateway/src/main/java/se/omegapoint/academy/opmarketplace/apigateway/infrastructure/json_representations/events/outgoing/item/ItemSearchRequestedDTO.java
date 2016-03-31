@@ -1,23 +1,25 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.EmailDTO;
 
+import static se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.StringRandomizer.randomString;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccountUserChangedDTO implements Event {
+public class ItemSearchRequestedDTO implements Event {
 
-    public static final String TYPE = "AccountUserChanged";
+    public static final String TYPE = "ItemSearchRequested";
 
     public final String requestId;
+    public final String query;
 
     @JsonCreator
-    public AccountUserChangedDTO(@JsonProperty("requestId") String requestId){
-        this.requestId = notNull(requestId);
+    public ItemSearchRequestedDTO(@JsonProperty("query") String query) {
+        this.requestId = randomString();
+        this.query = notNull(query);
     }
 
     @Override

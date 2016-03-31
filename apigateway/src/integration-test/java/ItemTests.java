@@ -1,3 +1,4 @@
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -15,10 +16,9 @@ import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -45,11 +45,43 @@ public class ItemTests {
                 .andExpect(content().string(""));
     }
 
+    @Test
+    public void should_find_three_matches() throws Exception {
+        createItem("Hej", "Hej", "100")
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+        createItem("What hej", "no match", "100")
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+        createItem("No match", "Dude hej", "100")
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+        createItem("no match", "no match he j", "100")
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+        searchItems("hej")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items").isArray())
+                .andExpect(jsonPath("$.items", Matchers.hasSize(3)));
+    }
+
     private ResultActions createItem(String title, String description, String price) throws Exception {
         String content = itemCreationJson(title, description, price);
         MvcResult mvcResult = mockMvc.perform(post("/items")
                 .contentType(APPLICATION_JSON)
                 .content(content)
+        )
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvcResult.getAsyncResult();
+
+        return mockMvc.perform(asyncDispatch(mvcResult));
+    }
+
+    private ResultActions searchItems(String query) throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/items/search/")
+                .param("query", query)
         )
                 .andExpect(request().asyncStarted())
                 .andReturn();

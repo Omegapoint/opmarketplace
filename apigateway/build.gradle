@@ -1,8 +1,8 @@
 buildscript {
 	ext {
-		springBootVersion = '1.3.3.RELEASE'
-		reactorVersion = '2.0.7.RELEASE'
-		apacheHttpAsyncClientVersion = '4.1.1'
+		springBootVersion = "1.3.3.RELEASE"
+		reactorVersion = "2.0.7.RELEASE"
+		apacheHttpAsyncClientVersion = "4.1.1"
 	}
 	repositories {
 		mavenCentral()
@@ -12,12 +12,12 @@ buildscript {
 	}
 }
 
-apply plugin: 'java'
-apply plugin: 'spring-boot'
+apply plugin: "java"
+apply plugin: "spring-boot"
 
 jar {
-	baseName = 'apigateway'
-	version = '0.0.1-SNAPSHOT'
+	baseName = "apigateway"
+	version = "0.0.1-SNAPSHOT"
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -30,9 +30,9 @@ sourceSets {
 		java {
 			compileClasspath += main.output + test.output
 			runtimeClasspath += main.output + test.output
-			srcDir file('src/integration-test/java')
+			srcDir file("src/integration-test/java")
 		}
-		resources.srcDir file('src/integration-test/resources')
+		resources.srcDir file("src/integration-test/resources")
 	}
 }
 
@@ -42,20 +42,21 @@ configurations {
 }
 
 dependencies {
-	compile 'org.springframework.boot:spring-boot-starter-actuator'
-	//compile 'org.springframework.boot:spring-boot-starter-security'
-	compile 'org.springframework.boot:spring-boot-starter-web'
-	compile 'se.sawano.java:commons:1.3'
+	compile "org.springframework.boot:spring-boot-starter-actuator"
+	//compile "org.springframework.boot:spring-boot-starter-security"
+	compile "org.springframework.boot:spring-boot-starter-web"
+	compile "se.sawano.java:commons:1.3"
 	compile "io.projectreactor:reactor-bus:${reactorVersion}"
 	compile "io.projectreactor:reactor-core:${reactorVersion}"
 	compile "org.apache.httpcomponents:httpasyncclient:${apacheHttpAsyncClientVersion}"
 	compile "commons-lang:commons-lang:2.6"
 
-	testCompile 'org.springframework.boot:spring-boot-starter-test'
+	testCompile "com.jayway.jsonpath:json-path:2.2.0"
+	testCompile "org.springframework.boot:spring-boot-starter-test"
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.12'
+	gradleVersion = "2.12"
 }
 
 task integrationTest(type: Test) {

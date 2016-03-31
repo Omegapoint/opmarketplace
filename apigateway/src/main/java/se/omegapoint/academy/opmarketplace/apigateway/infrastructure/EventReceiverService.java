@@ -8,8 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account.*;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.ItemCreatedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.ItemNotCreatedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.*;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 import java.io.IOException;
 
@@ -64,9 +63,24 @@ public class EventReceiverService {
                 case ItemNotCreatedDTO.TYPE:
                     router.publish(json.readValue(event.data, ItemNotCreatedDTO.class));
                     break;
+                case ItemObtainedDTO.TYPE:
+                    router.publish(json.readValue(event.data, ItemObtainedDTO.class));
+                    break;
+                case ItemNotObtainedDTO.TYPE:
+                    router.publish(json.readValue(event.data, ItemNotObtainedDTO.class));
+                    break;
+                case ItemSearchCompletedDTO.TYPE:
+                    router.publish(json.readValue(event.data, ItemSearchCompletedDTO.class));
+                    break;
+                case ItemsNotSearchedDTO.TYPE:
+                    router.publish(json.readValue(event.data, ItemsNotSearchedDTO.class));
+                    break;
+                default:
+                    System.err.println("Received unknown event: " + event.type);
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (IllegalArgumentValidationException | IOException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
     }

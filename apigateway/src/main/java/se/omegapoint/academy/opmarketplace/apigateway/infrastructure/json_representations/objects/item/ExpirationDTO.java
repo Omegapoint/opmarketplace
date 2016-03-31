@@ -15,7 +15,7 @@ public class ExpirationDTO implements DTO {
     public final Timestamp time;
 
     @JsonCreator
-    public ExpirationDTO(@JsonProperty("time") String time) {
-        this.time = Timestamp.valueOf(notNull(time));
+    public ExpirationDTO(@JsonProperty("time") long time) {
+        this.time = new Timestamp(notNull(time));
     }
 }

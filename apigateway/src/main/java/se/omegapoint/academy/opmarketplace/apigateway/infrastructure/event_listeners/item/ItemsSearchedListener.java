@@ -7,16 +7,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.ItemNotObtainedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.ItemObtainedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.ItemSearchCompletedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.ItemsNotSearchedDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class ItemObtainedListener implements Consumer<reactor.bus.Event<Event>> {
+public class ItemsSearchedListener implements Consumer<reactor.bus.Event<Event>> {
     private DeferredResult<ResponseEntity<String>> result;
     ObjectMapper json = new ObjectMapper();
 
-    public ItemObtainedListener(DeferredResult<ResponseEntity<String>> result) {
+    public ItemsSearchedListener(DeferredResult<ResponseEntity<String>> result) {
         this.result = notNull(result);
     }
 
@@ -25,11 +25,11 @@ public class ItemObtainedListener implements Consumer<reactor.bus.Event<Event>> 
         notNull(event);
         Event model = event.getData();
         try {
-            if (model instanceof ItemObtainedDTO){
+            if (model instanceof ItemSearchCompletedDTO){
                 result.setResult(ResponseEntity.ok(json.writeValueAsString(model)));
             }
-            if (model instanceof ItemNotObtainedDTO){
-                result.setErrorResult(ResponseEntity.badRequest().body(((ItemNotObtainedDTO)model)));
+            if (model instanceof ItemsNotSearchedDTO){
+                result.setErrorResult(ResponseEntity.badRequest().body(((ItemsNotSearchedDTO)model)));
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
