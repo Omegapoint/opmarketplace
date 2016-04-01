@@ -29,6 +29,7 @@ public class ItemFactory {
         item = new Item(UUID.fromString(itemCreated.item().id()),
                 itemCreated.item().title(),
                 itemCreated.item().description(),
-                itemCreated.item().price());
+                itemCreated.item().price(),
+                itemCreated.item().supply());
     }
 }

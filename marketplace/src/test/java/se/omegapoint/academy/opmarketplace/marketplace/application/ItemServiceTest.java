@@ -19,10 +19,12 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.pe
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Price;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.TestPublisher;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.DescriptionDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.PriceDTO;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.QuantityDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.TitleDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemCreationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemRequestedDTO;
@@ -55,7 +57,8 @@ public class ItemServiceTest {
                 requestId,
                 new TitleDTO("Item"),
                 new DescriptionDTO("Desc"),
-                new PriceDTO("1.00"));
+                new PriceDTO("1.00"),
+                new QuantityDTO(1));
         itemService.accept(Event.wrap(request));
         ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
         assertEquals("Item", itemCreated.item().title().text());
@@ -68,7 +71,8 @@ public class ItemServiceTest {
                 requestId,
                 new TitleDTO("Item"),
                 new DescriptionDTO("Desc"),
-                new PriceDTO("$.00"));
+                new PriceDTO("$.00"),
+                new QuantityDTO(1));
         itemService.accept(Event.wrap(request));
         ItemNotCreated itemNotCreated = (ItemNotCreated)publisher.getLatestEvent();
         assertEquals(Price.ILLEGAL_FORMAT, itemNotCreated.reason());
@@ -77,9 +81,10 @@ public class ItemServiceTest {
     @Test
     public void should_obtain_item() throws Exception {
         ItemCreated itemCreated = Item.createItem(new ItemCreationRequested(
-                        new Title("Obtainable"),
-                        new Description("Obtain"),
-                        new Price("100")));
+                new Title("Obtainable"),
+                new Description("Obtain"),
+                new Price("100"),
+                new Quantity(1)));
         repository.append(itemCreated);
         String itemId = itemCreated.item().id();
         String requestId = "1";
@@ -110,19 +115,23 @@ public class ItemServiceTest {
         ItemCreationRequested match1 = new ItemCreationRequested(
                 new Title("Hej"),
                 new Description("Hej"),
-                new Price("100"));
+                new Price("100"),
+                new Quantity(1));
         ItemCreationRequested match2 = new ItemCreationRequested(
                 new Title("What hej"),
                 new Description("no match"),
-                new Price("100"));
+                new Price("100"),
+                new Quantity(1));
         ItemCreationRequested match3 = new ItemCreationRequested(
                 new Title("No match"),
                 new Description("Dude hej"),
-                new Price("100"));
+                new Price("100"),
+                new Quantity(1));
         ItemCreationRequested noMatch = new ItemCreationRequested(
                 new Title("no match"),
                 new Description("no match he j"),
-                new Price("100"));
+                new Price("100"),
+                new Quantity(1));
 
         repository.append(Item.createItem(match1));
         repository.append(Item.createItem(match2));

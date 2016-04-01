@@ -40,33 +40,34 @@ public class ItemTests {
 
     @Test
     public void should_create_an_item() throws Exception {
-        createItem("Create", "Create", "100")
+        createItem("Create", "Create", "100", 1)
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
     }
 
     @Test
     public void should_find_three_matches() throws Exception {
-        createItem("Hej", "Hej", "100")
+        createItem("Hej", "Hej", "100", 1)
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
-        createItem("What hej", "no match", "100")
+        createItem("What hej", "no match", "100", 1)
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
-        createItem("No match", "Dude hej", "100")
+        createItem("No match", "Dude hej", "100", 1)
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
-        createItem("no match", "no match he j", "100")
+        createItem("no match", "no match he j", "100", 1)
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
         searchItems("hej")
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items").isArray())
-                .andExpect(jsonPath("$.items", Matchers.hasSize(3)));
+                .andExpect(jsonPath("$.items", Matchers.hasSize(3)))
+                .andExpect(jsonPath("$.items[0].supply", Matchers.hasValue(1)));
     }
 
-    private ResultActions createItem(String title, String description, String price) throws Exception {
-        String content = itemCreationJson(title, description, price);
+    private ResultActions createItem(String title, String description, String price, int quantity) throws Exception {
+        String content = itemCreationJson(title, description, price, quantity);
         MvcResult mvcResult = mockMvc.perform(post("/items")
                 .contentType(APPLICATION_JSON)
                 .content(content)
@@ -91,7 +92,7 @@ public class ItemTests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    private String itemCreationJson(String title, String description, String price) {
+    private String itemCreationJson(String title, String description, String price, int quantity) {
         return  "{" +
                     "\"title\":{" +
                         "\"text\":\"" + title + "\"" +
@@ -101,6 +102,9 @@ public class ItemTests {
                     "}," +
                     "\"price\":{" +
                         "\"amount\":\"" + price + "\"" +
+                    "}," +
+                    "\"supply\":{" +
+                        "\"amount\":\"" + quantity + "\"" +
                     "}" +
                 "}";
     }

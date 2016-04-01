@@ -18,6 +18,7 @@ public class ItemDTO implements DTO, Serializer, Deserializer<Item> {
     public final TitleDTO title;
     public final DescriptionDTO description;
     public final PriceDTO price;
+    public final QuantityDTO supply;
 
     public ItemDTO(Item item){
         notNull(item);
@@ -25,17 +26,20 @@ public class ItemDTO implements DTO, Serializer, Deserializer<Item> {
         this.title = new TitleDTO(item.title());
         this.description = new DescriptionDTO(item.description());
         this.price = new PriceDTO(item.price());
+        this.supply = new QuantityDTO(item.supply());
     }
 
     @JsonCreator
     public ItemDTO(@JsonProperty("id") String id,
                    @JsonProperty("title") TitleDTO title,
                    @JsonProperty("description") DescriptionDTO description,
-                   @JsonProperty("price") PriceDTO price){
+                   @JsonProperty("price") PriceDTO price,
+                   @JsonProperty("supply") QuantityDTO supply){
         this.id = notNull(id);
-        this.title = title;
-        this.description = description;
-        this.price = price;
+        this.title = notNull(title);
+        this.description = notNull(description);
+        this.price = notNull(price);
+        this.supply = notNull(supply);
     }
 
     @Override
@@ -43,6 +47,7 @@ public class ItemDTO implements DTO, Serializer, Deserializer<Item> {
         return new Item(UUID.fromString(id),
                 title.domainObject(),
                 description.domainObject(),
-                price.domainObject());
+                price.domainObject(),
+                supply.domainObject());
     }
 }

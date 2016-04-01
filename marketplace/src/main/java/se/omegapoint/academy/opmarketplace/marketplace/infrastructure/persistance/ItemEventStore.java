@@ -90,6 +90,7 @@ public class ItemEventStore implements ItemRepository {
                 itemCreated.item().title().text(),
                 itemCreated.item().description().text(),
                 itemCreated.item().price().amount(),
+                itemCreated.item().supply().amount(),
                 itemCreated.timestamp()));
     }
 }

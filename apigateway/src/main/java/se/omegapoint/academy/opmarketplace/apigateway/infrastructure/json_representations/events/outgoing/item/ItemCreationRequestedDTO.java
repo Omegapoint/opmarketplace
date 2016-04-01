@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.DescriptionDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.PriceDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.QuantityDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.TitleDTO;
 
 import static se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.StringRandomizer.randomString;
@@ -20,16 +21,19 @@ public class ItemCreationRequestedDTO implements Event {
     public final TitleDTO title;
     public final DescriptionDTO description;
     public final PriceDTO price;
+    public final QuantityDTO supply;
 
     @JsonCreator
     public ItemCreationRequestedDTO(
             @JsonProperty("title") TitleDTO title,
             @JsonProperty("description") DescriptionDTO description,
-            @JsonProperty("price") PriceDTO price) {
+            @JsonProperty("price") PriceDTO price,
+            @JsonProperty("supply") QuantityDTO supply) {
         this.requestId = randomString();
         this.title = notNull(title);
         this.description = notNull(description);
         this.price = notNull(price);
+        this.supply = notNull(supply);
     }
 
     @Override

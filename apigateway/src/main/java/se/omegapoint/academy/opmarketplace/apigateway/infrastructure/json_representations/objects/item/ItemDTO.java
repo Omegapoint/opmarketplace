@@ -14,15 +14,18 @@ public class ItemDTO implements DTO {
     public final TitleDTO title;
     public final DescriptionDTO description;
     public final PriceDTO price;
+    public final QuantityDTO supply;
 
     @JsonCreator
     public ItemDTO(@JsonProperty("id") String id,
                    @JsonProperty("title") TitleDTO title,
                    @JsonProperty("description") DescriptionDTO description,
-                   @JsonProperty("price") PriceDTO price) {
+                   @JsonProperty("price") PriceDTO price,
+                   @JsonProperty("supply") QuantityDTO supply) {
         this.id = notNull(id);
-        this.title = title;
-        this.description = description;
-        this.price = price;
+        this.title = notNull(title);
+        this.description = notNull(description);
+        this.price = notNull(price);
+        this.supply = notNull(supply);
     }
 }
