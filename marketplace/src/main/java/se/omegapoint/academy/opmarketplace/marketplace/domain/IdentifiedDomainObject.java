@@ -10,7 +10,7 @@ public abstract class IdentifiedDomainObject {
         this.id = id;
     }
 
-    public String id(){
-        return id.toString();
+    public UUID id(){
+        return id;
     }
 }

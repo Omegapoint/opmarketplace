@@ -15,6 +15,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.It
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotObtained;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemObtained;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemSearchCompleted;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
@@ -26,6 +27,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.PriceDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.QuantityDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.TitleDTO;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemChangeRequestedDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemCreationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemRequestedDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemSearchRequestedDTO;
@@ -86,7 +88,7 @@ public class ItemServiceTest {
                 new Price("100"),
                 new Quantity(1)));
         repository.append(itemCreated);
-        String itemId = itemCreated.item().id();
+        String itemId = itemCreated.item().id().toString();
         String requestId = "1";
         ItemRequestedDTO request = new ItemRequestedDTO(
                 requestId,
@@ -145,5 +147,33 @@ public class ItemServiceTest {
         itemService.accept(Event.wrap(request));
         ItemSearchCompleted searchCompleted = (ItemSearchCompleted) publisher.getLatestEvent();
         assertEquals(3, searchCompleted.items().size());
+    }
+
+    @Test
+    public void should_change_item() throws Exception {
+        String requestId = "1";
+        se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event request = new ItemCreationRequestedDTO(
+                requestId,
+                new TitleDTO("ToBeChanged"),
+                new DescriptionDTO("ToBeChanged"),
+                new PriceDTO("1.00"),
+                new QuantityDTO(1));
+        itemService.accept(Event.wrap(request));
+        ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
+
+        request = new ItemChangeRequestedDTO(requestId,
+                itemCreated.itemId().toString(),
+                new TitleDTO("Changed"),
+                new DescriptionDTO("Changed"),
+                new PriceDTO("2.00"),
+                new QuantityDTO(2));
+        itemService.accept(Event.wrap(request));
+
+        ItemChanged itemChanged = (ItemChanged)publisher.getLatestEvent();
+
+        assertEquals("Changed", itemChanged.item().title().text());
+        assertEquals("Changed", itemChanged.item().description().text());
+        assertEquals("2.00", itemChanged.item().price().amount());
+        assertEquals(2, itemChanged.item().supply().amount());
     }
 }

@@ -14,7 +14,7 @@ public class ItemRequested implements DomainEvent {
         this.itemId = notNull(itemId);
     }
 
-    public UUID itemID(){
+    public UUID itemId(){
         return this.itemId;
     }
 }

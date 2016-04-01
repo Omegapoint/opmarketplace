@@ -31,9 +31,9 @@ public class DomainObjectResult<T>{
         return value.isPresent() ? value.get() : other.apply(reason);
     }
 
-    public static <U, V> DomainObjectResult<U> of(Function<V, U> conversion, V input){
+    public static <U, V> DomainObjectResult<U> of(Function<V, U> conversion, V ownerOfFunction){
         try {
-            return new DomainObjectResult<>(conversion.apply(input));
+            return new DomainObjectResult<>(conversion.apply(ownerOfFunction));
         } catch (IllegalArgumentValidationException e){
             return new DomainObjectResult<>(e.getMessage());
         }

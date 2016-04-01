@@ -1,6 +1,9 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.entities;
 
 import se.omegapoint.academy.opmarketplace.marketplace.domain.IdentifiedDomainObject;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemChangeRequested;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Price;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
@@ -10,6 +13,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.pe
 
 import java.util.UUID;
 
+import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public final class Item extends IdentifiedDomainObject {
@@ -51,7 +55,12 @@ public final class Item extends IdentifiedDomainObject {
                 request.supply()));
     }
 
-    public Item changeTitle(String title){
-        return new Item(UUID.fromString(this.id()), new Title(title), this.description, this.price, supply);
+    public ItemChanged handle(ItemChangeRequested request){
+        isTrue(notNull(request).itemId().equals(id()));
+        return new ItemChanged(new Item(UUID.randomUUID(),
+                request.title(),
+                request.description(),
+                request.price(),
+                request.supply()));
     }
 }

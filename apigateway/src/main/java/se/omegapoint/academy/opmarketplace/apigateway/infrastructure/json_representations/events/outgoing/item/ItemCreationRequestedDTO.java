@@ -30,7 +30,7 @@ public class ItemCreationRequestedDTO implements Event {
             @JsonProperty("price") PriceDTO price,
             @JsonProperty("supply") QuantityDTO supply) {
         this.requestId = randomString();
-        this.title = notNull(title);
+        this.title = notNull(title) ;
         this.description = notNull(description);
         this.price = notNull(price);
         this.supply = notNull(supply);

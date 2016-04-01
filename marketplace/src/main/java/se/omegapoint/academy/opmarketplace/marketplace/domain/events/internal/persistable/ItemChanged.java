@@ -8,16 +8,15 @@ import java.util.UUID;
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class ItemCreated implements PersistableEvent {
-
+public class ItemChanged implements PersistableEvent {
     private final Item item;
     private final Timestamp timestamp;
 
-    public ItemCreated(Item item){
+    public ItemChanged(Item item){
         this(item, new Timestamp(System.currentTimeMillis()));
     }
 
-    public ItemCreated(Item item, Timestamp timestamp){
+    public ItemChanged(Item item, Timestamp timestamp){
         isTrue(notNull(timestamp).before(new Timestamp(System.currentTimeMillis() + 1)));
         this.item = notNull(item);
         this.timestamp = notNull(timestamp);

@@ -22,7 +22,7 @@ public class ItemDTO implements DTO, Serializer, Deserializer<Item> {
 
     public ItemDTO(Item item){
         notNull(item);
-        this.id = item.id();
+        this.id = item.id().toString();
         this.title = new TitleDTO(item.title());
         this.description = new DescriptionDTO(item.description());
         this.price = new PriceDTO(item.price());

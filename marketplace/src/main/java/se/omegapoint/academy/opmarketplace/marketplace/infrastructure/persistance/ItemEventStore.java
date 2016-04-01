@@ -5,12 +5,15 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotObtained;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemObtained;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemSearchCompleted;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEvent;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEventComarator;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.factories.ItemFactory;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemChangedEntity;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemCreatedEntity;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemChangedJPARepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemCreatedJPARepository;
 
 import java.util.*;
@@ -23,9 +26,12 @@ public class ItemEventStore implements ItemRepository {
     public static final String ITEM_DOES_NOT_EXIST = "Item does not exist.";
 
     private final ItemCreatedJPARepository itemCreatedRepository;
+    private final ItemChangedJPARepository itemChangedRepository;
 
-    public ItemEventStore(ItemCreatedJPARepository itemCreatedRepository){
-        this.itemCreatedRepository = itemCreatedRepository;
+    public ItemEventStore(ItemCreatedJPARepository itemCreatedRepository,
+                          ItemChangedJPARepository itemChangedRepository){
+        this.itemCreatedRepository = notNull(itemCreatedRepository);
+        this.itemChangedRepository = notNull(itemChangedRepository);
     }
 
     @Override
@@ -36,15 +42,19 @@ public class ItemEventStore implements ItemRepository {
         retrieveCreatedEvent(itemId)
                 .map(events::add)
                 .orElse(false);
+
         if (events.isEmpty()){
             return new ItemNotObtained(ITEM_DOES_NOT_EXIST);
         }
+
+        events.addAll(retrieveChangedEvent(itemId));
+
         return new ItemObtained(ItemFactory.fromPersistableEvents(events));
     }
 
     @Override
     public ItemSearchCompleted search(String query) {
-        HashMap<String, List<PersistableEvent>> matches = new HashMap<>();
+        HashMap<UUID, List<PersistableEvent>> matches = new HashMap<>();
 
         searchCreatedEvents(query).stream().forEach(itemCreated -> {
             if (!matches.containsKey(itemCreated.itemId())){
@@ -53,8 +63,15 @@ public class ItemEventStore implements ItemRepository {
             matches.get(itemCreated.itemId()).add(itemCreated);
         });
 
+        searchChangedEvents(query).stream().forEach(itemChanged -> {
+            if (!matches.containsKey(itemChanged.itemId())){
+                matches.put(itemChanged.itemId(), new ArrayList<>());
+            }
+            matches.get(itemChanged.itemId()).add(itemChanged);
+        });
+
         List<Item> items = new ArrayList<>();
-        for (String id : matches.keySet()){
+        for (UUID id : matches.keySet()){
             Collections.sort(matches.get(id), new PersistableEventComarator());
             items.add(ItemFactory.fromPersistableEvents(matches.get(id)));
         }
@@ -68,29 +85,52 @@ public class ItemEventStore implements ItemRepository {
 
     @Override
     public DomainEvent append(PersistableEvent event) {
-        if (notNull(event) instanceof ItemCreated){
+        notNull(event);
+        if (event instanceof ItemCreated){
             add((ItemCreated) event);
+        } else if (event instanceof ItemChanged){
+            add((ItemChanged) event);
         }
         return event;
     }
 
     private List<ItemCreated> searchCreatedEvents(String query){
         return itemCreatedRepository.findByTitleContainingOrDescriptionContainingAllIgnoreCase(query, query).stream()
-                .map(ItemCreatedEntity::domainEvent).collect(Collectors.toList());
+                .map(ItemCreatedEntity::domainObject).collect(Collectors.toList());
+    }
+
+    private List<ItemChanged> searchChangedEvents(String query) {
+        return itemChangedRepository.findByTitleContainingOrDescriptionContainingAllIgnoreCase(query, query).stream()
+                .map(ItemChangedEntity::domainObject).collect(Collectors.toList());
     }
 
     private Optional<ItemCreated> retrieveCreatedEvent(String id) {
         return itemCreatedRepository.findById(notNull(id)).stream()
-                .map(ItemCreatedEntity::domainEvent).findAny();
+                .map(ItemCreatedEntity::domainObject).findAny();
+    }
+
+    private List<ItemChanged> retrieveChangedEvent(String id) {
+        return itemChangedRepository.findById(id).stream()
+                .map(ItemChangedEntity::domainObject).collect(Collectors.toList());
     }
 
     private void add(ItemCreated itemCreated){
         notNull(itemCreated);
-        itemCreatedRepository.save(new ItemCreatedEntity(itemCreated.item().id(),
+        itemCreatedRepository.save(new ItemCreatedEntity(itemCreated.item().id().toString(),
                 itemCreated.item().title().text(),
                 itemCreated.item().description().text(),
                 itemCreated.item().price().amount(),
                 itemCreated.item().supply().amount(),
                 itemCreated.timestamp()));
+    }
+
+    private void add(ItemChanged itemChanged){
+        notNull(itemChanged);
+        itemChangedRepository.save(new ItemChangedEntity(itemChanged.item().id().toString(),
+                itemChanged.item().title().text(),
+                itemChanged.item().description().text(),
+                itemChanged.item().price().amount(),
+                itemChanged.item().supply().amount(),
+                itemChanged.timestamp()));
     }
 }

@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface ItemCreatedJPARepository extends JpaRepository<ItemCreatedEntity, Long>{
 
-    List<ItemCreatedEntity> findByTitle(String title);
-
     List<ItemCreatedEntity> findByTitleContainingOrDescriptionContainingAllIgnoreCase(String titleQuery, String descriptionQuery);
 
     List<ItemCreatedEntity> findById(String id);
