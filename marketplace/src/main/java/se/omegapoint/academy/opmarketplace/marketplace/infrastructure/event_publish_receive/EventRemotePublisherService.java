@@ -10,6 +10,7 @@ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.springframework.beans.factory.annotation.Value;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.*;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
@@ -52,7 +53,11 @@ public class EventRemotePublisherService implements EventPublisher {
             dispatch(new ItemSearchCompletedDTO((ItemSearchCompleted) event, requestId));
         } else if (event instanceof ItemsNotSearched) {
             dispatch(new ItemsNotSearchedDTO((ItemsNotSearched) event, requestId));
-        } else {
+        } else if (event instanceof ItemChanged) {
+            dispatch(new ItemChangedDTO((ItemChanged) event, requestId));
+        } else if (event instanceof ItemNotChanged) {
+            dispatch(new ItemNotChangedDTO((ItemNotChanged) event, requestId));
+        }else {
             throw new IllegalStateException("Domain Event not recognized.");
         }
     }
