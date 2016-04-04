@@ -38,12 +38,21 @@ public class AccountGateway {
     private Router router;
 
     @Autowired
+    private RuleEngine ruleEngine;
+
+    @Autowired
     private RemoteEventPublisher publisher;
 
     @RequestMapping(method = POST, produces = APPLICATION_JSON_VALUE)
     public DeferredResult<ResponseEntity<String>> createAccount(@RequestBody final AccountCreationRequestedDTO newAccount) {
         notNull(newAccount);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
+
+        if (!ruleEngine.allow(AccountCreationRequestedDTO.TYPE)) {
+            result.setResult(new ResponseEntity<String>(HttpStatus.FORBIDDEN));
+            return result;
+        }
+
         AccountCreatedListener listener =  new AccountCreatedListener(result);
         router.subscribe(newAccount.requestId(), listener);
         publisher.publish(new OutgoingRemoteEvent(newAccount), "Account");

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import reactor.Environment;
 import reactor.bus.EventBus;
 import se.omegapoint.academy.opmarketplace.apigateway.application.AccountGateway;
+import se.omegapoint.academy.opmarketplace.apigateway.application.RuleEngine;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.EventReceiverService;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
@@ -32,4 +33,8 @@ public class MainConfiguration {
         return new Router(eventBus, new Timer());
     }
 
+    @Bean
+    RuleEngine createRuleEngine() {
+        return new RuleEngine();
+    }
 }

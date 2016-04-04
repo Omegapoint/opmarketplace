@@ -11,8 +11,8 @@ import java.util.HashMap;
 public class Analyzer implements Consumer<Event<RemoteEvent>> {
 
     // TODO: 04/04/16 Change to correct values
-    private final int LIMIT_SIZE = 1;
-    private final long LIMIT_TIME_MS = 100000000;
+    private final int LIMIT_SIZE = 500;
+    private final long LIMIT_TIME_MS = 1000;
     private final int DISABLE_DURATION_S = 20;
 
     private EventBus eventBus;
