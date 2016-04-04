@@ -4,6 +4,10 @@ server:
 subscription:
   url: http://localhost:8000/subscribe_all
 
+url:
+  apigateway:
+    command: http://localhost:8002/command
+
 event:
   receiver:
     url: http://localhost:8010/event

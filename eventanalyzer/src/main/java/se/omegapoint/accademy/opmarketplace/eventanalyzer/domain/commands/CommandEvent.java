@@ -1,4 +1,4 @@
-package se.omegapoint.accademy.opmarketplace.eventanalyzer.domain;
+package se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands;
 
 public final class CommandEvent {
     private String eventType;

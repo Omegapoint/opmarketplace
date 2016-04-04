@@ -4,34 +4,41 @@ import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.DisableAccountCreation;
 
 import java.util.HashMap;
 
-public class Analyzer implements Consumer<Event<RemoteEvent>> {
+public class Analyzer implements Consumer<Event<IncomingRemoteEvent>> {
 
-    EventBus eventBus;
-    HashMap<String, Integer> eventCounter;
+    private final int LIMIT_SIZE = 500;
+    private final long LIMIT_TIME_MS = 1000;
+    private final int DISABLE_DURATION_S = 20;
+
+    private EventBus eventBus;
+    private HashMap<String, SlidingWindow> eventWindows;
 
     public Analyzer(EventBus eventBus) {
         this.eventBus = eventBus;
         eventBus.on(Selectors.object("events"), this);
-        eventCounter = new HashMap<>();
+        eventWindows = new HashMap<>();
     }
 
     @Override
-    public void accept(Event<RemoteEvent> domainEventModelEvent) {
-        System.out.println("Analyzing event...");
-        RemoteEvent domainEvent = domainEventModelEvent.getData();
-        String eventType = domainEvent.getType();
-        if (!eventCounter.containsKey(eventType)) {
-            eventCounter.put(eventType, 0);
-        } else {
-            Integer current = eventCounter.get(eventType);
-            eventCounter.put(eventType, current + 1);
+    public void accept(Event<IncomingRemoteEvent> event) {
+        IncomingRemoteEvent remoteEvent = event.getData();
+        String eventType = remoteEvent.type;
+        System.out.printf("Analyzing event with type %s%n", eventType);
+
+        if (!eventWindows.containsKey(eventType)) {
+            eventWindows.put(eventType, new SlidingWindow(LIMIT_SIZE, LIMIT_TIME_MS));
         }
 
-        if (eventCounter.get(eventType) > 10) {
-            eventBus.notify("command", Event.wrap(new CommandEvent(eventType, false)));
+        boolean overwhelmed = !eventWindows.get(eventType).put();
+
+        if (overwhelmed) {
+            // TODO: 04/04/16 Change event type;
+            System.out.printf("TOO MANY EVENTS OF TYPE: %s%n", eventType);
+            eventBus.notify("command", Event.wrap(new DisableAccountCreation(DISABLE_DURATION_S)));
         }
     }
 }

@@ -7,16 +7,22 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.springframework.beans.factory.annotation.Value;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
-import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.CommandEvent;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.DisableAccountCreation;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URL;
 
-public class EventPublisher implements Consumer<Event<CommandEvent>> {
+public class EventPublisher implements Consumer<Event<DisableAccountCreation>> {
+
+    @Value("${url.apigateway.command}")
+    private URL commandURL;
+
     CloseableHttpAsyncClient httpAsyncClient;
 
     public EventPublisher(EventBus eventBus) {
@@ -26,25 +32,24 @@ public class EventPublisher implements Consumer<Event<CommandEvent>> {
     }
 
     @Override
-    public void accept(Event<CommandEvent> event) {
-        CommandEvent commandEvent = event.getData();
-        publish(commandEvent);
+    public void accept(Event<DisableAccountCreation> event) {
+        DisableAccountCreation disableEvent = event.getData();
+        publish(disableEvent);
     }
 
-    private void publish(CommandEvent commandEvent) {
+    private void publish(DisableAccountCreation disableEvent) {
         try {
-            StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(commandEvent));
+            StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(disableEvent));
 
-            URIBuilder uriBuilder = new URIBuilder("http://localhost:8000/command").addParameter("token", "kebabpizza");
-            HttpPost httpPost = new HttpPost(uriBuilder.build());
+            HttpPost httpPost = new HttpPost(commandURL.toURI());
 
             httpPost.addHeader("Content-Type", "application/json");
             httpPost.setEntity(eventJson);
 
+            // TODO: 04/04/16 change to synch client
             httpAsyncClient.execute(httpPost, null);
 
-            System.out.printf("Command event dispatched URI %s. %s is set to %b%n",
-                    uriBuilder.build(), commandEvent.getEventType(), commandEvent.isAllow());
+            System.out.printf("DisableAccountCreation command sent to %s%n", commandURL);
 
         } catch (URISyntaxException | UnsupportedEncodingException | JsonProcessingException e) {
             // TODO: Var detta ok?
