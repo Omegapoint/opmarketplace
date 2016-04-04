@@ -2,14 +2,14 @@ package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_list
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
-import reactor.bus.Event;
 import reactor.fn.Consumer;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account.AccountDeletedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account.AccountNotDeletedDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountDeletionListener implements Consumer<Event<se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event>> {
+public class AccountDeletionListener implements Consumer<reactor.bus.Event<Event>> {
     private DeferredResult<ResponseEntity<String>> result;
 
     public AccountDeletionListener(DeferredResult<ResponseEntity<String>> result) {
@@ -17,14 +17,15 @@ public class AccountDeletionListener implements Consumer<Event<se.omegapoint.aca
     }
 
     @Override
-    public void accept(Event<se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event> event) {
+    public void accept(reactor.bus.Event<Event> event) {
         notNull(event);
-        se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event model = event.getData();
+        Event model = event.getData();
         if (model instanceof AccountDeletedDTO){
             result.setResult(ResponseEntity.ok(""));
-        }
-        if (model instanceof AccountNotDeletedDTO){
+        } else if (model instanceof AccountNotDeletedDTO){
             result.setErrorResult(ResponseEntity.badRequest().body(((AccountNotDeletedDTO)model)));
+        } else{
+            System.err.println("Response came through unknown event type: " + model.type());
         }
     }
 }

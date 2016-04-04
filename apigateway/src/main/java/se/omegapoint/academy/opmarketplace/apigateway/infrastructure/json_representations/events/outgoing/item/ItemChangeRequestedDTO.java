@@ -18,6 +18,7 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public class ItemChangeRequestedDTO implements Event{
 
     public static final String TYPE = "ItemChangeRequested";
+
     public final String requestId;
     public final String itemId;
     public final TitleDTO title;

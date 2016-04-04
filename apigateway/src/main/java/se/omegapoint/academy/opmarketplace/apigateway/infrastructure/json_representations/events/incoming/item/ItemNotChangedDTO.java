@@ -1,29 +1,25 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.ItemDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ItemCreatedDTO implements Event {
+public class ItemNotChangedDTO implements Event {
 
-    public static final String TYPE = "ItemCreated";
+    public static final String TYPE = "ItemNotChanged";
 
-    @JsonIgnore
     public final String requestId;
-    public final ItemDTO item;
+    public final String reason;
 
     @JsonCreator
-    public ItemCreatedDTO(@JsonProperty("requestId") String requestId,
-                          @JsonProperty("item") ItemDTO item){
+    public ItemNotChangedDTO(@JsonProperty("requestId") String requestId,
+                             @JsonProperty("reason") String reason) {
         this.requestId = notNull(requestId);
-        this.item = notNull(item);
+        this.reason = notNull(reason);
     }
 
     @Override

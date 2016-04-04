@@ -75,6 +75,12 @@ public class EventReceiverService {
                 case ItemsNotSearchedDTO.TYPE:
                     router.publish(json.readValue(event.data, ItemsNotSearchedDTO.class));
                     break;
+                case ItemChangedDTO.TYPE:
+                    router.publish(json.readValue(event.data, ItemChangedDTO.class));
+                    break;
+                case ItemNotChangedDTO.TYPE:
+                    router.publish(json.readValue(event.data, ItemNotChangedDTO.class));
+                    break;
                 default:
                     System.err.println("Received unknown event: " + event.type);
             }

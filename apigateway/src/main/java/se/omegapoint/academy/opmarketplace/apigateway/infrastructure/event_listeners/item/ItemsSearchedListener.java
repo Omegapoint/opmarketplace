@@ -26,10 +26,11 @@ public class ItemsSearchedListener implements Consumer<reactor.bus.Event<Event>>
         Event model = event.getData();
         try {
             if (model instanceof ItemSearchCompletedDTO){
-                result.setResult(ResponseEntity.ok(json.writeValueAsString(model)));
-            }
-            if (model instanceof ItemsNotSearchedDTO){
+                result.setResult(ResponseEntity.ok(json.writeValueAsString(((ItemSearchCompletedDTO) model).items)));
+            } else if (model instanceof ItemsNotSearchedDTO){
                 result.setErrorResult(ResponseEntity.badRequest().body(((ItemsNotSearchedDTO)model)));
+            } else{
+                System.err.println("Response came through unknown event type: " + model.type());
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
