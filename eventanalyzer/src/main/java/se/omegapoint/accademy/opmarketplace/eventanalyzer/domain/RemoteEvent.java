@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class IncomingRemoteEvent {
+public class RemoteEvent {
 
     public final String type;
 
-    public IncomingRemoteEvent(@JsonProperty("type") String type) {
+    public RemoteEvent(@JsonProperty("type") String type) {
         this.type = notNull(type);
     }
 }

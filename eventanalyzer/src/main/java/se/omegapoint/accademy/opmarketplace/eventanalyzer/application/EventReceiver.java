@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
-import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.IncomingRemoteEvent;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.RemoteEvent;
 
 import static org.springframework.http.MediaType.*;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -20,7 +20,7 @@ public class EventReceiver {
     EventBus eventBus;
 
     @RequestMapping(method = POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> receiveEvent(@RequestBody IncomingRemoteEvent event) {
+    public ResponseEntity<Void> receiveEvent(@RequestBody RemoteEvent event) {
         eventBus.notify("events", Event.wrap(event));
         return ResponseEntity.accepted().body(null);
     }

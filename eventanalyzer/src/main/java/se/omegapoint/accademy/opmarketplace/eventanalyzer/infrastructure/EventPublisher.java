@@ -3,7 +3,6 @@ package se.omegapoint.accademy.opmarketplace.eventanalyzer.infrastructure;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
@@ -12,13 +11,14 @@ import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
-import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.DisableAccountCreation;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.RemoteCommand;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.DisableFeatureDTO;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public class EventPublisher implements Consumer<Event<DisableAccountCreation>> {
+public class EventPublisher implements Consumer<Event<DisableFeatureDTO>> {
 
     @Value("${url.apigateway.command}")
     private URL commandURL;
@@ -32,14 +32,14 @@ public class EventPublisher implements Consumer<Event<DisableAccountCreation>> {
     }
 
     @Override
-    public void accept(Event<DisableAccountCreation> event) {
-        DisableAccountCreation disableEvent = event.getData();
-        publish(disableEvent);
+    public void accept(Event<DisableFeatureDTO> event) {
+        DisableFeatureDTO disableEvent = event.getData();
+        publish(new RemoteCommand(disableEvent));
     }
 
-    private void publish(DisableAccountCreation disableEvent) {
+    private void publish(RemoteCommand remoteEvent) {
         try {
-            StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(disableEvent));
+            StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(remoteEvent));
 
             HttpPost httpPost = new HttpPost(commandURL.toURI());
 
@@ -49,7 +49,8 @@ public class EventPublisher implements Consumer<Event<DisableAccountCreation>> {
             // TODO: 04/04/16 change to synch client
             httpAsyncClient.execute(httpPost, null);
 
-            System.out.printf("DisableAccountCreation command sent to %s%n", commandURL);
+            System.out.printf("DisableFeatureDTO command sent to %s%n", commandURL);
+            System.out.println(new ObjectMapper().writeValueAsString(remoteEvent));
 
         } catch (URISyntaxException | UnsupportedEncodingException | JsonProcessingException e) {
             // TODO: Var detta ok?
