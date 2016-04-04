@@ -1,6 +1,7 @@
 package se.omegapoint.academy.opmarketplace.apigateway.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +29,8 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 @RequestMapping("/items")
 public class ItemGateway {
 
-    public static final long TIMEOUT = 2000;
+    @Value("${event.timeout}")
+    private long TIMEOUT;
     private final ResponseEntity<String> TIMEOUT_RESPONSE = ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("");
 
     @Autowired

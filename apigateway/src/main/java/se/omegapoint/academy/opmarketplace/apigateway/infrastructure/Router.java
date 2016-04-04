@@ -1,5 +1,6 @@
 package se.omegapoint.academy.opmarketplace.apigateway.infrastructure;
 
+import org.springframework.beans.factory.annotation.Value;
 import reactor.bus.EventBus;
 import reactor.bus.registry.Registration;
 import reactor.bus.selector.Selectors;
@@ -14,7 +15,8 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class Router {
 
-    private static final long TIMEOUT = ItemGateway.TIMEOUT + 1000;
+    @Value("${event.timeout}")
+    private long TIMEOUT;
 
     private Timer timeoutCleanup;
 
@@ -31,6 +33,6 @@ public class Router {
 
     public void subscribe(String id, Consumer consumer){
         Registration registrationToCancel = eventBus.on(Selectors.object(id), consumer).cancelAfterUse();
-        timeoutCleanup.schedule(new TimeoutListenerCleanup(registrationToCancel), TIMEOUT);
+        timeoutCleanup.schedule(new TimeoutListenerCleanup(registrationToCancel), TIMEOUT + 1000);
     }
 }
