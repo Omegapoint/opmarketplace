@@ -28,7 +28,7 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 @RequestMapping("/items")
 public class ItemGateway {
 
-    private final long TIMEOUT = 2000;
+    public static final long TIMEOUT = 2000;
     private final ResponseEntity<String> TIMEOUT_RESPONSE = ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("");
 
     @Autowired

@@ -11,6 +11,7 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account.*;
 
 import java.util.HashMap;
+import java.util.Timer;
 
 @Configuration
 public class MainConfiguration {
@@ -28,7 +29,7 @@ public class MainConfiguration {
 
     @Bean
     Router createRouter(EventBus eventBus){
-        return new Router(eventBus);
+        return new Router(eventBus, new Timer());
     }
 
 }
