@@ -57,7 +57,7 @@ public final class Item extends IdentifiedDomainObject {
 
     public ItemChanged handle(ItemChangeRequested request){
         isTrue(notNull(request).itemId().equals(id()));
-        return new ItemChanged(new Item(UUID.randomUUID(),
+        return new ItemChanged(new Item(request.itemId(),
                 request.title(),
                 request.description(),
                 request.price(),

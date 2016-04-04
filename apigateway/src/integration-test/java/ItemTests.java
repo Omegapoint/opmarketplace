@@ -83,6 +83,11 @@ public class ItemTests {
                 .andExpect(jsonPath("$.description", Matchers.hasValue("Changed")))
                 .andExpect(jsonPath("$.price", Matchers.hasValue("200.00")))
                 .andExpect(jsonPath("$.supply", Matchers.hasValue(2)));
+        getItem(item.id)
+                .andExpect(jsonPath("$.title", Matchers.hasValue("Changed")))
+                .andExpect(jsonPath("$.description", Matchers.hasValue("Changed")))
+                .andExpect(jsonPath("$.price", Matchers.hasValue("200.00")))
+                .andExpect(jsonPath("$.supply", Matchers.hasValue(2)));
     }
 
     @Test
@@ -119,6 +124,19 @@ public class ItemTests {
         MvcResult mvcResult = mockMvc.perform(post("/items")
                 .contentType(APPLICATION_JSON)
                 .content(content)
+        )
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvcResult.getAsyncResult();
+
+        return mockMvc.perform(asyncDispatch(mvcResult));
+    }
+
+    private ResultActions getItem(String id) throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/items")
+                .contentType(APPLICATION_JSON)
+                .param("itemId", id)
         )
                 .andExpect(request().asyncStarted())
                 .andReturn();

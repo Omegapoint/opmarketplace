@@ -7,7 +7,6 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import reactor.bus.Event;
 import se.omegapoint.academy.opmarketplace.marketplace.Application;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
@@ -23,6 +22,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Pric
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.TestPublisher;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.DescriptionDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.PriceDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.QuantityDTO;
@@ -61,7 +61,7 @@ public class ItemServiceTest {
                 new DescriptionDTO("Desc"),
                 new PriceDTO("1.00"),
                 new QuantityDTO(1));
-        itemService.accept(Event.wrap(request));
+        itemService.accept(reactor.bus.Event.wrap(request));
         ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
         assertEquals("Item", itemCreated.item().title().text());
     }
@@ -75,7 +75,7 @@ public class ItemServiceTest {
                 new DescriptionDTO("Desc"),
                 new PriceDTO("$.00"),
                 new QuantityDTO(1));
-        itemService.accept(Event.wrap(request));
+        itemService.accept(reactor.bus.Event.wrap(request));
         ItemNotCreated itemNotCreated = (ItemNotCreated)publisher.getLatestEvent();
         assertEquals(Price.ILLEGAL_FORMAT, itemNotCreated.reason());
     }
@@ -93,7 +93,7 @@ public class ItemServiceTest {
         ItemRequestedDTO request = new ItemRequestedDTO(
                 requestId,
                 itemId);
-        itemService.accept(Event.wrap(request));
+        itemService.accept(reactor.bus.Event.wrap(request));
         ItemObtained itemObtained = (ItemObtained)publisher.getLatestEvent();
         assertEquals("Obtainable", itemObtained.item().title().text());
     }
@@ -105,7 +105,7 @@ public class ItemServiceTest {
         ItemRequestedDTO request = new ItemRequestedDTO(
                 requestId,
                 itemId);
-        itemService.accept(Event.wrap(request));
+        itemService.accept(reactor.bus.Event.wrap(request));
         ItemNotObtained itemNotObtained = (ItemNotObtained)publisher.getLatestEvent();
         assertEquals(ItemEventStore.ITEM_DOES_NOT_EXIST, itemNotObtained.reason());
     }
@@ -144,7 +144,7 @@ public class ItemServiceTest {
                 requestId,
                 "hej");
 
-        itemService.accept(Event.wrap(request));
+        itemService.accept(reactor.bus.Event.wrap(request));
         ItemSearchCompleted searchCompleted = (ItemSearchCompleted) publisher.getLatestEvent();
         assertEquals(3, searchCompleted.items().size());
     }
@@ -152,13 +152,13 @@ public class ItemServiceTest {
     @Test
     public void should_change_item() throws Exception {
         String requestId = "1";
-        se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event request = new ItemCreationRequestedDTO(
+        Event request = new ItemCreationRequestedDTO(
                 requestId,
                 new TitleDTO("ToBeChanged"),
                 new DescriptionDTO("ToBeChanged"),
                 new PriceDTO("1.00"),
                 new QuantityDTO(1));
-        itemService.accept(Event.wrap(request));
+        itemService.accept(reactor.bus.Event.wrap(request));
         ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
 
         request = new ItemChangeRequestedDTO(requestId,
@@ -167,13 +167,21 @@ public class ItemServiceTest {
                 new DescriptionDTO("Changed"),
                 new PriceDTO("2.00"),
                 new QuantityDTO(2));
-        itemService.accept(Event.wrap(request));
+        itemService.accept(reactor.bus.Event.wrap(request));
 
         ItemChanged itemChanged = (ItemChanged)publisher.getLatestEvent();
 
+        assertEquals(itemCreated.itemId(), itemChanged.itemId());
         assertEquals("Changed", itemChanged.item().title().text());
         assertEquals("Changed", itemChanged.item().description().text());
         assertEquals("2.00", itemChanged.item().price().amount());
         assertEquals(2, itemChanged.item().supply().amount());
+
+        Event getRequest = new ItemRequestedDTO(
+                requestId,
+                itemCreated.itemId().toString());
+        itemService.accept(reactor.bus.Event.wrap(getRequest));
+        ItemObtained itemObtained = (ItemObtained)publisher.getLatestEvent();
+        assertEquals("Changed", itemObtained.item().title().text());
     }
 }
