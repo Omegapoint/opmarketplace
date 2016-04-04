@@ -1,5 +1,4 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects;
-
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -9,14 +8,13 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EmailDTO implements DTO {
-
-    public final String address;
+public class AccountDTO implements DTO{
+    public final EmailDTO email;
+    public final UserDTO user;
 
     @JsonCreator
-    public EmailDTO(@JsonProperty("address") String address){
-        this.address = notNull(address);
+    public AccountDTO(@JsonProperty("email") EmailDTO email, @JsonProperty("user") UserDTO user) {
+        this.email = notNull(email);
+        this.user = notNull(user);
     }
-
-
 }
