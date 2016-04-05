@@ -3,11 +3,16 @@ package se.omegapoint.accademy.opmarketplace.messageservice.application.receiver
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.bus.selector.Selectors;
 import se.omegapoint.accademy.opmarketplace.messageservice.infrastructure.SubscriptionController;
-import java.net.URL;
 
+import java.net.URL;
+import java.util.HashMap;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
@@ -39,5 +44,10 @@ public class SubscriptionReceiver {
             subscriptionController.subscribeEndpoint(endpoint, Selectors.regex("\\w+"));
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
         }
+    }
+
+    @RequestMapping(value = "/subscriptions", method = GET)
+    public ResponseEntity<HashMap> getSubscriptions() {
+        return ResponseEntity.ok().body(subscriptionController.subscriptions());
     }
 }

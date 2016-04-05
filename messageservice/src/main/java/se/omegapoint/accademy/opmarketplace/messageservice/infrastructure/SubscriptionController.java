@@ -47,4 +47,8 @@ public class SubscriptionController {
             return false;
         }
     }
+
+    public HashMap subscriptions() {
+        return subscriptions;
+    }
 }
