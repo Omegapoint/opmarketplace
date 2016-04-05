@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class Analyzer implements Consumer<Event<RemoteEvent>> {
 
     // TODO: 04/04/16 Change to correct values
-    private final int LIMIT_SIZE = 500;
+    private final int LIMIT_SIZE = 50;
     private final long LIMIT_TIME_MS = 1000;
     private final int DISABLE_DURATION_S = 20;
 
@@ -26,9 +26,17 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
 
     @Override
     public void accept(Event<RemoteEvent> event) {
-        // TODO: 04/04/16 filter, only some events
         RemoteEvent remoteEvent = event.getData();
         String eventType = remoteEvent.type;
+
+        switch (eventType) { // Filter events
+            case "AccountCreationRequested":
+                analyze(eventType);
+                break;
+        }
+    }
+
+    private void analyze(String eventType) {
         System.out.printf("Analyzing event with type %s%n", eventType);
 
         if (!eventWindows.containsKey(eventType)) {
@@ -38,9 +46,8 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
         boolean overwhelmed = !eventWindows.get(eventType).put();
 
         if (overwhelmed) {
-            // TODO: 04/04/16 Change event type;
-            System.out.printf("TOO MANY EVENTS OF TYPE: %s%n", eventType);
-            eventBus.notify("command", Event.wrap(new DisableFeatureDTO(DISABLE_DURATION_S, "AccountCreationRequested")));
+            System.out.printf("DEBUG: Disabling %s events for %d seconds.%n", eventType, DISABLE_DURATION_S);
+            eventBus.notify("command", Event.wrap(new DisableFeatureDTO(DISABLE_DURATION_S, eventType)));
         }
     }
 }
