@@ -80,7 +80,10 @@ public class EventReceiverServiceTest {
                 "        \"user\":{" +
                 "            \"firstName\":\"testFirst\"," +
                 "            \"lastName\":\"testLast\"" +
-                "        }" +
+                "        }," +
+                "       \"vault\":{\n" +
+                "           \"amount\":" + 10 +
+                "       }\n" +
                 "    }" +
                 "}", AccountObtainedDTO.class);
 

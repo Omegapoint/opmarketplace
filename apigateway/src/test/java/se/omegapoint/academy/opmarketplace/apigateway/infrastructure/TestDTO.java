@@ -51,6 +51,9 @@ public class TestDTO {
                 "   \"user\":{\n" +
                 "       \"firstName\":\"first\",\n" +
                 "       \"lastName\":\"last\"\n" +
+                "   },\n" +
+                "   \"vault\":{\n" +
+                "       \"amount\":" + 10 +
                 "   }\n" +
                 "}", AccountDTO.class);
         assertEquals("test@test.com", dto.email.address);
@@ -143,6 +146,9 @@ public class TestDTO {
                 "       \"user\":{\n" +
                 "           \"firstName\":\"first\",\n" +
                 "           \"lastName\":\"last\"\n" +
+                "       },\n" +
+                "       \"vault\":{\n" +
+                "           \"amount\":" + 10 +
                 "       }\n" +
                 "   }" +
                 "}", AccountObtainedDTO.class);
