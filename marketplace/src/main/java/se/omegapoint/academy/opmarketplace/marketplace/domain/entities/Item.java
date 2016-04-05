@@ -3,10 +3,7 @@ package se.omegapoint.academy.opmarketplace.marketplace.domain.entities;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.IdentifiedDomainObject;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemChangeRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Credit;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 
@@ -20,13 +17,15 @@ public final class Item extends IdentifiedDomainObject {
     private final Description description;
     private final Credit price;
     private final Quantity supply;
+    private final Email seller;
 
-    public Item(UUID id, Title title, Description description, Credit price, Quantity supply) {
+    public Item(UUID id, Title title, Description description, Credit price, Quantity supply, Email seller) {
         super(notNull(id));
         this.title = notNull(title);
         this.description = notNull(description);
         this.price = notNull(price);
         this.supply = notNull(supply);
+        this.seller = notNull(seller);
     }
 
     public Title title() {
@@ -45,13 +44,18 @@ public final class Item extends IdentifiedDomainObject {
         return supply;
     }
 
+    public Email seller(){
+        return seller;
+    }
+
     public static ItemCreated createItem(ItemCreationRequested request){
         notNull(request);
         return new ItemCreated(new Item(UUID.randomUUID(),
                 request.title(),
                 request.description(),
                 request.price(),
-                request.supply()));
+                request.supply(),
+                request.seller()));
     }
 
     public ItemChanged handle(ItemChangeRequested request){
@@ -60,6 +64,7 @@ public final class Item extends IdentifiedDomainObject {
                 request.title(),
                 request.description(),
                 request.price(),
-                request.supply()));
+                request.supply(),
+                this.seller));
     }
 }

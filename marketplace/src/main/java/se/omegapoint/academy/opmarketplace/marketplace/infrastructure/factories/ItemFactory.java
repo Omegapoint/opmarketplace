@@ -33,7 +33,8 @@ public class ItemFactory {
                 itemCreated.item().title(),
                 itemCreated.item().description(),
                 itemCreated.item().price(),
-                itemCreated.item().supply());
+                itemCreated.item().supply(),
+                itemCreated.item().seller());
     }
 
     private static void mutate(ItemChanged itemChanged) {
@@ -41,6 +42,7 @@ public class ItemFactory {
                 itemChanged.item().title(),
                 itemChanged.item().description(),
                 itemChanged.item().price(),
-                itemChanged.item().supply());
+                itemChanged.item().supply(),
+                itemChanged.item().seller());
     }
 }

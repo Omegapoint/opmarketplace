@@ -3,17 +3,11 @@ package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.exter
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Credit;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.DescriptionDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.CreditDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.QuantityDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.TitleDTO;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.*;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -26,6 +20,7 @@ public class ItemCreationRequestedDTO implements Event, Deserializer<ItemCreatio
     public final DescriptionDTO description;
     public final CreditDTO price;
     public final QuantityDTO supply;
+    public final EmailDTO seller;
 
     @JsonCreator
     public ItemCreationRequestedDTO(
@@ -33,12 +28,14 @@ public class ItemCreationRequestedDTO implements Event, Deserializer<ItemCreatio
             @JsonProperty("title") TitleDTO title,
             @JsonProperty("description") DescriptionDTO description,
             @JsonProperty("price") CreditDTO price,
-            @JsonProperty("supply") QuantityDTO supply) {
+            @JsonProperty("supply") QuantityDTO supply,
+            @JsonProperty("seller") EmailDTO seller) {
         this.requestId = notNull(requestId);
         this.title = notNull(title);
         this.description = notNull(description);
         this.price = notNull(price);
         this.supply = notNull(supply);
+        this.seller = notNull(seller);
     }
 
     @Override
@@ -47,7 +44,8 @@ public class ItemCreationRequestedDTO implements Event, Deserializer<ItemCreatio
                 new Title(title.text),
                 new Description(description.text),
                 new Credit(price.amount),
-                new Quantity(supply.amount));
+                new Quantity(supply.amount),
+                new Email(seller.address));
     }
 
     @Override

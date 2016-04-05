@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemChangeRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemCreationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.ItemDTO;
 
 import java.util.UUID;
@@ -42,23 +44,24 @@ public class ItemTests {
 
     @Test
     public void should_create_an_item() throws Exception {
-        createItem("Create", "Create", 100, 1)
+        createItem("Create", "Create", 100, 1, "hej@hej.com")
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", Matchers.hasValue("Create")))
                 .andExpect(jsonPath("$.description", Matchers.hasValue("Create")))
                 .andExpect(jsonPath("$.price", Matchers.hasValue(100)))
-                .andExpect(jsonPath("$.supply", Matchers.hasValue(1)));
+                .andExpect(jsonPath("$.supply", Matchers.hasValue(1)))
+                .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")));
     }
 
     @Test
     public void should_find_three_matches() throws Exception {
-        createItem("Hej", "Hej", 100, 1)
+        createItem("Hej", "Hej", 100, 1, "hej@hej.com")
                 .andExpect(status().isOk());
-        createItem("What hej", "no match", 100, 1)
+        createItem("What hej", "no match", 100, 1, "hej@hej.com")
                 .andExpect(status().isOk());
-        createItem("No match", "Dude hej", 100, 1)
+        createItem("No match", "Dude hej", 100, 1, "hej@hej.com")
                 .andExpect(status().isOk());
-        createItem("no match", "no match he j", 100, 1)
+        createItem("no match", "no match he j", 100, 1, "hej@hej.com")
                 .andExpect(status().isOk());
         searchItems("hej")
                 .andExpect(status().isOk())
@@ -69,12 +72,13 @@ public class ItemTests {
 
     @Test
     public void should_change_one_item() throws Exception {
-        MvcResult result = createItem("ToBeChanged", "ToBeChanged", 100, 1)
+        MvcResult result = createItem("ToBeChanged", "ToBeChanged", 100, 1, "hej@hej.com")
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", Matchers.hasValue("ToBeChanged")))
                 .andExpect(jsonPath("$.description", Matchers.hasValue("ToBeChanged")))
                 .andExpect(jsonPath("$.price", Matchers.hasValue(100)))
                 .andExpect(jsonPath("$.supply", Matchers.hasValue(1)))
+                .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")))
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         ItemDTO item = new ObjectMapper().readValue(content, ItemDTO.class);
@@ -82,22 +86,25 @@ public class ItemTests {
                 .andExpect(jsonPath("$.title", Matchers.hasValue("Changed")))
                 .andExpect(jsonPath("$.description", Matchers.hasValue("Changed")))
                 .andExpect(jsonPath("$.price", Matchers.hasValue(200)))
-                .andExpect(jsonPath("$.supply", Matchers.hasValue(2)));
+                .andExpect(jsonPath("$.supply", Matchers.hasValue(2)))
+                .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")));
         getItem(item.id)
                 .andExpect(jsonPath("$.title", Matchers.hasValue("Changed")))
                 .andExpect(jsonPath("$.description", Matchers.hasValue("Changed")))
                 .andExpect(jsonPath("$.price", Matchers.hasValue(200)))
-                .andExpect(jsonPath("$.supply", Matchers.hasValue(2)));
+                .andExpect(jsonPath("$.supply", Matchers.hasValue(2)))
+                .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")));
     }
 
     @Test
     public void should_not_change_one_item_due_to_wrong_id_supplied() throws Exception {
-        createItem("NotToBeChanged", "NotToBeChanged", 100, 1)
+        createItem("NotToBeChanged", "NotToBeChanged", 100, 1, "hej@hej.com")
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", Matchers.hasValue("NotToBeChanged")))
                 .andExpect(jsonPath("$.description", Matchers.hasValue("NotToBeChanged")))
                 .andExpect(jsonPath("$.price", Matchers.hasValue(100)))
-                .andExpect(jsonPath("$.supply", Matchers.hasValue(1)));
+                .andExpect(jsonPath("$.supply", Matchers.hasValue(1)))
+                .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")));
         changeItem(UUID.randomUUID().toString(), "Changed", "Changed", 200, 2)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$", Matchers.hasValue("Item does not exist.")));
@@ -105,12 +112,13 @@ public class ItemTests {
 
     @Test
     public void should_not_change_one_item_due_to_illegal_title() throws Exception {
-        MvcResult result = createItem("NotToBeChanged", "NotToBeChanged", 100, 1)
+        MvcResult result = createItem("NotToBeChanged", "NotToBeChanged", 100, 1, "hej@hej.com")
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", Matchers.hasValue("NotToBeChanged")))
                 .andExpect(jsonPath("$.description", Matchers.hasValue("NotToBeChanged")))
                 .andExpect(jsonPath("$.price", Matchers.hasValue(100)))
                 .andExpect(jsonPath("$.supply", Matchers.hasValue(1)))
+                .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")))
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         ItemDTO item = new ObjectMapper().readValue(content, ItemDTO.class);
@@ -119,8 +127,8 @@ public class ItemTests {
                 .andExpect(jsonPath("$", Matchers.hasValue("Title can only contain letters, digits and spaces")));
     }
 
-    private ResultActions createItem(String title, String description, int price, int quantity) throws Exception {
-        String content = itemCreationJson(title, description, price, quantity);
+    private ResultActions createItem(String title, String description, int price, int quantity, String seller) throws Exception {
+        String content = itemCreationJson(title, description, price, quantity, seller);
         MvcResult mvcResult = mockMvc.perform(post("/items")
                 .contentType(APPLICATION_JSON)
                 .content(content)
@@ -146,8 +154,8 @@ public class ItemTests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    private String itemCreationJson(String title, String description, int price, int quantity) {
-        return  "{" +
+    private String itemCreationJson(String title, String description, int price, int quantity, String seller) throws Exception {
+        String content = "{" +
                     "\"title\":{" +
                         "\"text\":\"" + title + "\"" +
                     "}," +
@@ -159,8 +167,14 @@ public class ItemTests {
                     "}," +
                     "\"supply\":{" +
                         "\"amount\":" + quantity +
+                    "}," +
+                    "\"seller\":{" +
+                        "\"address\":\"" + seller + "\"" +
                     "}" +
                 "}";
+        // Validate content
+        new ObjectMapper().readValue(content, ItemCreationRequestedDTO.class);
+        return content;
     }
 
     private ResultActions searchItems(String query) throws Exception {
@@ -189,8 +203,8 @@ public class ItemTests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    private String itemChangeJson(String id, String title, String description, int price, int quantity) {
-        return  "{" +
+    private String itemChangeJson(String id, String title, String description, int price, int quantity) throws Exception {
+        String content =  "{" +
                     "\"itemId\":\"" + id + "\"," +
                     "\"title\":{" +
                         "\"text\":\"" + title + "\"" +
@@ -205,5 +219,8 @@ public class ItemTests {
                         "\"amount\":" + quantity +
                     "}" +
                 "}";
+        // Validate content
+        new ObjectMapper().readValue(content, ItemChangeRequestedDTO.class);
+        return content;
     }
 }

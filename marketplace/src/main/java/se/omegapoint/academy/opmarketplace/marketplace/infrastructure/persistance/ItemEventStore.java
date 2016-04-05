@@ -121,6 +121,7 @@ public class ItemEventStore implements ItemRepository {
                 itemCreated.item().description().text(),
                 itemCreated.item().price().amount(),
                 itemCreated.item().supply().amount(),
+                itemCreated.item().seller().address(),
                 itemCreated.timestamp()));
     }
 
@@ -131,6 +132,7 @@ public class ItemEventStore implements ItemRepository {
                 itemChanged.item().description().text(),
                 itemChanged.item().price().amount(),
                 itemChanged.item().supply().amount(),
+                itemChanged.item().seller().address(),
                 itemChanged.timestamp()));
     }
 }

@@ -11,10 +11,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemSearchCompleted;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Credit;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 
 import static org.junit.Assert.*;
 
@@ -31,22 +28,26 @@ public class ItemEventStoreTest {
                 new Title("Hej"),
                 new Description("Hej"),
                 new Credit(100),
-                new Quantity(1));
+                new Quantity(1),
+                new Email("hej@hej.com"));
         ItemCreationRequested match2 = new ItemCreationRequested(
                 new Title("What hej"),
                 new Description("no match"),
                 new Credit(100),
-                new Quantity(1));
+                new Quantity(1),
+                new Email("hej@hej.com"));
         ItemCreationRequested match3 = new ItemCreationRequested(
                 new Title("No match"),
                 new Description("Dude hej"),
                 new Credit(100),
-                new Quantity(1));
+                new Quantity(1),
+                new Email("hej@hej.com"));
         ItemCreationRequested noMatch = new ItemCreationRequested(
                 new Title("no match"),
                 new Description("no match he j"),
                 new Credit(100),
-                new Quantity(1));
+                new Quantity(1),
+                new Email("hej@hej.com"));
 
         itemRepository.append(Item.createItem(match1));
         itemRepository.append(Item.createItem(match2));
