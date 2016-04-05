@@ -1,11 +1,10 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.entities;
 
 import se.omegapoint.academy.opmarketplace.marketplace.domain.IdentifiedDomainObject;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemChangeRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Credit;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Price;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
@@ -19,10 +18,10 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public final class Item extends IdentifiedDomainObject {
     private final Title title;
     private final Description description;
-    private final Price price;
+    private final Credit price;
     private final Quantity supply;
 
-    public Item(UUID id, Title title, Description description, Price price, Quantity supply) {
+    public Item(UUID id, Title title, Description description, Credit price, Quantity supply) {
         super(notNull(id));
         this.title = notNull(title);
         this.description = notNull(description);
@@ -38,7 +37,7 @@ public final class Item extends IdentifiedDomainObject {
         return description;
     }
 
-    public Price price() {
+    public Credit price() {
         return price;
     }
 

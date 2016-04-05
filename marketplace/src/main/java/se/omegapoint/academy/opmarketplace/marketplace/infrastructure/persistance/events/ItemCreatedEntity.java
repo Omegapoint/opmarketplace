@@ -1,8 +1,8 @@
 package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events;
 
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Credit;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Price;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
@@ -23,13 +23,13 @@ public class ItemCreatedEntity implements Deserializer<ItemCreated> {
     private String id;
     private String title;
     private String description;
-    private String price;
+    private Integer price;
     private Integer supply;
     private Timestamp time;
 
     protected ItemCreatedEntity(){}
 
-    public ItemCreatedEntity(final String id, final String title, final String description, final String price, final int supply, Timestamp time) {
+    public ItemCreatedEntity(final String id, final String title, final String description, final int price, final int supply, Timestamp time) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -42,7 +42,7 @@ public class ItemCreatedEntity implements Deserializer<ItemCreated> {
         return new ItemCreated(new Item(UUID.fromString(id),
                 new Title(title),
                 new Description(description),
-                new Price(price),
+                new Credit(price),
                 new Quantity(supply)), time);
     }
 }

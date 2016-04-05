@@ -17,14 +17,14 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.It
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Credit;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Price;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.TestPublisher;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.DescriptionDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.PriceDTO;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.CreditDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.QuantityDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.TitleDTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemChangeRequestedDTO;
@@ -59,7 +59,7 @@ public class ItemServiceTest {
                 requestId,
                 new TitleDTO("Item"),
                 new DescriptionDTO("Desc"),
-                new PriceDTO("1.00"),
+                new CreditDTO(1),
                 new QuantityDTO(1));
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
@@ -67,17 +67,17 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void should_not_create_item_due_to_illegal_characters_in_price() throws Exception {
+    public void should_not_create_item_due_to_illegal_amount_in_price() throws Exception {
         String requestId = "1";
         ItemCreationRequestedDTO request = new ItemCreationRequestedDTO(
                 requestId,
                 new TitleDTO("Item"),
                 new DescriptionDTO("Desc"),
-                new PriceDTO("$.00"),
+                new CreditDTO(-1),
                 new QuantityDTO(1));
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemNotCreated itemNotCreated = (ItemNotCreated)publisher.getLatestEvent();
-        assertEquals(Price.ILLEGAL_FORMAT, itemNotCreated.reason());
+        assertEquals(Credit.ILLEGAL_FORMAT, itemNotCreated.reason());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class ItemServiceTest {
         ItemCreated itemCreated = Item.createItem(new ItemCreationRequested(
                 new Title("Obtainable"),
                 new Description("Obtain"),
-                new Price("100"),
+                new Credit(100),
                 new Quantity(1)));
         repository.append(itemCreated);
         String itemId = itemCreated.item().id().toString();
@@ -117,22 +117,22 @@ public class ItemServiceTest {
         ItemCreationRequested match1 = new ItemCreationRequested(
                 new Title("Hej"),
                 new Description("Hej"),
-                new Price("100"),
+                new Credit(100),
                 new Quantity(1));
         ItemCreationRequested match2 = new ItemCreationRequested(
                 new Title("What hej"),
                 new Description("no match"),
-                new Price("100"),
+                new Credit(100),
                 new Quantity(1));
         ItemCreationRequested match3 = new ItemCreationRequested(
                 new Title("No match"),
                 new Description("Dude hej"),
-                new Price("100"),
+                new Credit(100),
                 new Quantity(1));
         ItemCreationRequested noMatch = new ItemCreationRequested(
                 new Title("no match"),
                 new Description("no match he j"),
-                new Price("100"),
+                new Credit(100),
                 new Quantity(1));
 
         repository.append(Item.createItem(match1));
@@ -156,7 +156,7 @@ public class ItemServiceTest {
                 requestId,
                 new TitleDTO("ToBeChanged"),
                 new DescriptionDTO("ToBeChanged"),
-                new PriceDTO("1.00"),
+                new CreditDTO(1),
                 new QuantityDTO(1));
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
@@ -165,7 +165,7 @@ public class ItemServiceTest {
                 itemCreated.itemId().toString(),
                 new TitleDTO("Changed"),
                 new DescriptionDTO("Changed"),
-                new PriceDTO("2.00"),
+                new CreditDTO(2),
                 new QuantityDTO(2));
         itemService.accept(reactor.bus.Event.wrap(request));
 
@@ -174,7 +174,7 @@ public class ItemServiceTest {
         assertEquals(itemCreated.itemId(), itemChanged.itemId());
         assertEquals("Changed", itemChanged.item().title().text());
         assertEquals("Changed", itemChanged.item().description().text());
-        assertEquals("2.00", itemChanged.item().price().amount());
+        assertEquals(2, itemChanged.item().price().amount());
         assertEquals(2, itemChanged.item().supply().amount());
 
         Event getRequest = new ItemRequestedDTO(

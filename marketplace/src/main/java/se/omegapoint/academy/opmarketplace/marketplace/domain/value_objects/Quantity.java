@@ -10,7 +10,7 @@ public class Quantity {
     private final int amount;
 
     public Quantity(int quantity) {
-        isTrue(notNull(quantity) > 0);
+        isTrue(notNull(quantity) > 0, ILLEGAL_VALUE);
         this.amount = quantity;
     }
 

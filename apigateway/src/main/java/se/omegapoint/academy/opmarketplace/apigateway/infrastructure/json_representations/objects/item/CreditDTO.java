@@ -8,12 +8,12 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PriceDTO implements DTO {
+public class CreditDTO implements DTO {
 
-    public final String amount;
+    public final int amount;
 
     @JsonCreator
-    public PriceDTO(@JsonProperty("amount") String amount) {
+    public CreditDTO(@JsonProperty("amount") int amount) {
         this.amount = notNull(amount);
     }
 }

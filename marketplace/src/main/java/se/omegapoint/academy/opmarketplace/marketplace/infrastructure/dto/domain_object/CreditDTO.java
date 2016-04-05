@@ -3,7 +3,7 @@ package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domai
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Price;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Credit;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.DTO;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Serializer;
@@ -11,21 +11,21 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Serial
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PriceDTO implements DTO, Serializer, Deserializer<Price> {
+public class CreditDTO implements DTO, Serializer, Deserializer<Credit> {
 
-    public final String amount;
+    public final int amount;
 
-    public PriceDTO(Price price){
-        this.amount = notNull(price).amount();
+    public CreditDTO(Credit credit){
+        this.amount = notNull(credit).amount();
     }
 
     @JsonCreator
-    public PriceDTO(@JsonProperty("amount") String amount) {
+    public CreditDTO(@JsonProperty("amount") int amount) {
         this.amount = notNull(amount);
     }
 
     @Override
-    public Price domainObject() {
-        return new Price(this.amount);
+    public Credit domainObject() {
+        return new Credit(this.amount);
     }
 }

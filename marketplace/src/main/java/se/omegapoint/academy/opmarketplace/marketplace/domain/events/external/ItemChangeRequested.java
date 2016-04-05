@@ -1,7 +1,7 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.events.external;
 
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Price;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Credit;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
 
@@ -13,10 +13,10 @@ public class ItemChangeRequested {
     private final UUID itemId;
     private final Title title;
     private final Description description;
-    private final Price price;
+    private final Credit price;
     private final Quantity supply;
 
-    public ItemChangeRequested(UUID itemId, Title title, Description description, Price price, Quantity supply){
+    public ItemChangeRequested(UUID itemId, Title title, Description description, Credit price, Quantity supply){
         this.itemId = notNull(itemId);
         this.title = notNull(title);
         this.description = notNull(description);
@@ -36,7 +36,7 @@ public class ItemChangeRequested {
         return description;
     }
 
-    public Price price() {
+    public Credit price() {
         return price;
     }
 

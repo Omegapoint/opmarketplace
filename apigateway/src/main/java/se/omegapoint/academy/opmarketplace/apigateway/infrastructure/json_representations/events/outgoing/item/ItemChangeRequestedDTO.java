@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.DescriptionDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.PriceDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.CreditDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.QuantityDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.TitleDTO;
 
@@ -23,7 +23,7 @@ public class ItemChangeRequestedDTO implements Event{
     public final String itemId;
     public final TitleDTO title;
     public final DescriptionDTO description;
-    public final PriceDTO price;
+    public final CreditDTO price;
     public final QuantityDTO supply;
 
     @JsonCreator
@@ -31,7 +31,7 @@ public class ItemChangeRequestedDTO implements Event{
             @JsonProperty("itemId") String itemId,
             @JsonProperty("title") TitleDTO title,
             @JsonProperty("description") DescriptionDTO description,
-            @JsonProperty("price") PriceDTO price,
+            @JsonProperty("price") CreditDTO price,
             @JsonProperty("supply") QuantityDTO supply) {
         this.requestId = randomString();
         this.itemId = notBlank(itemId);
