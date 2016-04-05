@@ -14,6 +14,7 @@ import reactor.fn.Consumer;
 import se.omegapoint.accademy.opmarketplace.messageservice.Application;
 import se.omegapoint.accademy.opmarketplace.messageservice.domain.RuleEngine;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 
@@ -32,13 +33,13 @@ public class SubscriptionControllerTest {
     @Test
     public void testSubscriptionIsSuccessful() throws Exception {
         SubscriptionController subscriptionController = new SubscriptionController(eventBus, ruleEngine);
-        Assert.assertTrue(subscriptionController.subscribeEndpoint(new URL("http://test.xyz"), Selectors.object("channel_one")));
+        Assert.assertTrue(subscriptionController.subscribeEndpoint(new URI("http://test.xyz"), Selectors.object("channel_one")));
     }
 
     @Test
     public void testDispatchersAreSubscribedToCorrectChannel() throws Exception {
         SubscriptionController subscriptionController = new SubscriptionController(eventBus, ruleEngine);
-        subscriptionController.subscribeEndpoint(new URL("http://test.xyz"), Selectors.object("channel_one"));
+        subscriptionController.subscribeEndpoint(new URI("http://test.xyz"), Selectors.object("channel_one"));
         Assert.assertEquals(1, eventBus.getConsumerRegistry().select("channel_one").size());
         Assert.assertEquals(0, eventBus.getConsumerRegistry().select("channel_two").size());
     }
@@ -46,7 +47,7 @@ public class SubscriptionControllerTest {
     @Test
     public void testOneEndpointCannotSubscribeTwiceToSameChannel() throws Exception {
         SubscriptionController subscriptionController = new SubscriptionController(eventBus, ruleEngine);
-        Assert.assertTrue(subscriptionController.subscribeEndpoint(new URL("http://test.xyz"), Selectors.object("channel_one")));
-        Assert.assertFalse(subscriptionController.subscribeEndpoint(new URL("http://test.xyz"), Selectors.object("channel_one")));
+        Assert.assertTrue(subscriptionController.subscribeEndpoint(new URI("http://test.xyz"), Selectors.object("channel_one")));
+        Assert.assertFalse(subscriptionController.subscribeEndpoint(new URI("http://test.xyz"), Selectors.object("channel_one")));
     }
 }

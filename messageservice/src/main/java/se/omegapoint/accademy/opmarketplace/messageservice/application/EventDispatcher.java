@@ -12,16 +12,16 @@ import se.omegapoint.accademy.opmarketplace.messageservice.domain.RuleEngine;
 import se.omegapoint.accademy.opmarketplace.messageservice.infrastructure.EventMetaData;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 public class EventDispatcher implements Consumer<Event<String>> {
 
     private final CloseableHttpAsyncClient httpAsyncClient;
     private final RuleEngine ruleEngine;
-    private final URL endpoint;
+    private final URI endpoint;
 
-    public EventDispatcher(RuleEngine ruleEngine, URL endpoint) {
+    public EventDispatcher(RuleEngine ruleEngine, URI endpoint) {
         httpAsyncClient = HttpAsyncClients.createDefault();
         httpAsyncClient.start();
         this.ruleEngine = ruleEngine;
@@ -52,7 +52,7 @@ public class EventDispatcher implements Consumer<Event<String>> {
         try {
             StringEntity eventJson = new StringEntity(domainEvent);
 
-            URIBuilder uriBuilder = new URIBuilder(endpoint.toURI()).addParameter("channel", channel);
+            URIBuilder uriBuilder = new URIBuilder(endpoint).addParameter("channel", channel);
             HttpPost httpPost = new HttpPost(uriBuilder.build());
 
             httpPost.addHeader("Content-Type", "application/json");

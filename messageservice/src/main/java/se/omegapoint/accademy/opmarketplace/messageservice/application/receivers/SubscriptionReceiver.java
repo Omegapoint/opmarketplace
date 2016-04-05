@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.bus.selector.Selectors;
 import se.omegapoint.accademy.opmarketplace.messageservice.infrastructure.SubscriptionController;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.HashMap;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -25,7 +25,10 @@ public class SubscriptionReceiver {
     @RequestMapping(value = "/subscribe", method = POST)
     public ResponseEntity<Void> subscribe(
             @RequestParam("channel") String channel,
-            @RequestParam("endpoint") URL endpoint) {
+            @RequestParam("endpoint") URI endpoint) {
+
+        // Validate URL
+        if (!endpoint.isAbsolute()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
         subscriptionController.subscribeEndpoint(endpoint, Selectors.object(channel));
 
@@ -34,8 +37,11 @@ public class SubscriptionReceiver {
 
     @RequestMapping(value = "/subscribe_all", method = POST)
     public ResponseEntity<Void> subscribeAll(
-            @RequestParam("endpoint") URL endpoint,
+            @RequestParam("endpoint") URI endpoint,
             @RequestParam("token") String token) {
+
+        // Validate URL
+        if (!endpoint.isAbsolute()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
         //TODO: maybe improve security
         if (!token.equals("kebabpizza")) {
