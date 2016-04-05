@@ -10,6 +10,7 @@ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.springframework.beans.factory.annotation.Value;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreditDeposited;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountDeleted;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
@@ -57,6 +58,10 @@ public class EventRemotePublisherService implements EventPublisher {
             dispatch(new AccountDeletedDTO((AccountDeleted) event, requestId));
         } else if (event instanceof AccountNotDeleted) {
             dispatch(new AccountNotDeletedDTO((AccountNotDeleted) event, requestId));
+        } else if (event instanceof AccountCreditDeposited) {
+            dispatch(new AccountCreditDepositedDTO((AccountCreditDeposited) event, requestId));
+        } else if (event instanceof AccountCreditNotDeposited) {
+            dispatch(new AccountCreditNotDepositedDTO((AccountCreditNotDeposited) event, requestId));
         } else {
             throw new IllegalStateException("Domain Event not recognized.");
         }
