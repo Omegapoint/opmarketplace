@@ -25,7 +25,7 @@ public class ItemChangeRequestedDTO implements Event, Deserializer<ItemChangeReq
 
     public static final String TYPE = "ItemChangeRequested";
     public final String requestId;
-    public final String itemId;
+    public final String id;
     public final TitleDTO title;
     public final DescriptionDTO description;
     public final CreditDTO price;
@@ -34,13 +34,13 @@ public class ItemChangeRequestedDTO implements Event, Deserializer<ItemChangeReq
     @JsonCreator
     public ItemChangeRequestedDTO(
             @JsonProperty("requestId") String requestId,
-            @JsonProperty("itemId") String itemId,
+            @JsonProperty("id") String itemId,
             @JsonProperty("title") TitleDTO title,
             @JsonProperty("description") DescriptionDTO description,
             @JsonProperty("price") CreditDTO price,
             @JsonProperty("supply") QuantityDTO supply) {
         this.requestId = notBlank(requestId);
-        this.itemId = notBlank(itemId);
+        this.id = notBlank(itemId);
         this.title = notNull(title);
         this.description = notNull(description);
         this.price = notNull(price);
@@ -50,7 +50,7 @@ public class ItemChangeRequestedDTO implements Event, Deserializer<ItemChangeReq
     @Override
     public ItemChangeRequested domainObject() {
         return new ItemChangeRequested(
-                UUID.fromString(itemId),
+                UUID.fromString(id),
                 new Title(title.text),
                 new Description(description.text),
                 new Credit(price.amount),

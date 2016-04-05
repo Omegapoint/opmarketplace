@@ -144,7 +144,7 @@ public class ItemTests {
     private ResultActions getItem(String id) throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/items")
                 .contentType(APPLICATION_JSON)
-                .param("itemId", id)
+                .param("id", id)
         )
                 .andExpect(request().asyncStarted())
                 .andReturn();
@@ -205,7 +205,7 @@ public class ItemTests {
 
     private String itemChangeJson(String id, String title, String description, int price, int quantity) throws Exception {
         String content =  "{" +
-                    "\"itemId\":\"" + id + "\"," +
+                    "\"id\":\"" + id + "\"," +
                     "\"title\":{" +
                         "\"text\":\"" + title + "\"" +
                     "}," +

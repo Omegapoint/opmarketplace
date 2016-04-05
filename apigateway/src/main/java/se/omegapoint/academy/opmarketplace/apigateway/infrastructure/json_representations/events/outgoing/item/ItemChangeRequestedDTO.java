@@ -20,7 +20,7 @@ public class ItemChangeRequestedDTO implements Event{
     public static final String TYPE = "ItemChangeRequested";
 
     public final String requestId;
-    public final String itemId;
+    public final String id;
     public final TitleDTO title;
     public final DescriptionDTO description;
     public final CreditDTO price;
@@ -28,13 +28,13 @@ public class ItemChangeRequestedDTO implements Event{
 
     @JsonCreator
     public ItemChangeRequestedDTO(
-            @JsonProperty("itemId") String itemId,
+            @JsonProperty("id") String itemId,
             @JsonProperty("title") TitleDTO title,
             @JsonProperty("description") DescriptionDTO description,
             @JsonProperty("price") CreditDTO price,
             @JsonProperty("supply") QuantityDTO supply) {
         this.requestId = randomString();
-        this.itemId = notBlank(itemId);
+        this.id = notBlank(itemId);
         this.title = notNull(title);
         this.description = notNull(description);
         this.price = notNull(price);

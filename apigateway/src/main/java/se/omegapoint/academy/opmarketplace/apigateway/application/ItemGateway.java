@@ -50,7 +50,7 @@ public class ItemGateway {
     }
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
-    public DeferredResult<ResponseEntity<String>> item(@RequestParam("itemId") final ItemRequestedDTO request) {
+    public DeferredResult<ResponseEntity<String>> item(@RequestParam("id") final ItemRequestedDTO request) {
         notNull(request);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         ItemObtainedListener listener =  new ItemObtainedListener(result);
