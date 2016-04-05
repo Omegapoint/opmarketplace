@@ -28,4 +28,17 @@ public class SlidingWindowTest {
             }
         }
     }
+
+    @Test
+    public void window_should_accept_fast_rate_followed_by_pause_followed_by_fast_rate() throws Exception {
+        int size = 20; long timeInterval = 100;
+        SlidingWindow window = new SlidingWindow(size, timeInterval);
+        for (int i = 0; i < 20; i++) {
+            assertTrue(window.put());
+        }
+        Thread.sleep(200);
+        for (int i = 0; i < 20; i++) {
+            assertTrue(window.put());
+        }
+    }
 }
