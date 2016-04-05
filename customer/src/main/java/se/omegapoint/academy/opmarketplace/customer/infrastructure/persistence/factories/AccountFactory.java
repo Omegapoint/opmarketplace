@@ -5,6 +5,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.Ac
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Credit;
 
 import java.util.List;
 
@@ -29,10 +30,10 @@ public class AccountFactory {
     }
 
     private static void mutate(AccountCreated accountCreated) {
-        account = new Account(accountCreated.email(), accountCreated.user());
+        account = new Account(accountCreated.email(), accountCreated.user(), new Credit(0));
     }
 
     private static void mutate(AccountUserChanged userChanged) {
-        account = new Account(account.email(), userChanged.user());
+        account = new Account(account.email(), userChanged.user(), account.vault());
     }
 }
