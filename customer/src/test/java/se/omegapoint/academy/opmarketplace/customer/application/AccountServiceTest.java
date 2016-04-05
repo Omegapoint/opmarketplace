@@ -14,12 +14,10 @@ import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.TestConfiguration;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreditDeposited;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountDeleted;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedDTO;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountDeletionRequestedDTO;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedDTO;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.*;
 
 import java.io.IOException;
 
@@ -136,6 +134,15 @@ public class AccountServiceTest {
         Assert.assertEquals(1, testPublisher.seenEvents(AccountNotDeleted.class.getName()));
     }
 
+    @Test
+    public void should_add_credit_to_user() throws Exception {
+        addUser("add@credit.com", "first", "last");
+        depositCredits("add@credit.com", 10);
+        depositCredits("add@credit.com", 20);
+        getUser("add@credit.com");
+        Assert.assertEquals(30, ((AccountObtained)testPublisher.getLastEvent()).account().vault().amount());
+    }
+
     private void addUser(String email, String firstName, String lastName) throws IOException {
         String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email +"\"}," +
                 "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
@@ -164,5 +171,13 @@ public class AccountServiceTest {
 
         AccountDeletionRequestedDTO accountDeletionRequestedDTO = objectMapper.readValue(inputData, AccountDeletionRequestedDTO.class);
         accountService.accept(Event.wrap(accountDeletionRequestedDTO));
+    }
+
+    private void depositCredits(String email, int credit) throws IOException {
+        String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email +"\"}," +
+                "\"credit\":{\"amount\":" + credit + "}}";
+
+        AccountCreditDepositRequestedDTO model = objectMapper.readValue(inputData, AccountCreditDepositRequestedDTO.class);
+        accountService.accept(Event.wrap(model));
     }
 }

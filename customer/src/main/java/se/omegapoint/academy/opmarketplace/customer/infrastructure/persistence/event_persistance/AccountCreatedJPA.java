@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance;
+package se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_persistance;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_models.AccountCreatedModel;

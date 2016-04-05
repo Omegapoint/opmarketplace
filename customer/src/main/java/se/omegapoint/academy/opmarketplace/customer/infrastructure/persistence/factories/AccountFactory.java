@@ -2,6 +2,7 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.
 
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreditDeposited;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
@@ -25,8 +26,14 @@ public class AccountFactory {
                 mutate((AccountCreated)e);
             else if (e instanceof AccountUserChanged)
                 mutate((AccountUserChanged)e);
+            else if (e instanceof AccountCreditDeposited)
+                mutate((AccountCreditDeposited)e);
         }
         return account;
+    }
+
+    private static void mutate(AccountCreditDeposited creditDeposited) {
+        account = new Account(account.email(), account.user(), account.vault().addCredits(creditDeposited.credit()));
     }
 
     private static void mutate(AccountCreated accountCreated) {

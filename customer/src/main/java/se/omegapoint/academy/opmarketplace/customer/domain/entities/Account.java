@@ -1,7 +1,9 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.entities;
 
+import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreditDepositRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountDeletionRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChangeRequested;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreditDeposited;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountDeleted;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Credit;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
@@ -53,6 +55,12 @@ public class Account {
     public AccountDeleted deleteAccount(AccountDeletionRequested request) {
         notNull(request);
         isTrue(this.email.equals(request.email()));
-        return new AccountDeleted(email());
+        return new AccountDeleted(this.email());
+    }
+
+    public AccountCreditDeposited depositCredits(AccountCreditDepositRequested request){
+        notNull(request);
+        isTrue(this.email.equals(request.email()));
+        return new AccountCreditDeposited(this.email(), request.credits());
     }
 }

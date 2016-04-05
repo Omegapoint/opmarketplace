@@ -8,10 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedDTO;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountDeletionRequestedDTO;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedDTO;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.*;
 
 import java.io.IOException;
 
@@ -46,6 +43,9 @@ public class EventReceiverService {
                     break;
                 case AccountDeletionRequestedDTO.TYPE:
                     eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountDeletionRequestedDTO.class)));
+                    break;
+                case AccountCreditDepositRequestedDTO.TYPE:
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountCreditDepositRequestedDTO.class)));
                     break;
                 default:
                     System.err.printf("Received unknown event; %s%n", event.type);

@@ -8,7 +8,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.It
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEvent;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEventComarator;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEventComparator;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.factories.ItemFactory;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemChangedEntity;
@@ -72,7 +72,7 @@ public class ItemEventStore implements ItemRepository {
 
         List<Item> items = new ArrayList<>();
         for (UUID id : matches.keySet()){
-            Collections.sort(matches.get(id), new PersistableEventComarator());
+            Collections.sort(matches.get(id), new PersistableEventComparator());
             items.add(ItemFactory.fromPersistableEvents(matches.get(id)));
         }
         return new ItemSearchCompleted(items);

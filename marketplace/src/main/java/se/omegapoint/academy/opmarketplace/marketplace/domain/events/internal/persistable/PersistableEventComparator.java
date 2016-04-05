@@ -2,7 +2,7 @@ package se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.p
 
 import java.util.Comparator;
 
-public class PersistableEventComarator implements Comparator<PersistableEvent> {
+public class PersistableEventComparator implements Comparator<PersistableEvent> {
     @Override
     public int compare(PersistableEvent o1, PersistableEvent o2) {
         if (o1.timestamp().after(o2.timestamp())){

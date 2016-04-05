@@ -22,8 +22,11 @@ public class TestConfiguration {
     public class TestPublisher implements EventPublisher {
         HashMap<String, Integer> seenDomainEvents = new HashMap<>();
 
+        DomainEvent lastEvent;
+
         @Override
         public void publish(DomainEvent event, String requestId) {
+            lastEvent = event;
             String eventName = event.getClass().getName();
             seenDomainEvents.merge(eventName, 1, (counter, one) -> counter + one);
         }
@@ -34,6 +37,10 @@ public class TestConfiguration {
 
         public void clear() {
             seenDomainEvents.clear();
+        }
+
+        public DomainEvent getLastEvent(){
+            return lastEvent;
         }
     }
 }

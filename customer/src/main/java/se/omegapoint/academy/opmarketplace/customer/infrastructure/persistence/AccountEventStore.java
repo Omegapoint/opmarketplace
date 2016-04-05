@@ -1,21 +1,15 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountDeleted;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountDeletedJPA;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_models.AccountDeletedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_models.AccountCreatedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_models.AccountUserChangedModel;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountCreatedJPA;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.event_persistance.AccountUserChangedJPA;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_models.*;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.factories.AccountFactory;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_persistance.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,13 +21,16 @@ public class AccountEventStore implements AccountRepository {
     private final AccountCreatedJPA createAccountRepository;
     private final AccountUserChangedJPA userChangedRepository;
     private final AccountDeletedJPA deleteAccountRepository;
+    private final AccountCreditDepositedJPA creditDepositRepository;
 
     public AccountEventStore(AccountCreatedJPA createAccountRepository,
                              AccountUserChangedJPA userChangedRepository,
-                             AccountDeletedJPA deleteAccountRepository) {
+                             AccountDeletedJPA deleteAccountRepository,
+                             AccountCreditDepositedJPA creditDepositRepository) {
         this.createAccountRepository = notNull(createAccountRepository);
         this.userChangedRepository = notNull(userChangedRepository);
         this.deleteAccountRepository = notNull(deleteAccountRepository);
+        this.creditDepositRepository = notNull(creditDepositRepository);
     }
 
     @Override
@@ -55,6 +52,9 @@ public class AccountEventStore implements AccountRepository {
         }
 
         events.addAll(retrieveUserChangedEvents(email));
+        events.addAll(retrieveCreditDepositedEvents(email));
+
+        Collections.sort(events, new PersistableEventComparator());
 
         return Optional.of(AccountFactory.fromPersistableEvents(events));
     }
@@ -75,6 +75,12 @@ public class AccountEventStore implements AccountRepository {
                 .collect(Collectors.toList());
     }
 
+    private List<AccountCreditDeposited> retrieveCreditDepositedEvents(Email email) {
+        return creditDepositRepository.findByEmailOrderByTime(email.address()).stream()
+                .map(AccountCreditDepositedModel::domainEvent)
+                .collect(Collectors.toList());
+    }
+
     public void append(PersistableEvent event) {
         notNull(event);
         if (event instanceof AccountCreated) {
@@ -83,6 +89,8 @@ public class AccountEventStore implements AccountRepository {
             userChangedRepository.save(new AccountUserChangedModel((AccountUserChanged) event));
         } else if (event instanceof AccountDeleted) {
             deleteAccountRepository.save(new AccountDeletedModel((AccountDeleted) event));
+        } else if (event instanceof AccountCreditDeposited) {
+            creditDepositRepository.save(new AccountCreditDepositedModel((AccountCreditDeposited) event));
         } else {
             throw new IllegalArgumentException("Unsupported persistable event");
         }

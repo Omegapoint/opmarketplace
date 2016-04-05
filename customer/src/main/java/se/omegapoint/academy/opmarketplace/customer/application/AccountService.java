@@ -7,10 +7,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountCreationRequestedDTO;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountDeletionRequestedDTO;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountRequestedDTO;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.AccountUserChangeRequestedDTO;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.*;
 
 import java.util.Optional;
 
@@ -39,6 +36,8 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
             accountUserChangeRequested((AccountUserChangeRequestedDTO) dto);
         } else if (dto instanceof AccountDeletionRequestedDTO) {
             accountDeletionRequested((AccountDeletionRequestedDTO) dto);
+        } else if (dto instanceof AccountCreditDepositRequestedDTO) {
+            accountCreditDepositRequested((AccountCreditDepositRequestedDTO) dto);
         }
     }
 
@@ -70,6 +69,14 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
         DomainEvent event = DomainObjectResult.of(AccountDeletionRequestedDTO::domainObject, dto)
                 .map(this::deleteAccount)
                 .orElseReason(AccountNotDeleted::new);
+
+        publisher.publish(event, dto.requestId());
+    }
+
+    private void accountCreditDepositRequested(AccountCreditDepositRequestedDTO dto) {
+        DomainEvent event = DomainObjectResult.of(AccountCreditDepositRequestedDTO::domainObject, dto)
+                .map(this::depositCreditsToAccount)
+                .orElseReason(AccountUserNotChanged::new);
 
         publisher.publish(event, dto.requestId());
     }
@@ -116,5 +123,17 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
                     return (DomainEvent) persistableEvent;
                 })
                 .orElse(new AccountNotDeleted("Account does not exist."));
+    }
+
+    private DomainEvent depositCreditsToAccount(AccountCreditDepositRequested request) {
+        Optional<Account> maybeAccount = accountRepository.account(request.email());
+
+        return maybeAccount
+                .map(account -> {
+                    PersistableEvent persistableEvent = account.depositCredits(request);
+                    accountRepository.append(persistableEvent);
+                    return (DomainEvent) persistableEvent;
+                })
+                .orElse(new AccountCreditNotDeposited("Account does not exist."));
     }
 }
