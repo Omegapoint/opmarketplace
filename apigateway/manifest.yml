@@ -1,0 +1,10 @@
+---
+inherit: ../base-manifest.yml
+applications:
+- name: apigateway
+  host: apigateway-opm
+  path: build/libs/apigateway-0.0.1-SNAPSHOT.jar
+  env:
+    SUBSCRIPTION_URL: http://messageservice-opm.cfapps.io/subscribe
+    EVENT_PUBLISHER_URL: http://messageservice-opm.cfapps.io/event
+    EVENT_RECEIVER_URL: http://apigateway-opm.cfapps.io/event

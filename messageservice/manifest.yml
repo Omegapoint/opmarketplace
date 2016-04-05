@@ -1,0 +1,6 @@
+---
+inherit: ../base-manifest.yml
+applications:
+- name: messageservice
+  host: messageservice-opm
+  path: build/libs/messageservice-0.0.1-SNAPSHOT.jar
