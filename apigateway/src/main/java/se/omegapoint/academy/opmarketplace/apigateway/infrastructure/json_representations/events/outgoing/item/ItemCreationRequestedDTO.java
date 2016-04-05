@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account_item.EmailDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.DescriptionDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.CreditDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account_item.CreditDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.QuantityDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.TitleDTO;
 

@@ -145,7 +145,7 @@ public class AccountServiceTest {
 
     private void addUser(String email, String firstName, String lastName) throws IOException {
         String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email +"\"}," +
-                "\"credit\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
+                "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
 
         AccountCreationRequestedDTO model = objectMapper.readValue(inputData, AccountCreationRequestedDTO.class);
         accountService.accept(Event.wrap(model));
@@ -160,7 +160,7 @@ public class AccountServiceTest {
 
     private void changeUser(String email, String firstName, String lastName) throws IOException {
         String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email +"\"}," +
-                "\"credit\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
+                "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
 
         AccountUserChangeRequestedDTO accountUserChangeRequestedDTO = objectMapper.readValue(inputData, AccountUserChangeRequestedDTO.class);
         accountService.accept(Event.wrap(accountUserChangeRequestedDTO));

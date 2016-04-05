@@ -21,7 +21,8 @@ public class UserDTO implements DTO, Serializer, Deserializer<User> {
     }
 
     @JsonCreator
-    public UserDTO(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName){
+    public UserDTO(@JsonProperty("firstName") String firstName,
+                   @JsonProperty("lastName") String lastName){
         this.firstName = notNull(firstName);
         this.lastName = notNull(lastName);
     }

@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item;
+package se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account_item;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
