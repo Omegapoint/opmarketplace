@@ -10,16 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.account.AccountCreatedListener;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.account.AccountDeletionListener;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.account.AccountObtainedListener;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.account.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.account.AccountUserChangedListener;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.*;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountCreationRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountDeletionRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountUserChangeRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account_item.EmailDTO;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -49,7 +43,7 @@ public class AccountGateway {
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
 
         if (!ruleEngine.allow(AccountCreationRequestedDTO.TYPE)) {
-            result.setResult(new ResponseEntity<String>(HttpStatus.FORBIDDEN));
+            result.setResult(new ResponseEntity<>(HttpStatus.FORBIDDEN));
             return result;
         }
 
@@ -86,6 +80,16 @@ public class AccountGateway {
         AccountDeletionListener listener =  new AccountDeletionListener(result);
         router.subscribe(accountDeletionRequested.requestId(), listener);
         publisher.publish(new OutgoingRemoteEvent(accountDeletionRequested), "Account");
+        return result;
+    }
+
+    @RequestMapping(value = "/credit", method = PUT, produces = APPLICATION_JSON_VALUE)
+    public DeferredResult<ResponseEntity<String>> changeUser(@RequestBody final AccountCreditDepositRequestedDTO change) {
+        notNull(change);
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
+        AccountCreditDepositedListener listener =  new AccountCreditDepositedListener(result);
+        router.subscribe(change.requestId(), listener);
+        publisher.publish(new OutgoingRemoteEvent(change), "Account");
         return result;
     }
 }

@@ -1,3 +1,5 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -12,9 +14,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountCreditDepositRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountUserChangeRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account.UserDTO;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -66,7 +72,7 @@ public class AccountTests {
         String expectedResult = userJson("test3@test.com", "firstName", "lastName");
         getUser("test3@test.com")
                 .andExpect(status().isOk())
-                .andExpect(content().string(expectedResult));
+                .andExpect(jsonPath("$.email", Matchers.hasValue("test3@test.com")));
     }
 
     @Test
@@ -93,10 +99,9 @@ public class AccountTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
-        String expectedResult = userJson("test4@test.com", "changedFistName", "changedLastName");
         getUser("test4@test.com")
                 .andExpect(status().isOk())
-                .andExpect(content().string(expectedResult));
+                .andExpect(jsonPath("$.email", Matchers.hasValue("test4@test.com")));
     }
 
     @Test
@@ -116,6 +121,28 @@ public class AccountTests {
         deleteUser("nonexistent@test.com")
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
+    }
+
+    @Test
+    public void should_add_credits_to_account() throws Exception {
+        createUser("toBe@rich.com", "ToBe", "Rich")
+                .andExpect(status().isOk());
+        addCredit("toBe@rich.com", 10)
+                .andExpect(status().isOk());
+        addCredit("toBe@rich.com", 20)
+                .andExpect(status().isOk());
+        getUser("toBe@rich.com")
+                .andExpect(jsonPath("$.vault", Matchers.hasValue(30)));
+    }
+
+    @Test
+    public void should_not_add_negative_credits_to_account() throws Exception {
+        createUser("toRemain@poor.com", "ToBe", "Rich")
+                .andExpect(status().isOk());
+        addCredit("toRemain@poor.com", -1)
+                .andExpect(status().isBadRequest());
+        getUser("toRemain@poor.com")
+                .andExpect(jsonPath("$.vault", Matchers.hasValue(0)));
     }
 
     /// HELPER METHODS ///
@@ -172,8 +199,22 @@ public class AccountTests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    private String userJson(String email, String firstName, String lastName) {
-        return  "{" +
+    private ResultActions addCredit(String email, int credit) throws Exception {
+        String content = creditJson(email, credit);
+        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit")
+                .contentType(APPLICATION_JSON)
+                .content(content)
+        )
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvcResult.getAsyncResult();
+
+        return mockMvc.perform(asyncDispatch(mvcResult));
+    }
+
+    private String userJson(String email, String firstName, String lastName) throws Exception {
+        String content = "{" +
                     "\"email\":{" +
                         "\"address\":\"" + email + "\"" +
                     "}," +
@@ -182,5 +223,20 @@ public class AccountTests {
                         "\"lastName\":\"" + lastName + "\"" +
                     "}" +
                 "}";
+        new ObjectMapper().readValue(content, AccountUserChangeRequestedDTO.class);
+        return content;
+    }
+
+    private String creditJson(String email, int credit) throws Exception {
+        String content = "{" +
+                    "\"email\":{" +
+                        "\"address\":\"" + email + "\"" +
+                    "}," +
+                    "\"credit\":{" +
+                        "\"amount\":" + credit +
+                    "}" +
+                "}";
+        new ObjectMapper().readValue(content, AccountCreditDepositRequestedDTO.class);
+        return content;
     }
 }

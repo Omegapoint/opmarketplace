@@ -76,7 +76,7 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
     private void accountCreditDepositRequested(AccountCreditDepositRequestedDTO dto) {
         DomainEvent event = DomainObjectResult.of(AccountCreditDepositRequestedDTO::domainObject, dto)
                 .map(this::depositCreditsToAccount)
-                .orElseReason(AccountUserNotChanged::new);
+                .orElseReason(AccountCreditNotDeposited::new);
 
         publisher.publish(event, dto.requestId());
     }

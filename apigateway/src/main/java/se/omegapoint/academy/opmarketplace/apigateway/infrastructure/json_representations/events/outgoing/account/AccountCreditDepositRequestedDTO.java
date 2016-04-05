@@ -7,6 +7,7 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account_item.CreditDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account_item.EmailDTO;
 
+import static se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.StringRandomizer.randomString;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,10 +21,9 @@ public class AccountCreditDepositRequestedDTO implements Event {
 
     @JsonCreator
     public AccountCreditDepositRequestedDTO(
-            @JsonProperty("requestId") String requestId,
             @JsonProperty("email") EmailDTO email,
             @JsonProperty("credit") CreditDTO credits) {
-        this.requestId = notNull(requestId);
+        this.requestId = randomString();
         this.email = notNull(email);
         this.credit = notNull(credits);
     }

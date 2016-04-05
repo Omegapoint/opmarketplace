@@ -56,6 +56,12 @@ public class EventReceiverService {
                 case AccountNotDeletedDTO.TYPE:
                     router.publish(json.readValue(event.data, AccountNotDeletedDTO.class));
                     break;
+                case AccountCreditDepositedDTO.TYPE:
+                    router.publish(json.readValue(event.data, AccountCreditDepositedDTO.class));
+                    break;
+                case AccountCreditNotDepositedDTO.TYPE:
+                    router.publish(json.readValue(event.data, AccountCreditNotDepositedDTO.class));
+                    break;
                 // Item Events
                 case ItemCreatedDTO.TYPE:
                     router.publish(json.readValue(event.data, ItemCreatedDTO.class));

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.DTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account_item.CreditDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account_item.EmailDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
@@ -12,10 +13,14 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public class AccountDTO implements DTO{
     public final EmailDTO email;
     public final UserDTO user;
+    public final CreditDTO vault;
 
     @JsonCreator
-    public AccountDTO(@JsonProperty("email") EmailDTO email, @JsonProperty("user") UserDTO user) {
+    public AccountDTO(@JsonProperty("email") EmailDTO email,
+                      @JsonProperty("user") UserDTO user,
+                      @JsonProperty("vault") CreditDTO vault) {
         this.email = notNull(email);
         this.user = notNull(user);
+        this.vault = notNull(vault);
     }
 }
