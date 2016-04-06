@@ -3,6 +3,7 @@ package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.factories
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrdered;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEvent;
 
 import java.util.List;
@@ -23,9 +24,20 @@ public class ItemFactory {
                 mutate((ItemCreated)e);
             else if (e instanceof ItemChanged){
                 mutate((ItemChanged)e);
+            } else if (e instanceof ItemOrdered){
+                mutate((ItemOrdered)e);
             }
         }
         return item;
+    }
+
+    private static void mutate(ItemOrdered itemOrdered) {
+        item = new Item(item.id(),
+                item.title(),
+                item.description(),
+                item.price(),
+                item.supply().deduct(itemOrdered.quantity()),
+                item.seller());
     }
 
     private static void mutate(ItemCreated itemCreated) {

@@ -14,6 +14,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemChangedJPARepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemCreatedJPARepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.ItemEventStore;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemOrderJPARepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.JpaRepositoryMarker;
 
 @Configuration
@@ -40,8 +41,9 @@ public class MainConfiguration {
     }
 
     @Bean
-    public ItemEventStore itemRepository(ItemCreatedJPARepository itemCreatedJPARepository,
-                                         ItemChangedJPARepository itemChangedRepository){
-        return new ItemEventStore(itemCreatedJPARepository, itemChangedRepository);
+    public ItemEventStore itemRepository(ItemCreatedJPARepository itemCreatedRepository,
+                                         ItemChangedJPARepository itemChangedRepository,
+                                         ItemOrderJPARepository itemOrderRepository){
+        return new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository);
     }
 }

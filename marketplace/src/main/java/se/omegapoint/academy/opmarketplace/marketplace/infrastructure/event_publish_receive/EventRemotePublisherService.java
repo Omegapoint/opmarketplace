@@ -12,6 +12,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrdered;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.internal_events.*;
@@ -57,16 +58,24 @@ public class EventRemotePublisherService implements EventPublisher {
             dispatch(new ItemChangedDTO((ItemChanged) event, requestId));
         } else if (event instanceof ItemNotChanged) {
             dispatch(new ItemNotChangedDTO((ItemNotChanged) event, requestId));
-        }else {
+        } else if (event instanceof ItemOrdered) {
+            dispatch(new ItemOrderedDTO((ItemOrdered) event, requestId), "Account");
+        } else if (event instanceof ItemNotOrdered) {
+            dispatch(new ItemNotOrderedDTO((ItemNotOrdered) event, requestId));
+        } else {
             throw new IllegalStateException("Domain Event not recognized.");
         }
     }
 
-    private void dispatch(Event eventDTO) {
+    private void dispatch(Event eventDTO){
+        dispatch(eventDTO, "Item");
+    }
+
+    private void dispatch(Event eventDTO, String channel) {
         try {
             OutgoingRemoteEvent outgoingRemoteEvent = new OutgoingRemoteEvent(eventDTO);
             StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(outgoingRemoteEvent));
-            HttpPost httpPost = new HttpPost(publisherURL + "?channel=Item");
+            HttpPost httpPost = new HttpPost(publisherURL + "?channel=" + channel);
             httpPost.addHeader("Content-Type", "application/json");
             httpPost.setEntity(eventJson);
             httpclient.execute(httpPost, IGNORE_CALLBACK);

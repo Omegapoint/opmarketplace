@@ -2,11 +2,15 @@ package se.omegapoint.academy.opmarketplace.marketplace.domain.entities;
 
 import se.omegapoint.academy.opmarketplace.marketplace.domain.IdentifiedDomainObject;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemChangeRequested;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemPurchaseRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrdered;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
+import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
+import javax.persistence.criteria.Order;
 import java.util.UUID;
 
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
@@ -66,5 +70,19 @@ public final class Item extends IdentifiedDomainObject {
                 request.price(),
                 request.supply(),
                 this.seller));
+    }
+
+    public ItemOrdered handle(ItemPurchaseRequested request){
+        isTrue(notNull(request).itemId().equals(id()));
+        try {
+            this.supply().deduct(request.quantity());
+        } catch (IllegalArgumentValidationException e){
+            throw new IllegalArgumentValidationException("Insufficient supply.");
+        }
+        return new ItemOrdered(request.itemId(),
+                seller(),
+                request.quantity(),
+                new Credit(price().amount() * request.quantity().amount()),
+                request.buyer());
     }
 }

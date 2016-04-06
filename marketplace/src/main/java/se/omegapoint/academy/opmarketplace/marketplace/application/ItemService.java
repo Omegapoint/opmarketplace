@@ -3,18 +3,11 @@ package se.omegapoint.academy.opmarketplace.marketplace.application;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemChangeRequested;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotChanged;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotCreated;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemObtained;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemsNotSearched;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemChangeRequestedDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemCreationRequestedDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemRequestedDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemSearchRequestedDTO;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.*;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -39,9 +32,24 @@ public class ItemService implements Consumer<reactor.bus.Event<Event>> {
             handle((ItemSearchRequestedDTO) dto);
         } else if (dto instanceof ItemChangeRequestedDTO) {
             handle((ItemChangeRequestedDTO) dto);
+        } else if (dto instanceof ItemPurchaseRequestedDTO) {
+            handle((ItemPurchaseRequestedDTO) dto);
         } else{
             System.err.println("ItemService: Did not recognize event received from reactor bus.");
         }
+    }
+
+    private void handle(ItemPurchaseRequestedDTO dto) {
+        DomainEvent event = DomainObjectResult.of(ItemPurchaseRequestedDTO::domainObject, notNull(dto))
+                .map(request -> repository.item(request.itemId()))
+                .orElseReason(ItemNotOrdered::new);
+
+        if (event instanceof ItemObtained){
+            event = DomainObjectResult.of(item -> item.handle(dto.domainObject()), ((ItemObtained) event).item())
+                    .map(repository::append)
+                    .orElseReason(ItemNotOrdered::new);
+        }
+        publisher.publish(event, dto.requestId());
     }
 
     private void handle(ItemCreationRequestedDTO dto){

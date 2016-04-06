@@ -10,21 +10,16 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import se.omegapoint.academy.opmarketplace.marketplace.Application;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotCreated;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemNotObtained;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemObtained;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemSearchCompleted;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrdered;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.TestPublisher;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.*;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemChangeRequestedDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemCreationRequestedDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemRequestedDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemSearchRequestedDTO;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.*;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.ItemEventStore;
 
 import java.util.UUID;
@@ -186,5 +181,70 @@ public class ItemServiceTest {
         itemService.accept(reactor.bus.Event.wrap(getRequest));
         ItemObtained itemObtained = (ItemObtained)publisher.getLatestEvent();
         assertEquals("Changed", itemObtained.item().title().text());
+    }
+
+    @Test
+    public void should_create_order() throws Exception {
+        String requestId = "1";
+        Event request = new ItemCreationRequestedDTO(
+                requestId,
+                new TitleDTO("ToBeOrdered"),
+                new DescriptionDTO("To Be Ordered"),
+                new CreditDTO(20),
+                new QuantityDTO(5),
+                new EmailDTO("sell@sell.com"));
+        itemService.accept(reactor.bus.Event.wrap(request));
+        ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
+
+        request = new ItemPurchaseRequestedDTO(
+                requestId,
+                itemCreated.itemId().toString(),
+                new QuantityDTO(5),
+                new EmailDTO("buy@buy.com"));
+        itemService.accept(reactor.bus.Event.wrap(request));
+        ItemOrdered itemOrdered = (ItemOrdered)publisher.getLatestEvent();
+        assertEquals(100, itemOrdered.price().amount());
+        assertEquals(5, itemOrdered.quantity().amount());
+        assertEquals("sell@sell.com", itemOrdered.sellerId().address());
+        assertEquals("buy@buy.com", itemOrdered.buyerId().address());
+
+        request = new ItemRequestedDTO(
+                requestId,
+                itemCreated.itemId().toString());
+        itemService.accept(reactor.bus.Event.wrap(request));
+        ItemObtained itemObtained = (ItemObtained)publisher.getLatestEvent();
+        assertEquals("ToBeOrdered", itemObtained.item().title().text());
+        assertEquals(0, itemObtained.item().supply().amount());
+    }
+
+    @Test
+    public void should_not_create_order_due_to_insufficient_supply() throws Exception {
+        String requestId = "1";
+        Event request = new ItemCreationRequestedDTO(
+                requestId,
+                new TitleDTO("NotToBeOrdered"),
+                new DescriptionDTO("Not To Be Ordered"),
+                new CreditDTO(20),
+                new QuantityDTO(5),
+                new EmailDTO("sell@sell.com"));
+        itemService.accept(reactor.bus.Event.wrap(request));
+        ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
+
+        request = new ItemPurchaseRequestedDTO(
+                requestId,
+                itemCreated.itemId().toString(),
+                new QuantityDTO(6),
+                new EmailDTO("buy@buy.com"));
+        itemService.accept(reactor.bus.Event.wrap(request));
+        ItemNotOrdered itemNotOrdered = (ItemNotOrdered)publisher.getLatestEvent();
+        assertEquals("Insufficient supply.", itemNotOrdered.reason());
+
+        request = new ItemRequestedDTO(
+                requestId,
+                itemCreated.itemId().toString());
+        itemService.accept(reactor.bus.Event.wrap(request));
+        ItemObtained itemObtained = (ItemObtained)publisher.getLatestEvent();
+        assertEquals("NotToBeOrdered", itemObtained.item().title().text());
+        assertEquals(5, itemObtained.item().supply().amount());
     }
 }

@@ -8,10 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemChangeRequestedDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemCreationRequestedDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemRequestedDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.ItemSearchRequestedDTO;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.*;
 
 import java.io.IOException;
 
@@ -46,6 +43,9 @@ public class EventReceiverService {
                     break;
                 case ItemChangeRequestedDTO.TYPE:
                     eventBus.notify(channel, Event.wrap(json.readValue(event.data, ItemChangeRequestedDTO.class)));
+                    break;
+                case ItemPurchaseRequestedDTO.TYPE:
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, ItemPurchaseRequestedDTO.class)));
                     break;
                 default:
                     System.err.printf("Received unknown event; %s%n", event.type);
