@@ -11,15 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.item.ItemChangedListener;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.item.ItemCreatedListener;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.item.ItemObtainedListener;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.item.ItemsSearchedListener;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.item.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.OutgoingRemoteEvent;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemChangeRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemCreationRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemSearchRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -76,6 +70,16 @@ public class ItemGateway {
         ItemChangedListener listener =  new ItemChangedListener(result);
         router.subscribe(change.requestId(), listener);
         publisher.publish(new OutgoingRemoteEvent(change), "Item");
+        return result;
+    }
+
+    @RequestMapping(value = "/buy", method = POST, produces = APPLICATION_JSON_VALUE)
+    public DeferredResult<ResponseEntity<String>> createItem(@RequestBody final ItemPurchaseRequestedDTO newItem) {
+        notNull(newItem);
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
+        ItemPurchaseListener listener =  new ItemPurchaseListener(result);
+        router.subscribe(newItem.requestId(), listener);
+        publisher.publish(new OutgoingRemoteEvent(newItem), "Item");
         return result;
     }
 
