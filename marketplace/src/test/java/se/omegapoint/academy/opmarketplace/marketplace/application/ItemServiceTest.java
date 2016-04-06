@@ -107,29 +107,29 @@ public class ItemServiceTest {
         String requestId = "1";
 
         ItemCreationRequested match1 = new ItemCreationRequested(
-                new Title("Hej"),
-                new Description("Hej"),
+                new Title("Find"),
+                new Description("Find"),
                 new Credit(100),
                 new Quantity(1),
-                new Email("hej@hej.com"));
+                new Email("find@find.com"));
         ItemCreationRequested match2 = new ItemCreationRequested(
-                new Title("What hej"),
+                new Title("What find"),
                 new Description("no match"),
                 new Credit(100),
                 new Quantity(1),
-                new Email("hej@hej.com"));
+                new Email("find@find.com"));
         ItemCreationRequested match3 = new ItemCreationRequested(
                 new Title("No match"),
-                new Description("Dude hej"),
+                new Description("Dude find"),
                 new Credit(100),
                 new Quantity(1),
-                new Email("hej@hej.com"));
+                new Email("find@find.com"));
         ItemCreationRequested noMatch = new ItemCreationRequested(
                 new Title("no match"),
-                new Description("no match he j"),
+                new Description("no match fin d"),
                 new Credit(100),
                 new Quantity(1),
-                new Email("hej@hej.com"));
+                new Email("find@find.com"));
 
         repository.append(Item.createItem(match1));
         repository.append(Item.createItem(match2));
@@ -138,7 +138,7 @@ public class ItemServiceTest {
 
         ItemSearchRequestedDTO request = new ItemSearchRequestedDTO(
                 requestId,
-                "hej");
+                "find");
 
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemSearchCompleted searchCompleted = (ItemSearchCompleted) publisher.getLatestEvent();
