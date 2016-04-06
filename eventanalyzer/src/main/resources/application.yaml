@@ -7,6 +7,9 @@ subscription:
 url:
   apigateway:
     command: http://localhost:8002/command
+    users: http://localhost:8002/command
+  customer:
+    users: http://localhost:8001/users
 
 event:
   receiver:

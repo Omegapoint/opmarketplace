@@ -5,21 +5,26 @@ import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.DisableFeatureDTO;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.control_mechanisms.UserValidator;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 public class Analyzer implements Consumer<Event<RemoteEvent>> {
 
     // TODO: 04/04/16 Change to correct values
-    private final int LIMIT_SIZE = 50;
-    private final long LIMIT_TIME_MS = 1000;
+    private final int LIMIT_SIZE = 1;
+    private final long LIMIT_TIME_MS = 10000;
     private final int DISABLE_DURATION_S = 20;
+    private final int IMPORTANT_USER_LIMIT_MINUTES = 2;
 
     private EventBus eventBus;
     private HashMap<String, SlidingWindow> eventWindows;
+    private UserValidator userValidator;
 
-    public Analyzer(EventBus eventBus) {
+    public Analyzer(EventBus eventBus, UserValidator userValidator) {
         this.eventBus = eventBus;
+        this.userValidator = userValidator;
         eventBus.on(Selectors.object("events"), this);
         eventWindows = new HashMap<>();
     }
@@ -31,6 +36,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
 
         switch (eventType) { // Filter events
             case "AccountCreationRequested":
+            case "ItemRequested":
                 analyze(eventType);
                 break;
         }
@@ -46,8 +52,26 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
         boolean overwhelmed = !eventWindows.get(eventType).put();
 
         if (overwhelmed) {
-            System.out.printf("DEBUG: Disabling %s events for %d seconds.%n", eventType, DISABLE_DURATION_S);
-            eventBus.notify("command", Event.wrap(new DisableFeatureDTO(DISABLE_DURATION_S, eventType)));
+            takeMitigatingAction(eventType);
         }
+    }
+
+    private void takeMitigatingAction(String eventType) {
+        switch (eventType) {
+            case "AccountCreationRequested":
+                System.out.printf("DEBUG: Disabling %s events for %d seconds.%n", eventType, DISABLE_DURATION_S);
+                eventBus.notify("command", Event.wrap(new DisableFeatureDTO(DISABLE_DURATION_S, eventType)));
+                break;
+            case "ItemRequested":
+                System.out.printf("DEBUG: Too many %s events.%n", eventType);
+                fetchImportantUsers();
+                break;
+        }
+    }
+
+    private void fetchImportantUsers() {
+        LocalDateTime timeLimit = LocalDateTime.now().minusMinutes(IMPORTANT_USER_LIMIT_MINUTES);
+        userValidator.fetchList(timeLimit);
+        userValidator.publishList();
     }
 }
