@@ -38,6 +38,8 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
             accountDeletionRequested((AccountDeletionRequestedDTO) dto);
         } else if (dto instanceof AccountCreditDepositRequestedDTO) {
             accountCreditDepositRequested((AccountCreditDepositRequestedDTO) dto);
+        } else if (dto instanceof ItemOrderedDTO) {
+            accountCreditTransaction((ItemOrderedDTO) dto);
         }
     }
 
@@ -80,6 +82,15 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
 
         publisher.publish(event, dto.requestId());
     }
+
+    private void accountCreditTransaction(ItemOrderedDTO dto) {
+        DomainEvent event = DomainObjectResult.of(ItemOrderedDTO::domainObject, dto)
+                .map(this::creditTransaction)
+                .orElseReason(ItemPaymentNotCompleted::new);
+
+        publisher.publish(event, dto.requestId());
+    }
+
 
     private DomainEvent createAccount(AccountCreationRequested request) {
         Optional<Account> maybeAccount = accountRepository.account(request.email());
@@ -135,5 +146,30 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
                     return (DomainEvent) persistableEvent;
                 })
                 .orElse(new AccountCreditNotDeposited("Account does not exist."));
+    }
+
+    private DomainEvent creditTransaction(ItemOrdered request) {
+        Optional<Account> maybeBuyer = accountRepository.account(request.buyerId());
+        DomainEvent chargeEvent = maybeBuyer
+                .map(buyer -> DomainObjectResult.of(b -> b.charge(request), buyer)
+                    .map(n -> (DomainEvent)n)
+                    .orElseReason(ItemPaymentNotCompleted::new))
+                .orElse(new ItemPaymentNotCompleted("Buyer does not have an account registered."));
+
+        if (chargeEvent instanceof PersistableEvent){
+            Optional<Account> maybeSeller = accountRepository.account(request.sellerId());
+            DomainEvent depositEvent = maybeSeller
+                    .map(seller -> DomainObjectResult.of(s -> s.depositCredits(request), seller)
+                            .map(n -> (DomainEvent)n)
+                            .orElseReason(ItemPaymentNotCompleted::new))
+                    .orElse(new ItemPaymentNotCompleted("Seller does not have an account registered."));
+            if (depositEvent instanceof PersistableEvent){
+                accountRepository.append((PersistableEvent) chargeEvent);
+                accountRepository.append((PersistableEvent) depositEvent);
+                return new ItemPaymentCompleted(request.sellerId(), request.price(), request.buyerId());
+            }
+            return depositEvent;
+        }
+        return chargeEvent;
     }
 }

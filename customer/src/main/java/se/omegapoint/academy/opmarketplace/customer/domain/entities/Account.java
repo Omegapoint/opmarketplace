@@ -1,18 +1,13 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.entities;
 
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreditDepositRequested;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountDeletionRequested;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChangeRequested;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreditDeposited;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountDeleted;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Credit;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 
 import static se.sawano.java.commons.lang.validate.Validate.*;
+
 
 public class Account {
     private final Email email;
@@ -62,5 +57,17 @@ public class Account {
         notNull(request);
         isTrue(this.email.equals(request.email()));
         return new AccountCreditDeposited(this.email(), request.credits());
+    }
+
+    public AccountCreditWithdrawn charge(ItemOrdered request){
+        notNull(request);
+        isTrue(this.email.equals(request.buyerId()));
+        return new AccountCreditWithdrawn(this.email, request.price());
+    }
+
+    public AccountCreditDeposited depositCredits(ItemOrdered request){
+        notNull(request);
+        isTrue(this.email.equals(request.sellerId()));
+        return new AccountCreditDeposited(this.email(), request.price());
     }
 }

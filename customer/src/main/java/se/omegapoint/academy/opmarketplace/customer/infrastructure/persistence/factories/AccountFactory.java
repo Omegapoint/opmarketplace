@@ -1,11 +1,8 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.factories;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreditDeposited;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.DomainEvent;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Credit;
 
 import java.util.List;
@@ -28,12 +25,10 @@ public class AccountFactory {
                 mutate((AccountUserChanged)e);
             else if (e instanceof AccountCreditDeposited)
                 mutate((AccountCreditDeposited)e);
+            else if (e instanceof AccountCreditWithdrawn)
+                mutate((AccountCreditWithdrawn)e);
         }
         return account;
-    }
-
-    private static void mutate(AccountCreditDeposited creditDeposited) {
-        account = new Account(account.email(), account.user(), account.vault().addCredits(creditDeposited.credit()));
     }
 
     private static void mutate(AccountCreated accountCreated) {
@@ -42,5 +37,13 @@ public class AccountFactory {
 
     private static void mutate(AccountUserChanged userChanged) {
         account = new Account(account.email(), userChanged.user(), account.vault());
+    }
+
+    private static void mutate(AccountCreditDeposited creditDeposited) {
+        account = new Account(account.email(), account.user(), account.vault().addCredits(creditDeposited.credit()));
+    }
+
+    private static void mutate(AccountCreditWithdrawn creditWithdrawn) {
+        account = new Account(account.email(), account.user(), account.vault().removeCredits(creditWithdrawn.credit()));
     }
 }

@@ -62,6 +62,10 @@ public class EventRemotePublisherService implements EventPublisher {
             dispatch(new AccountCreditDepositedDTO((AccountCreditDeposited) event, requestId));
         } else if (event instanceof AccountCreditNotDeposited) {
             dispatch(new AccountCreditNotDepositedDTO((AccountCreditNotDeposited) event, requestId));
+        } else if (event instanceof ItemPaymentCompleted) {
+            dispatch(new ItemPaymentCompletedDTO((ItemPaymentCompleted) event, requestId));
+        } else if (event instanceof ItemPaymentNotCompleted) {
+            dispatch(new ItemPaymentNotCompletedDTO((ItemPaymentNotCompleted) event, requestId));
         } else {
             throw new IllegalStateException("Domain Event not recognized.");
         }

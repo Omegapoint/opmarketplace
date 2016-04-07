@@ -21,6 +21,10 @@ public final class Credit {
         return new Credit(amount + toAdd.amount);
     }
 
+    public Credit removeCredits(Credit toRemove){
+        return new Credit(amount - toRemove.amount);
+    }
+
     public int amount(){
         return this.amount;
     }

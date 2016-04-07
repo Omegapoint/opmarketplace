@@ -22,15 +22,18 @@ public class AccountEventStore implements AccountRepository {
     private final AccountUserChangedJPA userChangedRepository;
     private final AccountDeletedJPA deleteAccountRepository;
     private final AccountCreditDepositedJPA creditDepositRepository;
+    private final AccountCreditWithdrawnJPA creditWithdrawnRepository;
 
     public AccountEventStore(AccountCreatedJPA createAccountRepository,
                              AccountUserChangedJPA userChangedRepository,
                              AccountDeletedJPA deleteAccountRepository,
-                             AccountCreditDepositedJPA creditDepositRepository) {
+                             AccountCreditDepositedJPA creditDepositRepository,
+                             AccountCreditWithdrawnJPA creditWithdrawnRepository) {
         this.createAccountRepository = notNull(createAccountRepository);
         this.userChangedRepository = notNull(userChangedRepository);
         this.deleteAccountRepository = notNull(deleteAccountRepository);
         this.creditDepositRepository = notNull(creditDepositRepository);
+        this.creditWithdrawnRepository = notNull(creditWithdrawnRepository);
     }
 
     @Override
@@ -53,6 +56,7 @@ public class AccountEventStore implements AccountRepository {
 
         events.addAll(retrieveUserChangedEvents(email));
         events.addAll(retrieveCreditDepositedEvents(email));
+        events.addAll(retrieveCreditWithdrawnEvents(email));
 
         Collections.sort(events, new PersistableEventComparator());
 
@@ -81,6 +85,12 @@ public class AccountEventStore implements AccountRepository {
                 .collect(Collectors.toList());
     }
 
+    private List<AccountCreditWithdrawn> retrieveCreditWithdrawnEvents(Email email) {
+        return creditWithdrawnRepository.findByEmailOrderByTime(email.address()).stream()
+                .map(AccountCreditWithdrawnModel::domainEvent)
+                .collect(Collectors.toList());
+    }
+
     public void append(PersistableEvent event) {
         notNull(event);
         if (event instanceof AccountCreated) {
@@ -91,7 +101,9 @@ public class AccountEventStore implements AccountRepository {
             deleteAccountRepository.save(new AccountDeletedModel((AccountDeleted) event));
         } else if (event instanceof AccountCreditDeposited) {
             creditDepositRepository.save(new AccountCreditDepositedModel((AccountCreditDeposited) event));
-        } else {
+        } else if (event instanceof AccountCreditWithdrawn) {
+            creditWithdrawnRepository.save(new AccountCreditWithdrawnModel((AccountCreditWithdrawn) event));
+        }  else {
             throw new IllegalArgumentException("Unsupported persistable event");
         }
     }

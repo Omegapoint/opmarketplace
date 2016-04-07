@@ -42,7 +42,12 @@ public class MainConfiguration {
     AccountEventStore createAccountEventStore(AccountCreatedJPA accountCreatedRepository,
                                               AccountUserChangedJPA accountUserChangedRepository,
                                               AccountDeletedJPA accountDeletedRepository,
-                                              AccountCreditDepositedJPA creditDepositRepository){
-        return new AccountEventStore(accountCreatedRepository, accountUserChangedRepository, accountDeletedRepository, creditDepositRepository);
+                                              AccountCreditDepositedJPA creditDepositRepository,
+                                              AccountCreditWithdrawnJPA creditWithdrawnRepository){
+        return new AccountEventStore(accountCreatedRepository,
+                accountUserChangedRepository,
+                accountDeletedRepository,
+                creditDepositRepository,
+                creditWithdrawnRepository);
     }
 }
