@@ -43,16 +43,16 @@ public class AccountTests {
 
     @Test
     public void should_create_an_account() throws Exception {
-       createUser("test1@test.com", "fistName", "lastName")
+        TestRequests.createUser("test1@test.com", "fistName", "lastName", mockMvc)
                .andExpect(status().isOk())
                .andExpect(content().string(""));
     }
 
     @Test
     public void should_not_create_duplicate_account() throws Exception {
-        createUser("test2@test.com", "fistName", "lastName")
+        TestRequests.createUser("test2@test.com", "fistName", "lastName", mockMvc)
                 .andExpect(status().isOk());
-        createUser("test2@test.com", "fistName", "lastName")
+        TestRequests.createUser("test2@test.com", "fistName", "lastName", mockMvc)
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("{\"reason\":\"Account already exists.\"}"));
 
@@ -60,31 +60,31 @@ public class AccountTests {
 
     @Test
     public void should_not_create_account_with_ill_formatted_email() throws Exception {
-        createUser("@test.com", "fistName", "lastName")
+        TestRequests.createUser("@test.com", "fistName", "lastName", mockMvc)
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("{\"reason\":\"Illegally formatted email.\"}"));
     }
 
     @Test
     public void should_get_correct_account() throws Exception {
-        createUser("test3@test.com", "firstName", "lastName");
+        TestRequests.createUser("test3@test.com", "firstName", "lastName", mockMvc);
 
-        String expectedResult = userJson("test3@test.com", "firstName", "lastName");
-        getUser("test3@test.com")
+        String expectedResult = TestRequests.userJson("test3@test.com", "firstName", "lastName");
+        TestRequests.getUser("test3@test.com", mockMvc)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email", Matchers.hasValue("test3@test.com")));
     }
 
     @Test
     public void should_not_get_non_existing_account() throws Exception {
-        getUser("should_not_exist@test.com")
+        TestRequests.getUser("should_not_exist@test.com", mockMvc)
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
     }
 
     @Test
     public void should_not_get_account_with_ill_formatted_email() throws Exception {
-        getUser("@test.com")
+        TestRequests.getUser("@test.com", mockMvc)
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("{\"reason\":\"Illegally formatted email.\"}"));
     }
@@ -92,151 +92,56 @@ public class AccountTests {
     @Test
     public void should_change_user() throws Exception {
         try {
-            createUser("test4@test.com", "fistName", "lastName")
+            TestRequests.createUser("test4@test.com", "fistName", "lastName", mockMvc)
                     .andExpect(status().isOk());
         } catch (IllegalStateException e){}
-        changeUser("test4@test.com", "changedFistName", "changedLastName")
+        TestRequests.changeUser("test4@test.com", "changedFistName", "changedLastName", mockMvc)
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
-        getUser("test4@test.com")
+        TestRequests.getUser("test4@test.com", mockMvc)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email", Matchers.hasValue("test4@test.com")));
     }
 
     @Test
     public void should_delete_user() throws Exception {
-        createUser("test5@test.com", "fistName", "lastName");
-        deleteUser("test5@test.com")
+        TestRequests.createUser("test5@test.com", "fistName", "lastName", mockMvc);
+        TestRequests.deleteUser("test5@test.com", mockMvc)
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
-        getUser("test5@test.com")
+        TestRequests.getUser("test5@test.com", mockMvc)
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
     }
 
     @Test
     public void should_not_delete_non_existing_user() throws Exception {
-        deleteUser("nonexistent@test.com")
+        TestRequests.deleteUser("nonexistent@test.com", mockMvc)
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("{\"reason\":\"Account does not exist.\"}"));
     }
 
     @Test
     public void should_add_credits_to_account() throws Exception {
-        createUser("toBe@rich.com", "ToBe", "Rich")
+        TestRequests.createUser("toBe@rich.com", "ToBe", "Rich", mockMvc)
                 .andExpect(status().isOk());
-        addCredit("toBe@rich.com", 10)
+        TestRequests.addCredit("toBe@rich.com", 10, mockMvc)
                 .andExpect(status().isOk());
-        addCredit("toBe@rich.com", 20)
+        TestRequests.addCredit("toBe@rich.com", 20, mockMvc)
                 .andExpect(status().isOk());
-        getUser("toBe@rich.com")
+        TestRequests.getUser("toBe@rich.com", mockMvc)
                 .andExpect(jsonPath("$.vault", Matchers.hasValue(30)));
     }
 
     @Test
     public void should_not_add_negative_credits_to_account() throws Exception {
-        createUser("toRemain@poor.com", "ToBe", "Rich")
+        TestRequests.createUser("toRemain@poor.com", "ToBe", "Rich", mockMvc)
                 .andExpect(status().isOk());
-        addCredit("toRemain@poor.com", -1)
+        TestRequests.addCredit("toRemain@poor.com", -1, mockMvc)
                 .andExpect(status().isBadRequest());
-        getUser("toRemain@poor.com")
+        TestRequests.getUser("toRemain@poor.com", mockMvc)
                 .andExpect(jsonPath("$.vault", Matchers.hasValue(0)));
-    }
-
-    /// HELPER METHODS ///
-    private ResultActions deleteUser(String email) throws Exception {
-        MvcResult mvcResult = mockMvc.perform(delete("/accounts")
-                .param("email", email)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    public ResultActions createUser(String email, String firstName, String lastName) throws Exception {
-        String content = userJson(email, firstName, lastName);
-        MvcResult mvcResult = mockMvc.perform(post("/accounts")
-                .contentType(APPLICATION_JSON)
-                .content(content)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    public ResultActions getUser(String email) throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/accounts")
-                .param("email", email)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    private ResultActions changeUser(String email, String firstName, String lastName) throws Exception {
-        String content = userJson(email, firstName, lastName);
-        MvcResult mvcResult = mockMvc.perform(put("/accounts")
-                .contentType(APPLICATION_JSON)
-                .content(content)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    private ResultActions addCredit(String email, int credit) throws Exception {
-        String content = creditJson(email, credit);
-        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit")
-                .contentType(APPLICATION_JSON)
-                .content(content)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    private String userJson(String email, String firstName, String lastName) throws Exception {
-        String content = "{" +
-                    "\"email\":{" +
-                        "\"address\":\"" + email + "\"" +
-                    "}," +
-                    "\"user\":{" +
-                        "\"firstName\":\"" + firstName + "\"," +
-                        "\"lastName\":\"" + lastName + "\"" +
-                    "}" +
-                "}";
-        new ObjectMapper().readValue(content, AccountUserChangeRequestedDTO.class);
-        return content;
-    }
-
-    private String creditJson(String email, int credit) throws Exception {
-        String content = "{" +
-                    "\"email\":{" +
-                        "\"address\":\"" + email + "\"" +
-                    "}," +
-                    "\"credit\":{" +
-                        "\"amount\":" + credit +
-                    "}" +
-                "}";
-        new ObjectMapper().readValue(content, AccountCreditDepositRequestedDTO.class);
-        return content;
     }
 }

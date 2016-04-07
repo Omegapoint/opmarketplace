@@ -44,10 +44,9 @@ public class ItemTests {
         mockMvc = webAppContextSetup(wac).build();
     }
 
-
     @Test
     public void should_create_an_item() throws Exception {
-        createItem("Create", "Create", 100, 1, "hej@hej.com")
+        TestRequests.createItem("Create", "Create", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", Matchers.hasValue("Create")))
                 .andExpect(jsonPath("$.description", Matchers.hasValue("Create")))
@@ -58,15 +57,15 @@ public class ItemTests {
 
     @Test
     public void should_find_three_matches() throws Exception {
-        createItem("Hej", "Hej", 100, 1, "hej@hej.com")
+        TestRequests.createItem("Hej", "Hej", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk());
-        createItem("What hej", "no match", 100, 1, "hej@hej.com")
+        TestRequests.createItem("What hej", "no match", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk());
-        createItem("No match", "Dude hej", 100, 1, "hej@hej.com")
+        TestRequests.createItem("No match", "Dude hej", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk());
-        createItem("no match", "no match he j", 100, 1, "hej@hej.com")
+        TestRequests.createItem("no match", "no match he j", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk());
-        searchItems("hej")
+        TestRequests.searchItems("hej", mockMvc)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", Matchers.hasSize(3)))
@@ -75,7 +74,7 @@ public class ItemTests {
 
     @Test
     public void should_change_one_item() throws Exception {
-        MvcResult result = createItem("ToBeChanged", "ToBeChanged", 100, 1, "hej@hej.com")
+        MvcResult result = TestRequests.createItem("ToBeChanged", "ToBeChanged", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", Matchers.hasValue("ToBeChanged")))
                 .andExpect(jsonPath("$.description", Matchers.hasValue("ToBeChanged")))
@@ -85,13 +84,13 @@ public class ItemTests {
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         ItemDTO item = new ObjectMapper().readValue(content, ItemDTO.class);
-        changeItem(item.id, "Changed", "Changed", 200, 2)
+        TestRequests.changeItem(item.id, "Changed", "Changed", 200, 2, mockMvc)
                 .andExpect(jsonPath("$.title", Matchers.hasValue("Changed")))
                 .andExpect(jsonPath("$.description", Matchers.hasValue("Changed")))
                 .andExpect(jsonPath("$.price", Matchers.hasValue(200)))
                 .andExpect(jsonPath("$.supply", Matchers.hasValue(2)))
                 .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")));
-        getItem(item.id)
+        TestRequests.getItem(item.id, mockMvc)
                 .andExpect(jsonPath("$.title", Matchers.hasValue("Changed")))
                 .andExpect(jsonPath("$.description", Matchers.hasValue("Changed")))
                 .andExpect(jsonPath("$.price", Matchers.hasValue(200)))
@@ -101,21 +100,21 @@ public class ItemTests {
 
     @Test
     public void should_not_change_one_item_due_to_wrong_id_supplied() throws Exception {
-        createItem("NotToBeChanged", "NotToBeChanged", 100, 1, "hej@hej.com")
+        TestRequests.createItem("NotToBeChanged", "NotToBeChanged", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", Matchers.hasValue("NotToBeChanged")))
                 .andExpect(jsonPath("$.description", Matchers.hasValue("NotToBeChanged")))
                 .andExpect(jsonPath("$.price", Matchers.hasValue(100)))
                 .andExpect(jsonPath("$.supply", Matchers.hasValue(1)))
                 .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")));
-        changeItem(UUID.randomUUID().toString(), "Changed", "Changed", 200, 2)
+        TestRequests.changeItem(UUID.randomUUID().toString(), "Changed", "Changed", 200, 2, mockMvc)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$", Matchers.hasValue("Item does not exist.")));
     }
 
     @Test
     public void should_not_change_one_item_due_to_illegal_title() throws Exception {
-        MvcResult result = createItem("NotToBeChanged", "NotToBeChanged", 100, 1, "hej@hej.com")
+        MvcResult result = TestRequests.createItem("NotToBeChanged", "NotToBeChanged", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", Matchers.hasValue("NotToBeChanged")))
                 .andExpect(jsonPath("$.description", Matchers.hasValue("NotToBeChanged")))
@@ -125,231 +124,35 @@ public class ItemTests {
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         ItemDTO item = new ObjectMapper().readValue(content, ItemDTO.class);
-        changeItem(item.id, "<Changed", "Changed", 200, 2)
+        TestRequests.changeItem(item.id, "<Changed", "Changed", 200, 2, mockMvc)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$", Matchers.hasValue("Title can only contain letters, digits and spaces")));
     }
 
     @Test
     public void should_purchase_item() throws Exception {
-        createUser("master@seller.com", "master", "seller")
+        TestRequests.createUser("master@seller.com", "master", "seller", mockMvc)
                 .andExpect(status().isOk());
 
-        createUser("master@buyer.com", "master", "buyer")
+        TestRequests.createUser("master@buyer.com", "master", "buyer", mockMvc)
                 .andExpect(status().isOk());
 
-        addCredit("master@buyer.com", 400)
+        TestRequests.addCredit("master@buyer.com", 400, mockMvc)
                 .andExpect(status().isOk());
 
-        MvcResult result = createItem("ToBeBought", "ToBeBought", 100, 8, "master@seller.com")
+        MvcResult result = TestRequests.createItem("ToBeBought", "ToBeBought", 100, 8, "master@seller.com", mockMvc)
                 .andExpect(status().isOk())
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
         ItemDTO item = new ObjectMapper().readValue(content, ItemDTO.class);
-        purchaseItem(item.id, 4, "master@buyer.com")
+        TestRequests.purchaseItem(item.id, 4, "master@buyer.com", mockMvc)
                 .andExpect(status().isOk());
 
-        getUser("master@buyer.com")
+        TestRequests.getUser("master@buyer.com", mockMvc)
                 .andExpect(jsonPath("$.vault", Matchers.hasValue(0)));
 
-        getUser("master@seller.com")
+        TestRequests.getUser("master@seller.com", mockMvc)
                 .andExpect(jsonPath("$.vault", Matchers.hasValue(400)));
-    }
-
-    private ResultActions createItem(String title, String description, int price, int quantity, String seller) throws Exception {
-        String content = itemCreationJson(title, description, price, quantity, seller);
-        MvcResult mvcResult = mockMvc.perform(post("/items")
-                .contentType(APPLICATION_JSON)
-                .content(content)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    private ResultActions getItem(String id) throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/items")
-                .contentType(APPLICATION_JSON)
-                .param("id", id)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    private String itemCreationJson(String title, String description, int price, int quantity, String seller) throws Exception {
-        String content = "{" +
-                    "\"title\":{" +
-                        "\"text\":\"" + title + "\"" +
-                    "}," +
-                    "\"description\":{" +
-                        "\"text\":\"" + description + "\"" +
-                    "}," +
-                    "\"price\":{" +
-                        "\"amount\":" + price +
-                    "}," +
-                    "\"supply\":{" +
-                        "\"amount\":" + quantity +
-                    "}," +
-                    "\"seller\":{" +
-                        "\"address\":\"" + seller + "\"" +
-                    "}" +
-                "}";
-        // Validate content
-        new ObjectMapper().readValue(content, ItemCreationRequestedDTO.class);
-        return content;
-    }
-
-    private ResultActions searchItems(String query) throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/items/search/")
-                .param("query", query)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    private ResultActions changeItem(String id, String title, String description, int price, int quantity) throws Exception {
-        String content = itemChangeJson(id, title, description, price, quantity);
-        MvcResult mvcResult = mockMvc.perform(put("/items")
-                .contentType(APPLICATION_JSON)
-                .content(content)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    private String itemChangeJson(String id, String title, String description, int price, int quantity) throws Exception {
-        String content =  "{" +
-                    "\"id\":\"" + id + "\"," +
-                    "\"title\":{" +
-                        "\"text\":\"" + title + "\"" +
-                    "}," +
-                    "\"description\":{" +
-                        "\"text\":\"" + description + "\"" +
-                    "}," +
-                    "\"price\":{" +
-                        "\"amount\":" + price +
-                    "}," +
-                    "\"supply\":{" +
-                        "\"amount\":" + quantity +
-                    "}" +
-                "}";
-        // Validate content
-        new ObjectMapper().readValue(content, ItemChangeRequestedDTO.class);
-        return content;
-    }
-
-    private ResultActions purchaseItem(String itemId, int quantity, String buyerId) throws Exception {
-        String content = itemPurchaseRequestJson(itemId, quantity, buyerId);
-        MvcResult mvcResult = mockMvc.perform(post("/items/purchase")
-                .contentType(APPLICATION_JSON)
-                .content(content)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    private String itemPurchaseRequestJson(String itemId, int quantity, String buyerId) throws Exception {
-        String content =
-                "{" +
-                    "\"itemId\":\"" + itemId + "\"," +
-                    "\"quantity\":{" +
-                        "\"amount\":" + quantity +
-                    "}," +
-                    "\"buyerId\":{" +
-                        "\"address\":\"" + buyerId + "\"" +
-                    "}" +
-                "}";
-        // Validate content
-        new ObjectMapper().readValue(content, ItemPurchaseRequestedDTO.class);
-        return content;
-    }
-
-    public ResultActions createUser(String email, String firstName, String lastName) throws Exception {
-        String content = userJson(email, firstName, lastName);
-        MvcResult mvcResult = mockMvc.perform(post("/accounts")
-                .contentType(APPLICATION_JSON)
-                .content(content)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    public ResultActions getUser(String email) throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/accounts")
-                .param("email", email)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    private ResultActions addCredit(String email, int credit) throws Exception {
-        String content = creditJson(email, credit);
-        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit")
-                .contentType(APPLICATION_JSON)
-                .content(content)
-        )
-                .andExpect(request().asyncStarted())
-                .andReturn();
-
-        mvcResult.getAsyncResult();
-
-        return mockMvc.perform(asyncDispatch(mvcResult));
-    }
-
-    private String creditJson(String email, int credit) throws Exception {
-        String content =
-                "{" +
-                    "\"email\":{" +
-                        "\"address\":\"" + email + "\"" +
-                    "}," +
-                    "\"credit\":{" +
-                        "\"amount\":" + credit +
-                    "}" +
-                "}";
-        new ObjectMapper().readValue(content, AccountCreditDepositRequestedDTO.class);
-        return content;
-    }
-
-    private String userJson(String email, String firstName, String lastName) throws Exception {
-        String content =
-                "{" +
-                    "\"email\":{" +
-                        "\"address\":\"" + email + "\"" +
-                    "}," +
-                    "\"user\":{" +
-                        "\"firstName\":\"" + firstName + "\"," +
-                        "\"lastName\":\"" + lastName + "\"" +
-                    "}" +
-                "}";
-        new ObjectMapper().readValue(content, AccountUserChangeRequestedDTO.class);
-        return content;
     }
 }
