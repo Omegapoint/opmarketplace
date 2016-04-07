@@ -14,8 +14,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountCreditDepositRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountUserChangeRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemChangeRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemCreationRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemPurchaseRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.ItemDTO;
 
 import java.util.UUID;
@@ -127,6 +130,33 @@ public class ItemTests {
                 .andExpect(jsonPath("$", Matchers.hasValue("Title can only contain letters, digits and spaces")));
     }
 
+    @Test
+    public void should_purchase_item() throws Exception {
+        createUser("master@seller.com", "master", "seller")
+                .andExpect(status().isOk());
+
+        createUser("master@buyer.com", "master", "buyer")
+                .andExpect(status().isOk());
+
+        addCredit("master@buyer.com", 400)
+                .andExpect(status().isOk());
+
+        MvcResult result = createItem("ToBeBought", "ToBeBought", 100, 8, "master@seller.com")
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        ItemDTO item = new ObjectMapper().readValue(content, ItemDTO.class);
+        purchaseItem(item.id, 4, "master@buyer.com")
+                .andExpect(status().isOk());
+
+        getUser("master@buyer.com")
+                .andExpect(jsonPath("$.vault", Matchers.hasValue(0)));
+
+        getUser("master@seller.com")
+                .andExpect(jsonPath("$.vault", Matchers.hasValue(400)));
+    }
+
     private ResultActions createItem(String title, String description, int price, int quantity, String seller) throws Exception {
         String content = itemCreationJson(title, description, price, quantity, seller);
         MvcResult mvcResult = mockMvc.perform(post("/items")
@@ -221,6 +251,105 @@ public class ItemTests {
                 "}";
         // Validate content
         new ObjectMapper().readValue(content, ItemChangeRequestedDTO.class);
+        return content;
+    }
+
+    private ResultActions purchaseItem(String itemId, int quantity, String buyerId) throws Exception {
+        String content = itemPurchaseRequestJson(itemId, quantity, buyerId);
+        MvcResult mvcResult = mockMvc.perform(post("/items/purchase")
+                .contentType(APPLICATION_JSON)
+                .content(content)
+        )
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvcResult.getAsyncResult();
+
+        return mockMvc.perform(asyncDispatch(mvcResult));
+    }
+
+    private String itemPurchaseRequestJson(String itemId, int quantity, String buyerId) throws Exception {
+        String content =
+                "{" +
+                    "\"itemId\":\"" + itemId + "\"," +
+                    "\"quantity\":{" +
+                        "\"amount\":" + quantity +
+                    "}," +
+                    "\"buyerId\":{" +
+                        "\"address\":\"" + buyerId + "\"" +
+                    "}" +
+                "}";
+        // Validate content
+        new ObjectMapper().readValue(content, ItemPurchaseRequestedDTO.class);
+        return content;
+    }
+
+    public ResultActions createUser(String email, String firstName, String lastName) throws Exception {
+        String content = userJson(email, firstName, lastName);
+        MvcResult mvcResult = mockMvc.perform(post("/accounts")
+                .contentType(APPLICATION_JSON)
+                .content(content)
+        )
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvcResult.getAsyncResult();
+
+        return mockMvc.perform(asyncDispatch(mvcResult));
+    }
+
+    public ResultActions getUser(String email) throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/accounts")
+                .param("email", email)
+        )
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvcResult.getAsyncResult();
+
+        return mockMvc.perform(asyncDispatch(mvcResult));
+    }
+
+    private ResultActions addCredit(String email, int credit) throws Exception {
+        String content = creditJson(email, credit);
+        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit")
+                .contentType(APPLICATION_JSON)
+                .content(content)
+        )
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvcResult.getAsyncResult();
+
+        return mockMvc.perform(asyncDispatch(mvcResult));
+    }
+
+    private String creditJson(String email, int credit) throws Exception {
+        String content =
+                "{" +
+                    "\"email\":{" +
+                        "\"address\":\"" + email + "\"" +
+                    "}," +
+                    "\"credit\":{" +
+                        "\"amount\":" + credit +
+                    "}" +
+                "}";
+        new ObjectMapper().readValue(content, AccountCreditDepositRequestedDTO.class);
+        return content;
+    }
+
+    private String userJson(String email, String firstName, String lastName) throws Exception {
+        String content =
+                "{" +
+                    "\"email\":{" +
+                        "\"address\":\"" + email + "\"" +
+                    "}," +
+                    "\"user\":{" +
+                        "\"firstName\":\"" + firstName + "\"," +
+                        "\"lastName\":\"" + lastName + "\"" +
+                    "}" +
+                "}";
+        new ObjectMapper().readValue(content, AccountUserChangeRequestedDTO.class);
         return content;
     }
 }

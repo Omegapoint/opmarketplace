@@ -159,7 +159,7 @@ public class AccountTests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    private ResultActions createUser(String email, String firstName, String lastName) throws Exception {
+    public ResultActions createUser(String email, String firstName, String lastName) throws Exception {
         String content = userJson(email, firstName, lastName);
         MvcResult mvcResult = mockMvc.perform(post("/accounts")
                 .contentType(APPLICATION_JSON)
@@ -173,7 +173,7 @@ public class AccountTests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    private ResultActions getUser(String email) throws Exception {
+    public ResultActions getUser(String email) throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/accounts")
                 .param("email", email)
         )

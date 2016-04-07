@@ -73,7 +73,7 @@ public class ItemGateway {
         return result;
     }
 
-    @RequestMapping(value = "/buy", method = POST, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/purchase", method = POST, produces = APPLICATION_JSON_VALUE)
     public DeferredResult<ResponseEntity<String>> createItem(@RequestBody final ItemPurchaseRequestedDTO newItem) {
         notNull(newItem);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
