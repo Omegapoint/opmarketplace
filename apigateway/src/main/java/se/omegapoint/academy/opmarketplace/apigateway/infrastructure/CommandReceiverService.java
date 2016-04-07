@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.omegapoint.academy.opmarketplace.apigateway.application.RuleEngine;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.commands.DisableFeatureDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.commands.ValidateUsersDTO;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/command")
@@ -30,11 +32,17 @@ public class CommandReceiverService {
         try {
             switch (commandType) {
                 case DisableFeatureDTO.TYPE:
-                    DisableFeatureDTO command = mapper.readValue(data, DisableFeatureDTO.class);
-                    ruleEngine.deny(command.eventName, command.noSeconds);
+                    DisableFeatureDTO disableCommand = mapper.readValue(data, DisableFeatureDTO.class);
+                    ruleEngine.deny(disableCommand.eventName, disableCommand.noSeconds);
+                    break;
+                case ValidateUsersDTO.TYPE:
+                    ValidateUsersDTO validateUsersCommand = mapper.readValue(data, ValidateUsersDTO.class);
+                    System.out.println(Arrays.toString(validateUsersCommand.users.toArray()));
+                    // TODO: 07/04/16 Take action
                     break;
                 default:
                     System.err.println("Received unknown command: " + commandType);
+                    break;
             }
         } catch (IOException e) {
             e.printStackTrace();
