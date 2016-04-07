@@ -12,13 +12,14 @@ import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.RemoteCommand;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.Command;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.DisableFeatureDTO;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-public class EventPublisher implements Consumer<Event<DisableFeatureDTO>> {
+public class EventPublisher implements Consumer<Event<Command>> {
 
     @Value("${url.apigateway.command}")
     private URL commandURL;
@@ -32,8 +33,8 @@ public class EventPublisher implements Consumer<Event<DisableFeatureDTO>> {
     }
 
     @Override
-    public void accept(Event<DisableFeatureDTO> event) {
-        DisableFeatureDTO disableEvent = event.getData();
+    public void accept(Event<Command> event) {
+        Command disableEvent = event.getData();
         publish(new RemoteCommand(disableEvent));
     }
 
@@ -49,7 +50,7 @@ public class EventPublisher implements Consumer<Event<DisableFeatureDTO>> {
             // TODO: 04/04/16 change to synch client
             httpAsyncClient.execute(httpPost, null);
 
-            System.out.printf("DisableFeatureDTO command sent to %s%n", commandURL);
+            System.out.printf("Command: %s sent to %s%n", remoteEvent.type, commandURL);
             System.out.println(new ObjectMapper().writeValueAsString(remoteEvent));
 
         } catch (URISyntaxException | UnsupportedEncodingException | JsonProcessingException e) {

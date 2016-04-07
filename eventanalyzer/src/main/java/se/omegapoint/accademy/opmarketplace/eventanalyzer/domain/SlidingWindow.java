@@ -15,12 +15,12 @@ public class SlidingWindow {
         window = new LocalTime[size];
     }
 
-    public boolean put() {
+    public boolean isFull() {
         LocalTime now = LocalTime.now();
         LocalTime then = window[counter % window.length];
         window[counter % window.length] = now;
         counter++;
 
-        return then == null || now.minusNanos(MILLISECONDS.toNanos(milliSecondInterval)).isAfter(then);
+        return then != null && now.minusNanos(MILLISECONDS.toNanos(milliSecondInterval)).isBefore(then);
     }
 }

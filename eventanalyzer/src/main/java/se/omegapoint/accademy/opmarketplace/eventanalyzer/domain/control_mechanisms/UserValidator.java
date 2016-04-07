@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,48 +25,30 @@ public class UserValidator {
     @Value("${url.customer.users}")
     private URI fetchUsersURL;
 
-    @Value("${url.apigateway.users}")
-    private URI publishUsersURL;
-
     CloseableHttpClient httpClient;
     ObjectMapper objectMapper;
-    List<String> users;
 
     public UserValidator() {
         httpClient = HttpClients.createDefault();
         objectMapper = new ObjectMapper();
     }
 
-    public void fetchList(LocalDateTime memberSince) {
+    public List<String> fetchList(LocalDateTime memberSince) {
         try {
 
             URIBuilder builder = new URIBuilder(fetchUsersURL);
             HttpGet httpGet = new HttpGet(builder
                     .addParameter("member_since", memberSince.toString())
+                    // TODO: 07/04/16 Implement min spend
                     .addParameter("min_spend", "0")
                     .build());
 
             CloseableHttpResponse response = httpClient.execute(httpGet);
-            users = objectMapper.readValue(response.getEntity().getContent(), new TypeReference<List<String>>(){});
+            return objectMapper.readValue(response.getEntity().getContent(), new TypeReference<List<String>>(){});
 
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void publishList() {
-        try {
-
-            StringEntity content = new StringEntity(objectMapper.writeValueAsString(users));
-
-            HttpPost httpPost = new HttpPost(publishUsersURL);
-            httpPost.addHeader("Content-Type", "application/json");
-            httpPost.setEntity(content);
-
-            httpClient.execute(httpPost).close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 }
