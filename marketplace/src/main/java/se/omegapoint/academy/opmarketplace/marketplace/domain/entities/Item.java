@@ -10,7 +10,6 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.It
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
-import javax.persistence.criteria.Order;
 import java.util.UUID;
 
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
@@ -75,7 +74,7 @@ public final class Item extends IdentifiedDomainObject {
     public ItemOrdered handle(ItemPurchaseRequested request){
         isTrue(notNull(request).itemId().equals(id()));
         try {
-            this.supply().deduct(request.quantity());
+            this.supply().remove(request.quantity());
         } catch (IllegalArgumentValidationException e){
             throw new IllegalArgumentValidationException("Insufficient supply.");
         }

@@ -11,9 +11,11 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.factories.
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemChangedEntity;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemCreatedEntity;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemOrderEntity;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemOrderReversedEntity;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemChangedJPARepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemCreatedJPARepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemOrderJPARepository;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemOrderReverseJPARepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,13 +29,16 @@ public class ItemEventStore implements ItemRepository {
     private final ItemCreatedJPARepository itemCreatedRepository;
     private final ItemChangedJPARepository itemChangedRepository;
     private final ItemOrderJPARepository itemSupplyDeductedRepository;
+    private final ItemOrderReverseJPARepository itemOrderReverseRepository;
 
     public ItemEventStore(ItemCreatedJPARepository itemCreatedRepository,
                           ItemChangedJPARepository itemChangedRepository,
-                          ItemOrderJPARepository itemSupplyDeductedRepository){
+                          ItemOrderJPARepository itemSupplyDeductedRepository,
+                          ItemOrderReverseJPARepository itemOrderReverseRepository){
         this.itemCreatedRepository = notNull(itemCreatedRepository);
         this.itemChangedRepository = notNull(itemChangedRepository);
-        this.itemSupplyDeductedRepository = itemSupplyDeductedRepository;
+        this.itemSupplyDeductedRepository = notNull(itemSupplyDeductedRepository);
+        this.itemOrderReverseRepository = itemOrderReverseRepository;
     }
 
     @Override
@@ -50,7 +55,8 @@ public class ItemEventStore implements ItemRepository {
         }
 
         events.addAll(retrieveChangedEvent(itemId));
-        events.addAll(retrieveSupplyDeductedEvent(itemId));
+        events.addAll(retrieveItemOrderedEvents(itemId));
+        events.addAll(retrieveItemOrderReverseEvents(itemId));
         Collections.sort(events, new PersistableEventComparator());
 
         return new ItemObtained(ItemFactory.fromPersistableEvents(events));
@@ -76,11 +82,16 @@ public class ItemEventStore implements ItemRepository {
 
         List<Item> items = new ArrayList<>();
         for (UUID id : matches.keySet()){
-            matches.get(id).addAll(retrieveSupplyDeductedEvent(id.toString()));
+            matches.get(id).addAll(retrieveItemOrderedEvents(id.toString()));
+            matches.get(id).addAll(retrieveItemOrderReverseEvents(id.toString()));
             Collections.sort(matches.get(id), new PersistableEventComparator());
             items.add(ItemFactory.fromPersistableEvents(matches.get(id)));
         }
         return new ItemSearchCompleted(items);
+    }
+    @Override
+    public Optional<ItemOrdered> order(UUID orderId){
+        return retrieveItemOrderedEvent(orderId.toString());
     }
 
     @Override
@@ -97,6 +108,8 @@ public class ItemEventStore implements ItemRepository {
             add((ItemChanged) event);
         } else if (event instanceof ItemOrdered){
             add((ItemOrdered) event);
+        } else if (event instanceof ItemOrderReversed){
+            add((ItemOrderReversed) event);
         }
         return event;
     }
@@ -121,14 +134,25 @@ public class ItemEventStore implements ItemRepository {
                 .map(ItemChangedEntity::domainObject).collect(Collectors.toList());
     }
 
-    private List<ItemOrdered> retrieveSupplyDeductedEvent(String id) {
-        return itemSupplyDeductedRepository.findById(id).stream()
+    private Optional<ItemOrdered> retrieveItemOrderedEvent(String orderId) {
+        return itemSupplyDeductedRepository.findByOrderId(orderId).stream()
+                .map(ItemOrderEntity::domainObject).findAny();
+    }
+
+    private List<ItemOrdered> retrieveItemOrderedEvents(String itemId) {
+        return itemSupplyDeductedRepository.findById(itemId).stream()
                 .map(ItemOrderEntity::domainObject).collect(Collectors.toList());
+    }
+
+    private List<ItemOrderReversed> retrieveItemOrderReverseEvents(String itemId) {
+        return itemOrderReverseRepository.findByItemId(itemId).stream()
+                .map(ItemOrderReversedEntity::domainObject).collect(Collectors.toList());
     }
 
     private void add(ItemCreated itemCreated){
         notNull(itemCreated);
-        itemCreatedRepository.save(new ItemCreatedEntity(itemCreated.item().id().toString(),
+        itemCreatedRepository.save(new ItemCreatedEntity(
+                itemCreated.item().id().toString(),
                 itemCreated.item().title().text(),
                 itemCreated.item().description().text(),
                 itemCreated.item().price().amount(),
@@ -139,7 +163,8 @@ public class ItemEventStore implements ItemRepository {
 
     private void add(ItemChanged itemChanged){
         notNull(itemChanged);
-        itemChangedRepository.save(new ItemChangedEntity(itemChanged.item().id().toString(),
+        itemChangedRepository.save(new ItemChangedEntity(
+                itemChanged.item().id().toString(),
                 itemChanged.item().title().text(),
                 itemChanged.item().description().text(),
                 itemChanged.item().price().amount(),
@@ -150,11 +175,22 @@ public class ItemEventStore implements ItemRepository {
 
     private void add(ItemOrdered itemOrdered) {
         notNull(itemOrdered);
-        itemSupplyDeductedRepository.save(new ItemOrderEntity(itemOrdered.itemId().toString(),
+        itemSupplyDeductedRepository.save(new ItemOrderEntity(
+                itemOrdered.orderId().toString(),
+                itemOrdered.itemId().toString(),
                 itemOrdered.quantity().amount(),
                 itemOrdered.price().amount(),
                 itemOrdered.sellerId().address(),
                 itemOrdered.buyerId().address(),
                 itemOrdered.timestamp()));
+    }
+
+    private void add(ItemOrderReversed itemOrderReversed) {
+        notNull(itemOrderReversed);
+        itemOrderReverseRepository.save(new ItemOrderReversedEntity(
+                itemOrderReversed.originalOrderId().toString(),
+                itemOrderReversed.itemId().toString(),
+                itemOrderReversed.quantity().amount(),
+                itemOrderReversed.timestamp()));
     }
 }

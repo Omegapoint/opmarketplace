@@ -11,11 +11,8 @@ import se.omegapoint.academy.opmarketplace.marketplace.application.ItemService;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.EntityMarker;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemChangedJPARepository;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemCreatedJPARepository;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.*;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.ItemEventStore;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemOrderJPARepository;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.JpaRepositoryMarker;
 
 @Configuration
 @EntityScan(basePackageClasses = EntityMarker.class)
@@ -43,7 +40,8 @@ public class MainConfiguration {
     @Bean
     public ItemEventStore itemRepository(ItemCreatedJPARepository itemCreatedRepository,
                                          ItemChangedJPARepository itemChangedRepository,
-                                         ItemOrderJPARepository itemOrderRepository){
-        return new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository);
+                                         ItemOrderJPARepository itemOrderRepository,
+                                         ItemOrderReverseJPARepository itemOrderReverseRepository){
+        return new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository, itemOrderReverseRepository);
     }
 }

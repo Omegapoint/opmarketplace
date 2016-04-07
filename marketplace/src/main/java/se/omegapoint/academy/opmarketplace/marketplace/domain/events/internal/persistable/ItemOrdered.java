@@ -11,6 +11,7 @@ import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class ItemOrdered implements PersistableEvent {
+    private final UUID id;
     private final UUID itemId;
     private final Quantity quantity;
     private final Credit price;
@@ -19,17 +20,22 @@ public class ItemOrdered implements PersistableEvent {
     private final Timestamp timestamp;
 
     public ItemOrdered(UUID itemId, Email sellerId, Quantity quantity, Credit price, Email buyerId){
-        this(itemId, sellerId, quantity, price, buyerId, new Timestamp(System.currentTimeMillis()));
+        this(UUID.randomUUID(), itemId, sellerId, quantity, price, buyerId, new Timestamp(System.currentTimeMillis()));
     }
 
-    public ItemOrdered(UUID itemId, Email sellerId, Quantity quantity, Credit price, Email buyerId, Timestamp timestamp){
+    public ItemOrdered(UUID id, UUID itemId, Email sellerId, Quantity quantity, Credit price, Email buyerId, Timestamp timestamp){
         isTrue(notNull(timestamp).before(new Timestamp(System.currentTimeMillis() + 1)));
+        this.id = notNull(id);
         this.itemId = notNull(itemId);
         this.quantity = notNull(quantity);
         this.price = notNull(price);
         this.buyerId = notNull(buyerId);
         this.sellerId = notNull(sellerId);
         this.timestamp = notNull(timestamp);
+    }
+
+    public UUID orderId(){
+        return id;
     }
 
     public UUID itemId(){

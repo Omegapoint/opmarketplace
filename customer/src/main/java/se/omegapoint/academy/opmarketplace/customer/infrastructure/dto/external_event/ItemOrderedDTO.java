@@ -11,6 +11,8 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.CreditDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
 
+import java.util.UUID;
+
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -18,16 +20,19 @@ public class ItemOrderedDTO implements Event, Deserializer<ItemOrdered> {
 
     public static final String TYPE = "ItemOrdered";
     public final String requestId;
+    public final String orderId;
     public final CreditDTO price;
     public final EmailDTO sellerId;
     public final EmailDTO buyerId;
 
     @JsonCreator
     public ItemOrderedDTO(@JsonProperty("requestId") String requestId,
+                          @JsonProperty("orderId") String orderId,
                           @JsonProperty("price") CreditDTO price,
                           @JsonProperty("sellerId") EmailDTO sellerId,
                           @JsonProperty("buyerId") EmailDTO buyerId){
         this.requestId = notNull(requestId);
+        this.orderId = orderId;
         this.price = notNull(price);
         this.sellerId = notNull(sellerId);
         this.buyerId = notNull(buyerId);
@@ -45,6 +50,6 @@ public class ItemOrderedDTO implements Event, Deserializer<ItemOrdered> {
 
     @Override
     public ItemOrdered domainObject() {
-        return new ItemOrdered(new Email(sellerId.address), new Credit(price.amount), new Email(buyerId.address));
+        return new ItemOrdered(UUID.fromString(orderId), new Email(sellerId.address), new Credit(price.amount), new Email(buyerId.address));
     }
 }

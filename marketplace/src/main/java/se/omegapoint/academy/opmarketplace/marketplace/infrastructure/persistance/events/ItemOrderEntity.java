@@ -14,8 +14,7 @@ import java.util.UUID;
 public class ItemOrderEntity implements Deserializer<ItemOrdered> {
 
     @Id
-    @GeneratedValue
-    private long eventId;
+    private String orderId;
     private String id;
     private Integer quantity;
     private Integer price;
@@ -25,7 +24,8 @@ public class ItemOrderEntity implements Deserializer<ItemOrdered> {
 
     protected ItemOrderEntity(){}
 
-    public ItemOrderEntity(final String id, final int quantity, final int price,  final String sellerId, final String buyerId, Timestamp time) {
+    public ItemOrderEntity(final String orderId, final String id, final int quantity, final int price,  final String sellerId, final String buyerId, Timestamp time) {
+        this.orderId = orderId;
         this.id = id;
         this.quantity = quantity;
         this.price = price;
@@ -35,7 +35,8 @@ public class ItemOrderEntity implements Deserializer<ItemOrdered> {
     }
 
     public ItemOrdered domainObject(){
-        return new ItemOrdered(UUID.fromString(id),
+        return new ItemOrdered(UUID.fromString(orderId),
+                UUID.fromString(id),
                 new Email(sellerId),
                 new Quantity(quantity),
                 new Credit(price),

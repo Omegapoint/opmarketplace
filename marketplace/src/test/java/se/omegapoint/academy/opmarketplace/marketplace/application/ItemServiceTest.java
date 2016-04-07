@@ -247,4 +247,71 @@ public class ItemServiceTest {
         assertEquals("NotToBeOrdered", itemObtained.item().title().text());
         assertEquals(5, itemObtained.item().supply().amount());
     }
+
+    @Test
+    public void should_reverse_order() throws Exception {
+        String requestId = "1";
+        Event request = new ItemCreationRequestedDTO(
+                requestId,
+                new TitleDTO("ToBeOrdered"),
+                new DescriptionDTO("To Be Ordered"),
+                new CreditDTO(20),
+                new QuantityDTO(5),
+                new EmailDTO("sell@sell.com"));
+        itemService.accept(reactor.bus.Event.wrap(request));
+        ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
+
+        request = new ItemPurchaseRequestedDTO(
+                requestId,
+                itemCreated.itemId().toString(),
+                new QuantityDTO(5),
+                new EmailDTO("buy@buy.com"));
+        itemService.accept(reactor.bus.Event.wrap(request));
+        ItemOrdered itemOrdered = (ItemOrdered)publisher.getLatestEvent();
+        UUID orderId = itemOrdered.orderId();
+        assertEquals(100, itemOrdered.price().amount());
+        assertEquals(5, itemOrdered.quantity().amount());
+        assertEquals("sell@sell.com", itemOrdered.sellerId().address());
+        assertEquals("buy@buy.com", itemOrdered.buyerId().address());
+
+        request = new ItemPaymentNotCompletedDTO(
+                requestId,
+                orderId.toString());
+        itemService.accept(reactor.bus.Event.wrap(request));
+
+        request = new ItemRequestedDTO(
+                requestId,
+                itemCreated.itemId().toString());
+        itemService.accept(reactor.bus.Event.wrap(request));
+        ItemObtained itemObtained = (ItemObtained)publisher.getLatestEvent();
+        assertEquals("ToBeOrdered", itemObtained.item().title().text());
+        assertEquals(5, itemObtained.item().supply().amount());
+    }
+
+    @Test
+    public void should_not_reverse_nonexistent_order() throws Exception {
+        String requestId = "1";
+        Event request = new ItemCreationRequestedDTO(
+                requestId,
+                new TitleDTO("ToBeOrdered"),
+                new DescriptionDTO("To Be Ordered"),
+                new CreditDTO(20),
+                new QuantityDTO(5),
+                new EmailDTO("sell@sell.com"));
+        itemService.accept(reactor.bus.Event.wrap(request));
+        ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
+
+        request = new ItemPaymentNotCompletedDTO(
+                requestId,
+                UUID.randomUUID().toString());
+        itemService.accept(reactor.bus.Event.wrap(request));
+
+        request = new ItemRequestedDTO(
+                requestId,
+                itemCreated.itemId().toString());
+        itemService.accept(reactor.bus.Event.wrap(request));
+        ItemObtained itemObtained = (ItemObtained)publisher.getLatestEvent();
+        assertEquals("ToBeOrdered", itemObtained.item().title().text());
+        assertEquals(5, itemObtained.item().supply().amount());
+    }
 }

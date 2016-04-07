@@ -47,6 +47,9 @@ public class EventReceiverService {
                 case AccountCreditDepositRequestedDTO.TYPE:
                     eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountCreditDepositRequestedDTO.class)));
                     break;
+                case ItemOrderedDTO.TYPE:
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, ItemOrderedDTO.class)));
+                    break;
                 default:
                     System.err.printf("Received unknown event; %s%n", event.type);
             }

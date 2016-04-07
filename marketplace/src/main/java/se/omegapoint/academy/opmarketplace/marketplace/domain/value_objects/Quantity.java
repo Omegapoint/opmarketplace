@@ -18,7 +18,11 @@ public class Quantity {
         return this.amount;
     }
 
-    public Quantity deduct(Quantity toDeduct){
-        return new Quantity(amount - toDeduct.amount);
+    public Quantity remove(Quantity toRemove){
+        return new Quantity(amount - toRemove.amount);
+    }
+
+    public Quantity add(Quantity toAdd){
+        return new Quantity(amount + toAdd.amount);
     }
 }

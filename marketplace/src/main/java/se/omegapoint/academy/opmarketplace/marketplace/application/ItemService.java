@@ -3,7 +3,9 @@ package se.omegapoint.academy.opmarketplace.marketplace.application;
 import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemPaymentNotCompleted;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.*;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrderReversed;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
@@ -34,7 +36,9 @@ public class ItemService implements Consumer<reactor.bus.Event<Event>> {
             handle((ItemChangeRequestedDTO) dto);
         } else if (dto instanceof ItemPurchaseRequestedDTO) {
             handle((ItemPurchaseRequestedDTO) dto);
-        } else{
+        } else if (dto instanceof ItemPaymentNotCompletedDTO) {
+            handle((ItemPaymentNotCompletedDTO) dto);
+        } else {
             System.err.println("ItemService: Did not recognize event received from reactor bus.");
         }
     }
@@ -84,5 +88,14 @@ public class ItemService implements Consumer<reactor.bus.Event<Event>> {
                 .orElseReason(ItemNotChanged::new);
         }
         publisher.publish(event, dto.requestId());
+    }
+
+    private void handle(ItemPaymentNotCompletedDTO dto) {
+        DomainObjectResult.of(ItemPaymentNotCompletedDTO::domainObject, notNull(dto))
+                .map(request -> repository.order(request.orderId())
+                    .map(itemOrdered -> repository.append(new ItemOrderReversed(
+                            itemOrdered.orderId(),
+                            itemOrdered.itemId(),
+                            itemOrdered.quantity()))));
     }
 }

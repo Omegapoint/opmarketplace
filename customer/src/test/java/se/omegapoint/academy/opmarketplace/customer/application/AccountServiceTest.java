@@ -23,6 +23,7 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_ob
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.*;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -166,6 +167,7 @@ public class AccountServiceTest {
         accountService.accept(Event.wrap(request));
 
         request = new ItemOrderedDTO("1",
+                UUID.randomUUID().toString(),
                 new CreditDTO(10),
                 new EmailDTO("seller@market.com"),
                 new EmailDTO("buyer@market.com"));

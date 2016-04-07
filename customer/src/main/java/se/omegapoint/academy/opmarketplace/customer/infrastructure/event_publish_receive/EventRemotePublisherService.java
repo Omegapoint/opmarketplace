@@ -66,16 +66,22 @@ public class EventRemotePublisherService implements EventPublisher {
             dispatch(new ItemPaymentCompletedDTO((ItemPaymentCompleted) event, requestId));
         } else if (event instanceof ItemPaymentNotCompleted) {
             dispatch(new ItemPaymentNotCompletedDTO((ItemPaymentNotCompleted) event, requestId));
+            dispatch(new ItemPaymentNotCompletedDTO((ItemPaymentNotCompleted) event, requestId), "Item");
         } else {
             throw new IllegalStateException("Domain Event not recognized.");
         }
     }
 
     private void dispatch(Event eventDTO) {
+        dispatch(eventDTO, "Account");
+    }
+
+
+    private void dispatch(Event eventDTO, String channel) {
         try {
             OutgoingRemoteEvent outgoingRemoteEvent = new OutgoingRemoteEvent(eventDTO);
             StringEntity eventJson = new StringEntity(new ObjectMapper().writeValueAsString(outgoingRemoteEvent));
-            HttpPost httpPost = new HttpPost(publisherURL + "?channel=Account");
+            HttpPost httpPost = new HttpPost(publisherURL + "?channel=" + channel);
             httpPost.addHeader("Content-Type", "application/json");
             httpPost.setEntity(eventJson);
             httpclient.execute(httpPost, IGNORE_CALLBACK);

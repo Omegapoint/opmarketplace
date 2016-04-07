@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemPaymentNotCompleted;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.external_events.*;
 
 import java.io.IOException;
@@ -46,6 +47,9 @@ public class EventReceiverService {
                     break;
                 case ItemPurchaseRequestedDTO.TYPE:
                     eventBus.notify(channel, Event.wrap(json.readValue(event.data, ItemPurchaseRequestedDTO.class)));
+                    break;
+                case ItemPaymentNotCompletedDTO.TYPE:
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, ItemPaymentNotCompletedDTO.class)));
                     break;
                 default:
                     System.err.printf("Received unknown event; %s%n", event.type);

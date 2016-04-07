@@ -14,6 +14,7 @@ public class ItemOrderedDTO implements Event, Serializer {
 
     public static final String TYPE = "ItemOrdered";
     public final String requestId;
+    public final String orderId;
     public final QuantityDTO quantity;
     public final CreditDTO price;
     public final EmailDTO sellerId;
@@ -21,7 +22,9 @@ public class ItemOrderedDTO implements Event, Serializer {
 
     public ItemOrderedDTO(ItemOrdered itemOrdered, String requestId){
         this.requestId = notNull(requestId);
-        this.quantity = new QuantityDTO(notNull(itemOrdered).quantity().amount());
+        notNull(itemOrdered);
+        this.orderId = itemOrdered.orderId().toString();
+        this.quantity = new QuantityDTO(itemOrdered.quantity().amount());
         this.price = new CreditDTO(itemOrdered.price().amount());
         this.sellerId = new EmailDTO(itemOrdered.sellerId().address());
         this.buyerId = new EmailDTO(itemOrdered.buyerId().address());

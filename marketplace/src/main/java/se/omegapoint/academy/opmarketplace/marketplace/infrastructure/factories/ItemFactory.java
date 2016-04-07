@@ -1,10 +1,7 @@
 package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.factories;
 
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrdered;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.PersistableEvent;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.*;
 
 import java.util.List;
 
@@ -26,9 +23,20 @@ public class ItemFactory {
                 mutate((ItemChanged)e);
             } else if (e instanceof ItemOrdered){
                 mutate((ItemOrdered)e);
+            } else if (e instanceof ItemOrderReversed){
+                mutate((ItemOrderReversed)e);
             }
         }
         return item;
+    }
+
+    private static void mutate(ItemOrderReversed itemOrderReversed) {
+        item = new Item(item.id(),
+                item.title(),
+                item.description(),
+                item.price(),
+                item.supply().add(itemOrderReversed.quantity()),
+                item.seller());
     }
 
     private static void mutate(ItemOrdered itemOrdered) {
@@ -36,7 +44,7 @@ public class ItemFactory {
                 item.title(),
                 item.description(),
                 item.price(),
-                item.supply().deduct(itemOrdered.quantity()),
+                item.supply().remove(itemOrdered.quantity()),
                 item.seller());
     }
 

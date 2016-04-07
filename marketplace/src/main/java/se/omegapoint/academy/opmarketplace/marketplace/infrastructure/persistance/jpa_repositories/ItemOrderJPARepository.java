@@ -5,7 +5,9 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 
 import java.util.List;
 
-public interface ItemOrderJPARepository extends JpaRepository<ItemOrderEntity, Long> {
+public interface ItemOrderJPARepository extends JpaRepository<ItemOrderEntity, String> {
 
     List<ItemOrderEntity> findById(String id);
+
+    List<ItemOrderEntity> findByOrderId(String orderId);
 }
