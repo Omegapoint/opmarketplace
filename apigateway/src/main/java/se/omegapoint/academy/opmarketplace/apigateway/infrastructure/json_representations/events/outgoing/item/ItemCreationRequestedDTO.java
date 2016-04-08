@@ -4,11 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account_item.EmailDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.DescriptionDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account_item.CreditDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.QuantityDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.TitleDTO;
 
 import static se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.StringRandomizer.randomString;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
@@ -19,19 +14,19 @@ public class ItemCreationRequestedDTO implements Event {
     public static final String TYPE = "ItemCreationRequested";
 
     public final String requestId;
-    public final TitleDTO title;
-    public final DescriptionDTO description;
-    public final CreditDTO price;
-    public final QuantityDTO supply;
-    public final EmailDTO seller;
+    public final String title;
+    public final String description;
+    public final int price;
+    public final int supply;
+    public final String seller;
 
     @JsonCreator
     public ItemCreationRequestedDTO(
-            @JsonProperty("title") TitleDTO title,
-            @JsonProperty("description") DescriptionDTO description,
-            @JsonProperty("price") CreditDTO price,
-            @JsonProperty("supply") QuantityDTO supply,
-            @JsonProperty("seller") EmailDTO seller) {
+            @JsonProperty("title") String title,
+            @JsonProperty("description") String description,
+            @JsonProperty("price") int price,
+            @JsonProperty("supply") int supply,
+            @JsonProperty("seller") String seller) {
         this.requestId = randomString();
         this.title = notNull(title) ;
         this.description = notNull(description);

@@ -14,7 +14,6 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_liste
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.*;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account_item.EmailDTO;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -54,7 +53,7 @@ public class AccountGateway {
     }
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
-    public DeferredResult<ResponseEntity<String>> account(@RequestParam("email") final EmailDTO email) {
+    public DeferredResult<ResponseEntity<String>> account(@RequestParam("email") final String email) {
         AccountRequestedDTO accountRequested = new AccountRequestedDTO(notNull(email));
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         AccountObtainedListener listener =  new AccountObtainedListener(result);
@@ -74,7 +73,7 @@ public class AccountGateway {
     }
 
     @RequestMapping(method = DELETE, produces = APPLICATION_JSON_VALUE)
-    public DeferredResult<ResponseEntity<String>> deleteAccount(@RequestParam("email") final EmailDTO email) {
+    public DeferredResult<ResponseEntity<String>> deleteAccount(@RequestParam("email") final String email) {
         AccountDeletionRequestedDTO accountDeletionRequested = new AccountDeletionRequestedDTO(notNull(email));
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         AccountDeletionListener listener =  new AccountDeletionListener(result);

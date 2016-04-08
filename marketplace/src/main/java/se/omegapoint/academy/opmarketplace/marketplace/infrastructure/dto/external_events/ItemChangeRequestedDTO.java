@@ -10,10 +10,6 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quan
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.DescriptionDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.CreditDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.QuantityDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.TitleDTO;
 
 import java.util.UUID;
 
@@ -26,19 +22,19 @@ public class ItemChangeRequestedDTO implements Event, Deserializer<ItemChangeReq
     public static final String TYPE = "ItemChangeRequested";
     public final String requestId;
     public final String id;
-    public final TitleDTO title;
-    public final DescriptionDTO description;
-    public final CreditDTO price;
-    public final QuantityDTO supply;
+    public final String title;
+    public final String description;
+    public final int price;
+    public final int supply;
 
     @JsonCreator
     public ItemChangeRequestedDTO(
             @JsonProperty("requestId") String requestId,
             @JsonProperty("id") String itemId,
-            @JsonProperty("title") TitleDTO title,
-            @JsonProperty("description") DescriptionDTO description,
-            @JsonProperty("price") CreditDTO price,
-            @JsonProperty("supply") QuantityDTO supply) {
+            @JsonProperty("title") String title,
+            @JsonProperty("description") String description,
+            @JsonProperty("price") int price,
+            @JsonProperty("supply") int supply) {
         this.requestId = notBlank(requestId);
         this.id = notBlank(itemId);
         this.title = notNull(title);
@@ -51,10 +47,10 @@ public class ItemChangeRequestedDTO implements Event, Deserializer<ItemChangeReq
     public ItemChangeRequested domainObject() {
         return new ItemChangeRequested(
                 UUID.fromString(id),
-                new Title(title.text),
-                new Description(description.text),
-                new Credit(price.amount),
-                new Quantity(supply.amount));
+                new Title(title),
+                new Description(description),
+                new Credit(price),
+                new Quantity(supply));
     }
 
     @Override

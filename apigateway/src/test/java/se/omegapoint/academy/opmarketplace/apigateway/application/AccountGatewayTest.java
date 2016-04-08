@@ -45,14 +45,12 @@ public class AccountGatewayTest {
 
     @Test
     public void should_request_account_creation() throws Exception {
-        String content = "{\n" +
-                "    \"email\":{\n" +
-                "        \"address\":\"test@test.com\"\n" +
-                "    },\n" +
-                "    \"user\":{\n" +
-                "        \"firstName\":\"testFirst\",\n" +
-                "        \"lastName\":\"testLast\"\n" +
-                "    }\n" +
+        String content = "{" +
+                "    \"email\":\"test@test.com\"," +
+                "    \"user\":{" +
+                "        \"firstName\":\"testFirst\"," +
+                "        \"lastName\":\"testLast\"" +
+                "    }" +
                 "}";
         mockMvc.perform(post("/accounts")
                 .contentType(APPLICATION_JSON)
@@ -60,21 +58,19 @@ public class AccountGatewayTest {
         Event latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountCreationRequestedDTO requestedModel = (AccountCreationRequestedDTO) latestEvent;
-        assertEquals("test@test.com", requestedModel.email.address);
+        assertEquals("test@test.com", requestedModel.email);
         assertEquals("testFirst", requestedModel.user.firstName);
         assertEquals("testLast", requestedModel.user.lastName);
     }
 
     @Test
     public void should_request_account_user_change() throws Exception {
-        String content = "{\n" +
-                "    \"email\":{\n" +
-                "        \"address\":\"test@test.com\"\n" +
-                "    },\n" +
-                "    \"user\":{\n" +
-                "        \"firstName\":\"testFirst\",\n" +
-                "        \"lastName\":\"testLast\"\n" +
-                "    }\n" +
+        String content = "{" +
+                "    \"email\":\"test@test.com\"," +
+                "    \"user\":{" +
+                "        \"firstName\":\"testFirst\"," +
+                "        \"lastName\":\"testLast\"" +
+                "    }" +
                 "}";
         mockMvc.perform(put("/accounts")
                 .contentType(APPLICATION_JSON)
@@ -82,7 +78,7 @@ public class AccountGatewayTest {
         Event latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountUserChangeRequestedDTO requestedModel = (AccountUserChangeRequestedDTO) latestEvent;
-        assertEquals("test@test.com", requestedModel.email.address);
+        assertEquals("test@test.com", requestedModel.email);
     }
 
     @Test
@@ -93,7 +89,7 @@ public class AccountGatewayTest {
         Event latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountRequestedDTO requestedModel = (AccountRequestedDTO) latestEvent;
-        assertEquals("test@test.com" , requestedModel.email.address);
+        assertEquals("test@test.com" , requestedModel.email);
     }
 
     @Test
@@ -104,6 +100,6 @@ public class AccountGatewayTest {
         Event latestEvent = testPublisher.getLatestEvent();
         assertNotNull(latestEvent);
         AccountDeletionRequestedDTO requestedModel = (AccountDeletionRequestedDTO) latestEvent;
-        assertEquals("test@test.com" , requestedModel.email.address);
+        assertEquals("test@test.com" , requestedModel.email);
     }
 }

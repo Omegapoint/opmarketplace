@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountDeletionRequested;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -16,19 +16,19 @@ public class AccountDeletionRequestedDTO implements Event, Deserializer<AccountD
     public static final String TYPE = "AccountDeletionRequested";
 
     public final String requestId;
-    public final EmailDTO email;
+    public final String email;
 
     @JsonCreator
     public AccountDeletionRequestedDTO(
             @JsonProperty("requestId") String requestId,
-            @JsonProperty("email") EmailDTO email) {
+            @JsonProperty("email") String email) {
         this.requestId = notNull(requestId);
         this.email = notNull(email);
     }
 
     @Override
     public AccountDeletionRequested domainObject() {
-        return new AccountDeletionRequested(email.domainObject());
+        return new AccountDeletionRequested(new Email(email));
     }
 
     @Override

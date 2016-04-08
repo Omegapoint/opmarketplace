@@ -44,13 +44,7 @@ public class ItemServiceTest {
     @Test
     public void should_create_item() throws Exception {
         String requestId = "1";
-        ItemCreationRequestedDTO request = new ItemCreationRequestedDTO(
-                requestId,
-                new TitleDTO("Item"),
-                new DescriptionDTO("Desc"),
-                new CreditDTO(1),
-                new QuantityDTO(1),
-                new EmailDTO("hej@hej.com"));
+        ItemCreationRequestedDTO request = new ItemCreationRequestedDTO(requestId, "Item", "Desc", 1, 1, "hej@hej.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
         assertEquals("Item", itemCreated.item().title().text());
@@ -59,13 +53,7 @@ public class ItemServiceTest {
     @Test
     public void should_not_create_item_due_to_illegal_amount_in_price() throws Exception {
         String requestId = "1";
-        ItemCreationRequestedDTO request = new ItemCreationRequestedDTO(
-                requestId,
-                new TitleDTO("Item"),
-                new DescriptionDTO("Desc"),
-                new CreditDTO(-1),
-                new QuantityDTO(1),
-                new EmailDTO("hej@hej.com"));
+        ItemCreationRequestedDTO request = new ItemCreationRequestedDTO(requestId, "Item", "Desc", -1, 1, "hej@hej.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemNotCreated itemNotCreated = (ItemNotCreated)publisher.getLatestEvent();
         assertEquals(Credit.ILLEGAL_FORMAT, itemNotCreated.reason());
@@ -148,22 +136,11 @@ public class ItemServiceTest {
     @Test
     public void should_change_item() throws Exception {
         String requestId = "1";
-        Event request = new ItemCreationRequestedDTO(
-                requestId,
-                new TitleDTO("ToBeChanged"),
-                new DescriptionDTO("ToBeChanged"),
-                new CreditDTO(1),
-                new QuantityDTO(1),
-                new EmailDTO("NotToBe@changed.com"));
+        Event request = new ItemCreationRequestedDTO(requestId, "ToBeChanged", "ToBeChanged", 1, 1, "NotToBe@changed.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
 
-        request = new ItemChangeRequestedDTO(requestId,
-                itemCreated.itemId().toString(),
-                new TitleDTO("Changed"),
-                new DescriptionDTO("Changed"),
-                new CreditDTO(2),
-                new QuantityDTO(2));
+        request = new ItemChangeRequestedDTO(requestId, itemCreated.itemId().toString(), "Changed", "Changed", 2, 2);
         itemService.accept(reactor.bus.Event.wrap(request));
 
         ItemChanged itemChanged = (ItemChanged)publisher.getLatestEvent();
@@ -186,21 +163,11 @@ public class ItemServiceTest {
     @Test
     public void should_create_order() throws Exception {
         String requestId = "1";
-        Event request = new ItemCreationRequestedDTO(
-                requestId,
-                new TitleDTO("ToBeOrdered"),
-                new DescriptionDTO("To Be Ordered"),
-                new CreditDTO(20),
-                new QuantityDTO(5),
-                new EmailDTO("sell@sell.com"));
+        Event request = new ItemCreationRequestedDTO(requestId, "ToBeOrdered", "To Be Ordered", 20, 5, "sell@sell.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
 
-        request = new ItemPurchaseRequestedDTO(
-                requestId,
-                itemCreated.itemId().toString(),
-                new QuantityDTO(5),
-                new EmailDTO("buy@buy.com"));
+        request = new ItemPurchaseRequestedDTO(requestId, itemCreated.itemId().toString(), 5, "buy@buy.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemOrdered itemOrdered = (ItemOrdered)publisher.getLatestEvent();
         assertEquals(100, itemOrdered.price().amount());
@@ -220,21 +187,11 @@ public class ItemServiceTest {
     @Test
     public void should_not_create_order_due_to_insufficient_supply() throws Exception {
         String requestId = "1";
-        Event request = new ItemCreationRequestedDTO(
-                requestId,
-                new TitleDTO("NotToBeOrdered"),
-                new DescriptionDTO("Not To Be Ordered"),
-                new CreditDTO(20),
-                new QuantityDTO(5),
-                new EmailDTO("sell@sell.com"));
+        Event request = new ItemCreationRequestedDTO(requestId, "NotToBeOrdered", "Not To Be Ordered", 20, 5, "sell@sell.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
 
-        request = new ItemPurchaseRequestedDTO(
-                requestId,
-                itemCreated.itemId().toString(),
-                new QuantityDTO(6),
-                new EmailDTO("buy@buy.com"));
+        request = new ItemPurchaseRequestedDTO(requestId, itemCreated.itemId().toString(), 6, "buy@buy.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemNotOrdered itemNotOrdered = (ItemNotOrdered)publisher.getLatestEvent();
         assertEquals("Insufficient supply.", itemNotOrdered.reason());
@@ -251,21 +208,11 @@ public class ItemServiceTest {
     @Test
     public void should_reverse_order() throws Exception {
         String requestId = "1";
-        Event request = new ItemCreationRequestedDTO(
-                requestId,
-                new TitleDTO("ToBeOrdered"),
-                new DescriptionDTO("To Be Ordered"),
-                new CreditDTO(20),
-                new QuantityDTO(5),
-                new EmailDTO("sell@sell.com"));
+        Event request = new ItemCreationRequestedDTO(requestId, "ToBeOrdered", "To Be Ordered", 20, 5, "sell@sell.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
 
-        request = new ItemPurchaseRequestedDTO(
-                requestId,
-                itemCreated.itemId().toString(),
-                new QuantityDTO(5),
-                new EmailDTO("buy@buy.com"));
+        request = new ItemPurchaseRequestedDTO(requestId, itemCreated.itemId().toString(), 5, "buy@buy.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemOrdered itemOrdered = (ItemOrdered)publisher.getLatestEvent();
         UUID orderId = itemOrdered.orderId();
@@ -274,14 +221,10 @@ public class ItemServiceTest {
         assertEquals("sell@sell.com", itemOrdered.sellerId().address());
         assertEquals("buy@buy.com", itemOrdered.buyerId().address());
 
-        request = new ItemPaymentNotCompletedDTO(
-                requestId,
-                orderId.toString());
+        request = new ItemPaymentNotCompletedDTO(requestId, orderId.toString());
         itemService.accept(reactor.bus.Event.wrap(request));
 
-        request = new ItemRequestedDTO(
-                requestId,
-                itemCreated.itemId().toString());
+        request = new ItemRequestedDTO(requestId, itemCreated.itemId().toString());
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemObtained itemObtained = (ItemObtained)publisher.getLatestEvent();
         assertEquals("ToBeOrdered", itemObtained.item().title().text());
@@ -291,13 +234,7 @@ public class ItemServiceTest {
     @Test
     public void should_not_reverse_nonexistent_order() throws Exception {
         String requestId = "1";
-        Event request = new ItemCreationRequestedDTO(
-                requestId,
-                new TitleDTO("ToBeOrdered"),
-                new DescriptionDTO("To Be Ordered"),
-                new CreditDTO(20),
-                new QuantityDTO(5),
-                new EmailDTO("sell@sell.com"));
+        Event request = new ItemCreationRequestedDTO(requestId, "ToBeOrdered", "To Be Ordered", 20, 5, "sell@sell.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemCreated itemCreated = (ItemCreated)publisher.getLatestEvent();
 

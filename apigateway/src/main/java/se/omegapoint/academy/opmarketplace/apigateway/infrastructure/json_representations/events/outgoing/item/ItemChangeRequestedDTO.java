@@ -4,11 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.Event;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.DescriptionDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account_item.CreditDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.QuantityDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.TitleDTO;
-
 
 import static se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.StringRandomizer.randomString;
 import static se.sawano.java.commons.lang.validate.Validate.notBlank;
@@ -21,18 +16,18 @@ public class ItemChangeRequestedDTO implements Event{
 
     public final String requestId;
     public final String id;
-    public final TitleDTO title;
-    public final DescriptionDTO description;
-    public final CreditDTO price;
-    public final QuantityDTO supply;
+    public final String title;
+    public final String description;
+    public final int price;
+    public final int supply;
 
     @JsonCreator
     public ItemChangeRequestedDTO(
             @JsonProperty("id") String itemId,
-            @JsonProperty("title") TitleDTO title,
-            @JsonProperty("description") DescriptionDTO description,
-            @JsonProperty("price") CreditDTO price,
-            @JsonProperty("supply") QuantityDTO supply) {
+            @JsonProperty("title") String title,
+            @JsonProperty("description") String description,
+            @JsonProperty("price") int price,
+            @JsonProperty("supply") int supply) {
         this.requestId = randomString();
         this.id = notBlank(itemId);
         this.title = notNull(title);

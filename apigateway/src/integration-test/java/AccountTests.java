@@ -69,10 +69,11 @@ public class AccountTests {
     public void should_get_correct_account() throws Exception {
         TestRequests.createUser("test3@test.com", "firstName", "lastName", mockMvc);
 
-        String expectedResult = TestRequests.userJson("test3@test.com", "firstName", "lastName");
+        TestRequests.userJson("test3@test.com", "firstName", "lastName");
+
         TestRequests.getUser("test3@test.com", mockMvc)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email", Matchers.hasValue("test3@test.com")));
+                .andExpect(jsonPath("$.email").value("test3@test.com"));
     }
 
     @Test
@@ -101,7 +102,7 @@ public class AccountTests {
 
         TestRequests.getUser("test4@test.com", mockMvc)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email", Matchers.hasValue("test4@test.com")));
+                .andExpect(jsonPath("$.email").value("test4@test.com"));
     }
 
     @Test
@@ -132,7 +133,7 @@ public class AccountTests {
         TestRequests.addCredit("toBe@rich.com", 20, mockMvc)
                 .andExpect(status().isOk());
         TestRequests.getUser("toBe@rich.com", mockMvc)
-                .andExpect(jsonPath("$.vault", Matchers.hasValue(30)));
+                .andExpect(jsonPath("$.vault").value(30));
     }
 
     @Test
@@ -142,6 +143,6 @@ public class AccountTests {
         TestRequests.addCredit("toRemain@poor.com", -1, mockMvc)
                 .andExpect(status().isBadRequest());
         TestRequests.getUser("toRemain@poor.com", mockMvc)
-                .andExpect(jsonPath("$.vault", Matchers.hasValue(0)));
+                .andExpect(jsonPath("$.vault").value(0));
     }
 }

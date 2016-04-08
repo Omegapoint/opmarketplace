@@ -2,8 +2,6 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal
 import se.omegapoint.academy.opmarketplace.customer.domain.events.ItemPaymentCompleted;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.CreditDTO;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -13,17 +11,17 @@ public class ItemPaymentCompletedDTO implements Event, Serializer {
 
     public final String requestId;
     public final String orderId;
-    public final EmailDTO sellerId;
-    public final CreditDTO price;
-    public final EmailDTO buyerId;
+    public final String sellerId;
+    public final int price;
+    public final String buyerId;
 
     public ItemPaymentCompletedDTO(ItemPaymentCompleted itemPaymentCompleted, String requestId) {
         this.requestId = notNull(requestId);
         notNull(itemPaymentCompleted);
         this.orderId = itemPaymentCompleted.orderId().toString();
-        this.sellerId = new EmailDTO(itemPaymentCompleted.sellerId().address());
-        this.price = new CreditDTO(itemPaymentCompleted.price().amount());
-        this.buyerId = new EmailDTO(itemPaymentCompleted.buyerId().address());
+        this.sellerId = itemPaymentCompleted.sellerId().address();
+        this.price = itemPaymentCompleted.price().amount();
+        this.buyerId = itemPaymentCompleted.buyerId().address();
     }
 
     @Override

@@ -3,10 +3,10 @@ package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.exter
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemPurchaseRequested;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Email;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.EmailDTO;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.QuantityDTO;
 
 import java.util.UUID;
 
@@ -18,14 +18,14 @@ public class ItemPurchaseRequestedDTO implements Event, Deserializer<ItemPurchas
 
     public final String requestId;
     public final String itemId;
-    public final QuantityDTO quantity;
-    public final EmailDTO buyerId;
+    public final int quantity;
+    public final String buyerId;
 
     @JsonCreator
     public ItemPurchaseRequestedDTO(@JsonProperty("requestId") String requestId,
                                     @JsonProperty("itemId") String itemId,
-                                    @JsonProperty("quantity") QuantityDTO quantity,
-                                    @JsonProperty("buyerId") EmailDTO buyerId) {
+                                    @JsonProperty("quantity") int quantity,
+                                    @JsonProperty("buyerId") String buyerId) {
         this.requestId = notNull(requestId);
         this.itemId = notNull(itemId);
         this.quantity = notNull(quantity);
@@ -44,6 +44,6 @@ public class ItemPurchaseRequestedDTO implements Event, Deserializer<ItemPurchas
 
     @Override
     public ItemPurchaseRequested domainObject() {
-        return new ItemPurchaseRequested(UUID.fromString(itemId), quantity.domainObject(), buyerId.domainObject());
+        return new ItemPurchaseRequested(UUID.fromString(itemId), new Quantity(quantity), new Email(buyerId));
     }
 }

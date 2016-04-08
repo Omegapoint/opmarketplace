@@ -1,7 +1,6 @@
 package se.omegapoint.academy.opmarketplace.customer.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +13,8 @@ import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.TestConfiguration;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreditDeposited;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountDeleted;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.CreditDTO;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.*;
 
@@ -152,46 +148,36 @@ public class AccountServiceTest {
     @Test
     public void performCreditTransaction(){
         se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event request = new AccountCreationRequestedDTO("1",
-                new EmailDTO("buyer@market.com"),
+                "buyer@market.com",
                 new UserDTO("buyer", "market"));
         accountService.accept(Event.wrap(request));
 
-        request = new AccountCreationRequestedDTO("1",
-                new EmailDTO("seller@market.com"),
-                new UserDTO("seller", "market"));
+        request = new AccountCreationRequestedDTO("1", "seller@market.com", new UserDTO("seller", "market"));
         accountService.accept(Event.wrap(request));
 
-        request = new AccountCreditDepositRequestedDTO("1",
-                new EmailDTO("buyer@market.com"),
-                new CreditDTO(10));
+        request = new AccountCreditDepositRequestedDTO("1", "buyer@market.com", 10);
         accountService.accept(Event.wrap(request));
 
-        request = new ItemOrderedDTO("1",
-                UUID.randomUUID().toString(),
-                new CreditDTO(10),
-                new EmailDTO("seller@market.com"),
-                new EmailDTO("buyer@market.com"));
+        request = new ItemOrderedDTO("1", UUID.randomUUID().toString(), 10, "seller@market.com", "buyer@market.com");
         accountService.accept(Event.wrap(request));
         ItemPaymentCompleted completed = (ItemPaymentCompleted) testPublisher.getLastEvent();
         assertEquals(10, completed.price().amount());
         assertEquals("seller@market.com", completed.sellerId().address());
         assertEquals("buyer@market.com", completed.buyerId().address());
 
-        request = new AccountRequestedDTO("1",
-                new EmailDTO("seller@market.com"));
+        request = new AccountRequestedDTO("1", "seller@market.com");
         accountService.accept(Event.wrap(request));
         AccountObtained sellerAccount = (AccountObtained) testPublisher.getLastEvent();
         assertEquals(10, sellerAccount.account().vault().amount());
 
-        request = new AccountRequestedDTO("1",
-                new EmailDTO("buyer@market.com"));
+        request = new AccountRequestedDTO("1", "buyer@market.com");
         accountService.accept(Event.wrap(request));
         AccountObtained buyerAccount = (AccountObtained) testPublisher.getLastEvent();
         assertEquals(0, buyerAccount.account().vault().amount());
     }
 
     private void addUser(String email, String firstName, String lastName) throws IOException {
-        String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email +"\"}," +
+        String inputData = "{\"requestId\":\"abc\",\"email\":\"" + email +"\"," +
                 "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
 
         AccountCreationRequestedDTO model = objectMapper.readValue(inputData, AccountCreationRequestedDTO.class);
@@ -199,14 +185,14 @@ public class AccountServiceTest {
     }
 
     private void getUser(String email) throws IOException {
-        String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email + "\"}}";
+        String inputData = "{\"requestId\":\"abc\",\"email\":\"" + email + "\"}";
 
         AccountRequestedDTO accountRequestedDTO = objectMapper.readValue(inputData, AccountRequestedDTO.class);
         accountService.accept(Event.wrap(accountRequestedDTO));
     }
 
     private void changeUser(String email, String firstName, String lastName) throws IOException {
-        String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email +"\"}," +
+        String inputData = "{\"requestId\":\"abc\",\"email\":\"" + email +"\"," +
                 "\"user\":{\"firstName\":\"" + firstName + "\", \"lastName\":\"" + lastName + "\"}}";
 
         AccountUserChangeRequestedDTO accountUserChangeRequestedDTO = objectMapper.readValue(inputData, AccountUserChangeRequestedDTO.class);
@@ -214,15 +200,15 @@ public class AccountServiceTest {
     }
 
     private void deleteUser(String email) throws Exception {
-        String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email + "\"}}";
+        String inputData = "{\"requestId\":\"abc\",\"email\":\"" + email + "\"}";
 
         AccountDeletionRequestedDTO accountDeletionRequestedDTO = objectMapper.readValue(inputData, AccountDeletionRequestedDTO.class);
         accountService.accept(Event.wrap(accountDeletionRequestedDTO));
     }
 
     private void depositCredits(String email, int credit) throws IOException {
-        String inputData = "{\"requestId\":\"abc\",\"email\":{\"address\":\"" + email +"\"}," +
-                "\"credit\":{\"amount\":" + credit + "}}";
+        String inputData = "{\"requestId\":\"abc\",\"email\":\"" + email +"\"," +
+                "\"credit\":" + credit + "}";
 
         AccountCreditDepositRequestedDTO model = objectMapper.readValue(inputData, AccountCreditDepositRequestedDTO.class);
         accountService.accept(Event.wrap(model));

@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChangeRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
-import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
@@ -20,13 +18,13 @@ public class AccountUserChangeRequestedDTO implements Event, Deserializer<Accoun
     public static final String TYPE = "AccountUserChangeRequested";
 
     public final String requestId;
-    public final EmailDTO email;
+    public final String email;
     public final UserDTO user;
 
     @JsonCreator
     public AccountUserChangeRequestedDTO(
             @JsonProperty("requestId") String requestId,
-            @JsonProperty("email") EmailDTO email,
+            @JsonProperty("email") String email,
             @JsonProperty("user") UserDTO user){
         this.requestId = notNull(requestId);
         this.email = notNull(email);
@@ -36,7 +34,7 @@ public class AccountUserChangeRequestedDTO implements Event, Deserializer<Accoun
     @Override
     public AccountUserChangeRequested domainObject() {
         return new AccountUserChangeRequested(
-                email.domainObject(),
+                new Email(email),
                 user.domainObject());
     }
 

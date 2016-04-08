@@ -47,21 +47,11 @@ public class TestRequests {
 
     private static String itemCreationJson(String title, String description, int price, int quantity, String seller) throws Exception {
         String content = "{" +
-                "\"title\":{" +
-                "\"text\":\"" + title + "\"" +
-                "}," +
-                "\"description\":{" +
-                "\"text\":\"" + description + "\"" +
-                "}," +
-                "\"price\":{" +
-                "\"amount\":" + price +
-                "}," +
-                "\"supply\":{" +
-                "\"amount\":" + quantity +
-                "}," +
-                "\"seller\":{" +
-                "\"address\":\"" + seller + "\"" +
-                "}" +
+                    "\"title\":\"" + title + "\"," +
+                    "\"description\":\"" + description + "\"," +
+                    "\"price\":" + price + "," +
+                    "\"supply\":" + quantity + "," +
+                    "\"seller\":\"" + seller + "\"" +
                 "}";
         // Validate content
         new ObjectMapper().readValue(content, ItemCreationRequestedDTO.class);
@@ -95,20 +85,13 @@ public class TestRequests {
     }
 
     private static String itemChangeJson(String id, String title, String description, int price, int quantity) throws Exception {
-        String content =  "{" +
-                "\"id\":\"" + id + "\"," +
-                "\"title\":{" +
-                "\"text\":\"" + title + "\"" +
-                "}," +
-                "\"description\":{" +
-                "\"text\":\"" + description + "\"" +
-                "}," +
-                "\"price\":{" +
-                "\"amount\":" + price +
-                "}," +
-                "\"supply\":{" +
-                "\"amount\":" + quantity +
-                "}" +
+        String content =
+                "{" +
+                    "\"id\":\"" + id + "\"," +
+                    "\"title\":\"" + title + "\"," +
+                    "\"description\":\"" + description + "\"," +
+                    "\"price\":" + price + "," +
+                    "\"supply\":" + quantity +
                 "}";
         // Validate content
         new ObjectMapper().readValue(content, ItemChangeRequestedDTO.class);
@@ -132,14 +115,10 @@ public class TestRequests {
     private static String itemPurchaseRequestJson(String itemId, int quantity, String buyerId) throws Exception {
         String content =
                 "{" +
-                        "\"itemId\":\"" + itemId + "\"," +
-                        "\"quantity\":{" +
-                        "\"amount\":" + quantity +
-                        "}," +
-                        "\"buyerId\":{" +
-                        "\"address\":\"" + buyerId + "\"" +
-                        "}" +
-                        "}";
+                    "\"itemId\":\"" + itemId + "\"," +
+                    "\"quantity\":" + quantity + "," +
+                    "\"buyerId\":\"" + buyerId + "\"" +
+                "}";
         // Validate content
         new ObjectMapper().readValue(content, ItemPurchaseRequestedDTO.class);
         return content;
@@ -149,13 +128,9 @@ public class TestRequests {
     private static String creditJson(String email, int credit) throws Exception {
         String content =
                 "{" +
-                        "\"email\":{" +
-                        "\"address\":\"" + email + "\"" +
-                        "}," +
-                        "\"credit\":{" +
-                        "\"amount\":" + credit +
-                        "}" +
-                        "}";
+                    "\"email\":\"" + email + "\"," +
+                    "\"credit\":" + credit +
+                "}";
         new ObjectMapper().readValue(content, AccountCreditDepositRequestedDTO.class);
         return content;
     }
@@ -163,14 +138,12 @@ public class TestRequests {
     public static String userJson(String email, String firstName, String lastName) throws Exception {
         String content =
                 "{" +
-                        "\"email\":{" +
-                        "\"address\":\"" + email + "\"" +
-                        "}," +
-                        "\"user\":{" +
+                    "\"email\":\"" + email + "\"," +
+                    "\"user\":{" +
                         "\"firstName\":\"" + firstName + "\"," +
                         "\"lastName\":\"" + lastName + "\"" +
-                        "}" +
-                        "}";
+                    "}" +
+                "}";
         new ObjectMapper().readValue(content, AccountUserChangeRequestedDTO.class);
         return content;
     }

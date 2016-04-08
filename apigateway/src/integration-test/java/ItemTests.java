@@ -48,11 +48,11 @@ public class ItemTests {
     public void should_create_an_item() throws Exception {
         TestRequests.createItem("Create", "Create", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", Matchers.hasValue("Create")))
-                .andExpect(jsonPath("$.description", Matchers.hasValue("Create")))
-                .andExpect(jsonPath("$.price", Matchers.hasValue(100)))
-                .andExpect(jsonPath("$.supply", Matchers.hasValue(1)))
-                .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")));
+                .andExpect(jsonPath("$.title").value("Create"))
+                .andExpect(jsonPath("$.description").value("Create"))
+                .andExpect(jsonPath("$.price").value(100))
+                .andExpect(jsonPath("$.supply").value(1))
+                .andExpect(jsonPath("$.seller").value("hej@hej.com"));
     }
 
     @Test
@@ -69,64 +69,64 @@ public class ItemTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", Matchers.hasSize(3)))
-                .andExpect(jsonPath("$[0].supply", Matchers.hasValue(1)));
+                .andExpect(jsonPath("$[0].supply").value(1));
     }
 
     @Test
     public void should_change_one_item() throws Exception {
         MvcResult result = TestRequests.createItem("ToBeChanged", "ToBeChanged", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", Matchers.hasValue("ToBeChanged")))
-                .andExpect(jsonPath("$.description", Matchers.hasValue("ToBeChanged")))
-                .andExpect(jsonPath("$.price", Matchers.hasValue(100)))
-                .andExpect(jsonPath("$.supply", Matchers.hasValue(1)))
-                .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")))
+                .andExpect(jsonPath("$.title").value("ToBeChanged"))
+                .andExpect(jsonPath("$.description").value("ToBeChanged"))
+                .andExpect(jsonPath("$.price").value(100))
+                .andExpect(jsonPath("$.supply").value(1))
+                .andExpect(jsonPath("$.seller").value("hej@hej.com"))
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         ItemDTO item = new ObjectMapper().readValue(content, ItemDTO.class);
         TestRequests.changeItem(item.id, "Changed", "Changed", 200, 2, mockMvc)
-                .andExpect(jsonPath("$.title", Matchers.hasValue("Changed")))
-                .andExpect(jsonPath("$.description", Matchers.hasValue("Changed")))
-                .andExpect(jsonPath("$.price", Matchers.hasValue(200)))
-                .andExpect(jsonPath("$.supply", Matchers.hasValue(2)))
-                .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")));
+                .andExpect(jsonPath("$.title").value("Changed"))
+                .andExpect(jsonPath("$.description").value("Changed"))
+                .andExpect(jsonPath("$.price").value(200))
+                .andExpect(jsonPath("$.supply").value(2))
+                .andExpect(jsonPath("$.seller").value("hej@hej.com"));
         TestRequests.getItem(item.id, mockMvc)
-                .andExpect(jsonPath("$.title", Matchers.hasValue("Changed")))
-                .andExpect(jsonPath("$.description", Matchers.hasValue("Changed")))
-                .andExpect(jsonPath("$.price", Matchers.hasValue(200)))
-                .andExpect(jsonPath("$.supply", Matchers.hasValue(2)))
-                .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")));
+                .andExpect(jsonPath("$.title").value("Changed"))
+                .andExpect(jsonPath("$.description").value("Changed"))
+                .andExpect(jsonPath("$.price").value(200))
+                .andExpect(jsonPath("$.supply").value(2))
+                .andExpect(jsonPath("$.seller").value("hej@hej.com"));
     }
 
     @Test
     public void should_not_change_one_item_due_to_wrong_id_supplied() throws Exception {
         TestRequests.createItem("NotToBeChanged", "NotToBeChanged", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", Matchers.hasValue("NotToBeChanged")))
-                .andExpect(jsonPath("$.description", Matchers.hasValue("NotToBeChanged")))
-                .andExpect(jsonPath("$.price", Matchers.hasValue(100)))
-                .andExpect(jsonPath("$.supply", Matchers.hasValue(1)))
-                .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")));
+                .andExpect(jsonPath("$.title").value("NotToBeChanged"))
+                .andExpect(jsonPath("$.description").value("NotToBeChanged"))
+                .andExpect(jsonPath("$.price").value(100))
+                .andExpect(jsonPath("$.supply").value(1))
+                .andExpect(jsonPath("$.seller").value("hej@hej.com"));
         TestRequests.changeItem(UUID.randomUUID().toString(), "Changed", "Changed", 200, 2, mockMvc)
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", Matchers.hasValue("Item does not exist.")));
+                .andExpect(jsonPath("$.reason").value("Item does not exist."));
     }
 
     @Test
     public void should_not_change_one_item_due_to_illegal_title() throws Exception {
         MvcResult result = TestRequests.createItem("NotToBeChanged", "NotToBeChanged", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", Matchers.hasValue("NotToBeChanged")))
-                .andExpect(jsonPath("$.description", Matchers.hasValue("NotToBeChanged")))
-                .andExpect(jsonPath("$.price", Matchers.hasValue(100)))
-                .andExpect(jsonPath("$.supply", Matchers.hasValue(1)))
-                .andExpect(jsonPath("$.seller", Matchers.hasValue("hej@hej.com")))
+                .andExpect(jsonPath("$.title").value("NotToBeChanged"))
+                .andExpect(jsonPath("$.description").value("NotToBeChanged"))
+                .andExpect(jsonPath("$.price").value(100))
+                .andExpect(jsonPath("$.supply").value(1))
+                .andExpect(jsonPath("$.seller").value("hej@hej.com"))
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         ItemDTO item = new ObjectMapper().readValue(content, ItemDTO.class);
         TestRequests.changeItem(item.id, "<Changed", "Changed", 200, 2, mockMvc)
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", Matchers.hasValue("Title can only contain letters, digits and spaces")));
+                .andExpect(jsonPath("$.reason").value("Title can only contain letters, digits and spaces"));
     }
 
     @Test
@@ -150,9 +150,9 @@ public class ItemTests {
                 .andExpect(status().isOk());
 
         TestRequests.getUser("master@buyer.com", mockMvc)
-                .andExpect(jsonPath("$.vault", Matchers.hasValue(0)));
+                .andExpect(jsonPath("$.vault").value(0));
 
         TestRequests.getUser("master@seller.com", mockMvc)
-                .andExpect(jsonPath("$.vault", Matchers.hasValue(400)));
+                .andExpect(jsonPath("$.vault").value(400));
     }
 }

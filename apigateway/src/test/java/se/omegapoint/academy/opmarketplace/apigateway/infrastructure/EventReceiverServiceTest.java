@@ -73,17 +73,13 @@ public class EventReceiverServiceTest {
 
         AccountObtainedDTO model = json.readValue("{" +
                 "   \"requestId\":\"test@test.com\"," +
-                "    \"account\":{" +
-                "        \"email\":{" +
-                "            \"address\":\"test@test.com\"" +
-                "        }," +
+                "   \"account\":{" +
+                "        \"email\":\"test@test.com\"," +
                 "        \"user\":{" +
                 "            \"firstName\":\"testFirst\"," +
                 "            \"lastName\":\"testLast\"" +
                 "        }," +
-                "       \"vault\":{\n" +
-                "           \"amount\":" + 10 +
-                "       }\n" +
+                "       \"vault\":" + 10 +
                 "    }" +
                 "}", AccountObtainedDTO.class);
 

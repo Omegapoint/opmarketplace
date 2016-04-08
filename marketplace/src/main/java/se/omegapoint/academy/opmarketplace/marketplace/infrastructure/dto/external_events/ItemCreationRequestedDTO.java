@@ -7,7 +7,6 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.*;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -16,20 +15,20 @@ public class ItemCreationRequestedDTO implements Event, Deserializer<ItemCreatio
 
     public static final String TYPE = "ItemCreationRequested";
     public final String requestId;
-    public final TitleDTO title;
-    public final DescriptionDTO description;
-    public final CreditDTO price;
-    public final QuantityDTO supply;
-    public final EmailDTO seller;
+    public final String title;
+    public final String description;
+    public final int price;
+    public final int supply;
+    public final String seller;
 
     @JsonCreator
     public ItemCreationRequestedDTO(
             @JsonProperty("requestId") String requestId,
-            @JsonProperty("title") TitleDTO title,
-            @JsonProperty("description") DescriptionDTO description,
-            @JsonProperty("price") CreditDTO price,
-            @JsonProperty("supply") QuantityDTO supply,
-            @JsonProperty("seller") EmailDTO seller) {
+            @JsonProperty("title") String title,
+            @JsonProperty("description") String description,
+            @JsonProperty("price") int price,
+            @JsonProperty("supply") int supply,
+            @JsonProperty("seller") String seller) {
         this.requestId = notNull(requestId);
         this.title = notNull(title);
         this.description = notNull(description);
@@ -41,11 +40,11 @@ public class ItemCreationRequestedDTO implements Event, Deserializer<ItemCreatio
     @Override
     public ItemCreationRequested domainObject() {
         return new ItemCreationRequested(
-                new Title(title.text),
-                new Description(description.text),
-                new Credit(price.amount),
-                new Quantity(supply.amount),
-                new Email(seller.address));
+                new Title(title),
+                new Description(description),
+                new Credit(price),
+                new Quantity(supply),
+                new Email(seller));
     }
 
     @Override

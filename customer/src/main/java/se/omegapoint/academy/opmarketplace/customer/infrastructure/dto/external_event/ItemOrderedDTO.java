@@ -8,8 +8,6 @@ import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Credit;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.CreditDTO;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
 
 import java.util.UUID;
 
@@ -21,16 +19,16 @@ public class ItemOrderedDTO implements Event, Deserializer<ItemOrdered> {
     public static final String TYPE = "ItemOrdered";
     public final String requestId;
     public final String orderId;
-    public final CreditDTO price;
-    public final EmailDTO sellerId;
-    public final EmailDTO buyerId;
+    public final int price;
+    public final String sellerId;
+    public final String buyerId;
 
     @JsonCreator
     public ItemOrderedDTO(@JsonProperty("requestId") String requestId,
                           @JsonProperty("orderId") String orderId,
-                          @JsonProperty("price") CreditDTO price,
-                          @JsonProperty("sellerId") EmailDTO sellerId,
-                          @JsonProperty("buyerId") EmailDTO buyerId){
+                          @JsonProperty("price") int price,
+                          @JsonProperty("sellerId") String sellerId,
+                          @JsonProperty("buyerId") String buyerId){
         this.requestId = notNull(requestId);
         this.orderId = orderId;
         this.price = notNull(price);
@@ -50,6 +48,6 @@ public class ItemOrderedDTO implements Event, Deserializer<ItemOrdered> {
 
     @Override
     public ItemOrdered domainObject() {
-        return new ItemOrdered(UUID.fromString(orderId), new Email(sellerId.address), new Credit(price.amount), new Email(buyerId.address));
+        return new ItemOrdered(UUID.fromString(orderId), new Email(sellerId), new Credit(price), new Email(buyerId));
     }
 }
