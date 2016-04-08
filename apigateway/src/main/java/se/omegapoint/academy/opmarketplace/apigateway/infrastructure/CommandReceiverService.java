@@ -38,7 +38,7 @@ public class CommandReceiverService {
                 case ValidateUsersDTO.TYPE:
                     ValidateUsersDTO validateUsersCommand = mapper.readValue(data, ValidateUsersDTO.class);
                     System.out.println(Arrays.toString(validateUsersCommand.users.toArray()));
-                    // TODO: 07/04/16 Take action
+                    ruleEngine.allowUsers(validateUsersCommand.users, validateUsersCommand.noSeconds);
                     break;
                 default:
                     System.err.println("Received unknown command: " + commandType);

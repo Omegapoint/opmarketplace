@@ -42,7 +42,7 @@ public class AccountGateway {
         notNull(newAccount);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
 
-        if (!ruleEngine.allow(AccountCreationRequestedDTO.TYPE)) {
+        if (!ruleEngine.shouldAllowEvent(AccountCreationRequestedDTO.TYPE)) {
             result.setResult(new ResponseEntity<>(HttpStatus.FORBIDDEN));
             return result;
         }

@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
@@ -31,6 +28,9 @@ public class ItemGateway {
     private Router router;
 
     @Autowired
+    private RuleEngine ruleEngine;
+
+    @Autowired
     private RemoteEventPublisher publisher;
 
     @RequestMapping(method = POST, produces = APPLICATION_JSON_VALUE)
@@ -44,9 +44,17 @@ public class ItemGateway {
     }
 
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
-    public DeferredResult<ResponseEntity<String>> item(@RequestParam("id") final ItemRequestedDTO request) {
+    public DeferredResult<ResponseEntity<String>> item(
+            @RequestParam("id") final ItemRequestedDTO request,
+            @RequestHeader(value = "email", required = false) final String email) {
         notNull(request);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
+
+        if (email != null && !ruleEngine.shouldAllowUser(email)) {
+            result.setResult(new ResponseEntity<>(HttpStatus.FORBIDDEN));
+            return result;
+        }
+
         ItemObtainedListener listener =  new ItemObtainedListener(result);
         router.subscribe(request.requestId(), listener);
         publisher.publish(new OutgoingRemoteEvent(request), "Item");
