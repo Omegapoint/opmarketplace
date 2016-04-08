@@ -46,6 +46,8 @@ public class MitigationTests {
             TestRequests.createUser(randomEmail, "firstName", "lastName", mockMvc);
         }
 
+        Thread.sleep(2000);
+
         TestRequests.createUser("test@email.com", "firstName", "lastName", mockMvc)
                 .andExpect(status().isForbidden());
     }
