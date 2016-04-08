@@ -3,7 +3,6 @@ package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountNotCreated;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 

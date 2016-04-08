@@ -1,10 +1,9 @@
 package se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.internal_event;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountNotDeleted;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountNotObtained;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Serializer;
-import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.EmailDTO;
+
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
