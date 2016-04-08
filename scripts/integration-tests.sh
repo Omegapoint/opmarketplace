@@ -2,7 +2,7 @@
 set -ev
 # messageservice has to be first in array to enable
 # other services to subscribe on startup!
-DIRS=(messageservice customer marketplace)
+DIRS=(messageservice customer marketplace eventanalyzer)
 PIDS=()
 for DIR in ${DIRS[@]}; do
   echo -------------------------Starting build of $DIR-------------------------
@@ -17,7 +17,7 @@ done
 echo -------------------------Starting build of apigateway-------------------------
 cd ../apigateway
 chmod +x gradlew
-./gradlew integrationTest
+./gradlew clean integrationTest
 cd ../scripts
 
 echo -------------------------CleanUp-------------------------
