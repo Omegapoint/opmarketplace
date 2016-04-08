@@ -174,15 +174,7 @@ public class ItemEventStore implements ItemRepository {
     }
 
     private void add(ItemOrdered itemOrdered) {
-        notNull(itemOrdered);
-        itemSupplyDeductedRepository.save(new ItemOrderEntity(
-                itemOrdered.orderId().toString(),
-                itemOrdered.itemId().toString(),
-                itemOrdered.quantity().amount(),
-                itemOrdered.price().amount(),
-                itemOrdered.sellerId().address(),
-                itemOrdered.buyerId().address(),
-                itemOrdered.timestamp()));
+        itemSupplyDeductedRepository.save(new ItemOrderEntity(notNull(itemOrdered)));
     }
 
     private void add(ItemOrderReversed itemOrderReversed) {

@@ -15,6 +15,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountDeleted;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.OrderDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.domain_object.UserDTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.*;
 
@@ -158,7 +159,7 @@ public class AccountServiceTest {
         request = new AccountCreditDepositRequestedDTO("1", "buyer@market.com", 10);
         accountService.accept(Event.wrap(request));
 
-        request = new ItemOrderedDTO("1", UUID.randomUUID().toString(), 10, "seller@market.com", "buyer@market.com");
+        request = new ItemOrderedDTO("1", new OrderDTO(UUID.randomUUID().toString(), 10, "seller@market.com", "buyer@market.com"));
         accountService.accept(Event.wrap(request));
         ItemPaymentCompleted completed = (ItemPaymentCompleted) testPublisher.getLastEvent();
         assertEquals(10, completed.price().amount());

@@ -3,6 +3,7 @@ package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.inter
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrdered;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Serializer;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.domain_object.OrderDTO;
 
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
@@ -11,20 +12,12 @@ public class ItemOrderedDTO implements Event, Serializer {
 
     public static final String TYPE = "ItemOrdered";
     public final String requestId;
-    public final String orderId;
-    public final int quantity;
-    public final int price;
-    public final String sellerId;
-    public final String buyerId;
+    public final OrderDTO order;
 
     public ItemOrderedDTO(ItemOrdered itemOrdered, String requestId){
         this.requestId = notNull(requestId);
-        notNull(itemOrdered);
-        this.orderId = itemOrdered.orderId().toString();
-        this.quantity = itemOrdered.quantity().amount();
-        this.price = itemOrdered.price().amount();
-        this.sellerId = itemOrdered.sellerId().address();
-        this.buyerId = itemOrdered.buyerId().address();
+        this.order = new OrderDTO(notNull(itemOrdered).order());
+
     }
 
     @Override

@@ -7,6 +7,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.ItemOrdered;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.ItemPaymentCompleted;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.ItemPaymentNotCompleted;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Order;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -17,25 +18,26 @@ public class TransactionService {
 
     public static DomainEvent creditTransaction(ItemOrdered request, AccountRepository accountRepository) {
         notNull(request);
+        Order order = request.order();
 
-        Optional<Account> maybeBuyer = accountRepository.account(request.buyerId());
+        Optional<Account> maybeBuyer = accountRepository.account(order.buyerId());
         DomainEvent chargeEvent = maybeBuyer
                 .map(buyer -> DomainObjectResult.of(b -> b.charge(request), buyer)
                         .map(n -> (DomainEvent)n)
-                        .orElseReason(reason -> new ItemPaymentNotCompleted(request.orderId(), reason)))
-                .orElse(new ItemPaymentNotCompleted(request.orderId(), "Buyer does not have an account registered."));
+                        .orElseReason(reason -> new ItemPaymentNotCompleted(order.id(), reason)))
+                .orElse(new ItemPaymentNotCompleted(order.id(), "Buyer does not have an account registered."));
 
         if (chargeEvent instanceof PersistableEvent){
-            Optional<Account> maybeSeller = accountRepository.account(request.sellerId());
+            Optional<Account> maybeSeller = accountRepository.account(order.sellerId());
             DomainEvent depositEvent = maybeSeller
                     .map(seller -> DomainObjectResult.of(s -> s.depositCredits(request), seller)
                             .map(n -> (DomainEvent)n)
-                            .orElseReason(reason -> new ItemPaymentNotCompleted(request.orderId(), reason)))
-                    .orElse(new ItemPaymentNotCompleted(request.orderId(), "Seller does not have an account registered."));
+                            .orElseReason(reason -> new ItemPaymentNotCompleted(order.id(), reason)))
+                    .orElse(new ItemPaymentNotCompleted(order.id(), "Seller does not have an account registered."));
             if (depositEvent instanceof PersistableEvent){
                 accountRepository.append((PersistableEvent) chargeEvent);
                 accountRepository.append((PersistableEvent) depositEvent);
-                return new ItemPaymentCompleted(request.orderId(), request.sellerId(), request.price(), request.buyerId());
+                return new ItemPaymentCompleted(order.id(), order.sellerId(), order.sum(), order.buyerId());
             }
             return depositEvent;
         }

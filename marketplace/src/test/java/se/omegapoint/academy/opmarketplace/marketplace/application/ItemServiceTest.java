@@ -170,10 +170,10 @@ public class ItemServiceTest {
         request = new ItemPurchaseRequestedDTO(requestId, itemCreated.itemId().toString(), 5, "buy@buy.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemOrdered itemOrdered = (ItemOrdered)publisher.getLatestEvent();
-        assertEquals(100, itemOrdered.price().amount());
-        assertEquals(5, itemOrdered.quantity().amount());
-        assertEquals("sell@sell.com", itemOrdered.sellerId().address());
-        assertEquals("buy@buy.com", itemOrdered.buyerId().address());
+        assertEquals(100, itemOrdered.order().sum().amount());
+        assertEquals(5, itemOrdered.order().quantity().amount());
+        assertEquals("sell@sell.com", itemOrdered.order().sellerId().address());
+        assertEquals("buy@buy.com", itemOrdered.order().buyerId().address());
 
         request = new ItemRequestedDTO(
                 requestId,
@@ -215,11 +215,11 @@ public class ItemServiceTest {
         request = new ItemPurchaseRequestedDTO(requestId, itemCreated.itemId().toString(), 5, "buy@buy.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemOrdered itemOrdered = (ItemOrdered)publisher.getLatestEvent();
-        UUID orderId = itemOrdered.orderId();
-        assertEquals(100, itemOrdered.price().amount());
-        assertEquals(5, itemOrdered.quantity().amount());
-        assertEquals("sell@sell.com", itemOrdered.sellerId().address());
-        assertEquals("buy@buy.com", itemOrdered.buyerId().address());
+        UUID orderId = itemOrdered.order().id();
+        assertEquals(100, itemOrdered.order().sum().amount());
+        assertEquals(5, itemOrdered.order().quantity().amount());
+        assertEquals("sell@sell.com", itemOrdered.order().sellerId().address());
+        assertEquals("buy@buy.com", itemOrdered.order().buyerId().address());
 
         request = new ItemPaymentNotCompletedDTO(requestId, orderId.toString());
         itemService.accept(reactor.bus.Event.wrap(request));

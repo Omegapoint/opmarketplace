@@ -78,10 +78,10 @@ public final class Item extends IdentifiedDomainObject {
         } catch (IllegalArgumentValidationException e){
             throw new IllegalArgumentValidationException("Insufficient supply.");
         }
-        return new ItemOrdered(request.itemId(),
+        return new ItemOrdered(new Order(request.itemId(),
                 seller(),
                 request.quantity(),
                 new Credit(price().amount() * request.quantity().amount()),
-                request.buyer());
+                request.buyer()));
     }
 }

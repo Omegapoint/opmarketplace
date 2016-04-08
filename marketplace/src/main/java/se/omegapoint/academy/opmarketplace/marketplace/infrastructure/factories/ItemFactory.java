@@ -44,7 +44,7 @@ public class ItemFactory {
                 item.title(),
                 item.description(),
                 item.price(),
-                item.supply().remove(itemOrdered.quantity()),
+                item.supply().remove(itemOrdered.order().quantity()),
                 item.seller());
     }
 

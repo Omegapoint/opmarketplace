@@ -61,13 +61,13 @@ public class Account {
 
     public AccountCreditWithdrawn charge(ItemOrdered request){
         notNull(request);
-        isTrue(this.email.equals(request.buyerId()));
-        return new AccountCreditWithdrawn(this.email, request.price());
+        isTrue(this.email.equals(request.order().buyerId()));
+        return new AccountCreditWithdrawn(this.email, request.order().sum());
     }
 
     public AccountCreditDeposited depositCredits(ItemOrdered request){
         notNull(request);
-        isTrue(this.email.equals(request.sellerId()));
-        return new AccountCreditDeposited(this.email(), request.price());
+        isTrue(this.email.equals(request.order().sellerId()));
+        return new AccountCreditDeposited(this.email(), request.order().sum());
     }
 }

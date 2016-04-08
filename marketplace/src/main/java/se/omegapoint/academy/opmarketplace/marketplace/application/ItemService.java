@@ -94,8 +94,8 @@ public class ItemService implements Consumer<reactor.bus.Event<Event>> {
         DomainObjectResult.of(ItemPaymentNotCompletedDTO::domainObject, notNull(dto))
                 .map(request -> repository.order(request.orderId())
                     .map(itemOrdered -> repository.append(new ItemOrderReversed(
-                            itemOrdered.orderId(),
-                            itemOrdered.itemId(),
-                            itemOrdered.quantity()))));
+                            itemOrdered.order().id(),
+                            itemOrdered.order().itemId(),
+                            itemOrdered.order().quantity()))));
     }
 }

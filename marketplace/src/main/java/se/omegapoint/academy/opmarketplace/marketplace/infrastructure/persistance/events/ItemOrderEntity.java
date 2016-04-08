@@ -17,30 +17,40 @@ public class ItemOrderEntity implements Deserializer<ItemOrdered> {
     private String orderId;
     private String id;
     private Integer quantity;
-    private Integer price;
+    private Integer sum;
     private String sellerId;
     private String buyerId;
     private Timestamp time;
 
     protected ItemOrderEntity(){}
 
-    public ItemOrderEntity(final String orderId, final String id, final int quantity, final int price,  final String sellerId, final String buyerId, Timestamp time) {
+    public ItemOrderEntity(final String orderId, final String id, final int quantity, final int sum,  final String sellerId, final String buyerId, Timestamp time) {
         this.orderId = orderId;
         this.id = id;
         this.quantity = quantity;
-        this.price = price;
+        this.sum = sum;
         this.sellerId = sellerId;
         this.buyerId = buyerId;
         this.time = time;
     }
 
+    public ItemOrderEntity(ItemOrdered itemOrdered) {
+        this.orderId = itemOrdered.order().id().toString();
+        this.id = itemOrdered.order().itemId().toString();
+        this.quantity = itemOrdered.order().quantity().amount();
+        this.sum = itemOrdered.order().sum().amount();
+        this.sellerId = itemOrdered.order().sellerId().address();
+        this.buyerId = itemOrdered.order().buyerId().address();
+        this.time = itemOrdered.timestamp();
+    }
+
     public ItemOrdered domainObject(){
-        return new ItemOrdered(UUID.fromString(orderId),
+        return new ItemOrdered(new Order(UUID.fromString(orderId),
                 UUID.fromString(id),
                 new Email(sellerId),
                 new Quantity(quantity),
-                new Credit(price),
-                new Email(buyerId),
+                new Credit(sum),
+                new Email(buyerId)),
                 time);
     }
 }

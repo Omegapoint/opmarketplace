@@ -88,7 +88,7 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
     private void accountCreditTransaction(ItemOrderedDTO dto) {
         DomainEvent event = DomainObjectResult.of(ItemOrderedDTO::domainObject, dto)
                 .map(itemOrdered -> TransactionService.creditTransaction(itemOrdered, accountRepository))
-                .orElseReason(reason -> new ItemPaymentNotCompleted(UUID.fromString(dto.orderId), reason));
+                .orElseReason(reason -> new ItemPaymentNotCompleted(UUID.fromString(dto.order.id), reason));
 
         publisher.publish(event, dto.requestId());
     }
