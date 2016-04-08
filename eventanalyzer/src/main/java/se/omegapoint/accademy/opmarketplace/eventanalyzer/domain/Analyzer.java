@@ -16,10 +16,10 @@ import java.util.List;
 public class Analyzer implements Consumer<Event<RemoteEvent>> {
 
     // TODO: 04/04/16 Change to correct values
-    private final int LIMIT_SIZE = 1;
-    private final long LIMIT_TIME_MS = 10000;
+    private final int LIMIT_SIZE = 20;
+    private final long LIMIT_TIME_MS = 5000;
     private final int DISABLE_DURATION_S = 20;
-    private final int IMPORTANT_USER_LIMIT_MINUTES = 2;
+    private final int IMPORTANT_USER_LIMIT_SECONDS = 10;
 
     private EventBus eventBus;
     private HashMap<String, SlidingWindow> eventWindows;
@@ -70,7 +70,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
                 break;
             case "ItemRequested":
                 System.out.printf("DEBUG: Too many %s events.%n", eventType);
-                List<String> importantUsers = userValidator.fetchList(LocalDateTime.now().minusMinutes(IMPORTANT_USER_LIMIT_MINUTES));
+                List<String> importantUsers = userValidator.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_LIMIT_SECONDS));
                 command = new ValidateUsersDTO(DISABLE_DURATION_S, importantUsers);
                 break;
         }
