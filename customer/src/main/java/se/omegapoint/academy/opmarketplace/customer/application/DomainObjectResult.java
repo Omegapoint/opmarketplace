@@ -4,6 +4,7 @@ import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class DomainObjectResult<T>{
     private Optional<T> value;
@@ -34,6 +35,14 @@ public class DomainObjectResult<T>{
     public static <U, V> DomainObjectResult<U> of(Function<V, U> conversion, V input){
         try {
             return new DomainObjectResult<>(conversion.apply(input));
+        } catch (IllegalArgumentValidationException e){
+            return new DomainObjectResult<>(e.getMessage());
+        }
+    }
+
+    public static <U> DomainObjectResult<U> of(Supplier<U> supplier){
+        try {
+            return new DomainObjectResult<>(supplier.get());
         } catch (IllegalArgumentValidationException e){
             return new DomainObjectResult<>(e.getMessage());
         }

@@ -95,15 +95,9 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
 
 
     private DomainEvent createAccount(AccountCreationRequested request) {
-        Optional<Account> maybeAccount = accountRepository.account(request.email());
-
-        return maybeAccount
-                .map(account -> (DomainEvent) new AccountNotCreated("Account already exists."))
-                .orElseGet(() -> {
-                    PersistableEvent persistableEvent = Account.createAccount(request);
-                    accountRepository.append(persistableEvent);
-                    return persistableEvent;
-                });
+        return DomainObjectResult.of(() -> (DomainEvent)Account.createAccount(request, accountRepository))
+                .map(event -> (DomainEvent)accountRepository.append((PersistableEvent) event))
+                .orElseReason(AccountNotCreated::new);
     }
 
     private DomainEvent obtainAccount(AccountRequested request) {
@@ -139,14 +133,8 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
     }
 
     private DomainEvent depositCreditsToAccount(AccountCreditDepositRequested request) {
-        Optional<Account> maybeAccount = accountRepository.account(request.email());
-
-        return maybeAccount
-                .map(account -> {
-                    PersistableEvent persistableEvent = account.depositCredits(request);
-                    accountRepository.append(persistableEvent);
-                    return (DomainEvent) persistableEvent;
-                })
-                .orElse(new AccountCreditNotDeposited("Account does not exist."));
+        return DomainObjectResult.of(() -> (DomainEvent)Account.depositCredits(request, accountRepository))
+                .map(event -> (DomainEvent)accountRepository.append((PersistableEvent) event))
+                .orElseReason(AccountCreditNotDeposited::new);
     }
 }

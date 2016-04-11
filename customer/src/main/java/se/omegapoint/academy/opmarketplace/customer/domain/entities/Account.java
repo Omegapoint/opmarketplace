@@ -2,6 +2,7 @@ package se.omegapoint.academy.opmarketplace.customer.domain.entities;
 
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.*;
+import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Credit;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
@@ -37,9 +38,16 @@ public class Account {
         return vault;
     }
 
-    public static AccountCreated createAccount(AccountCreationRequested request){
+    public static AccountCreated createAccount(AccountCreationRequested request, AccountRepository repository){
         notNull(request);
+        isTrue(!repository.accountInExistence(request.email()), "Account already exists.");
         return new AccountCreated(request.email(), request.user());
+    }
+
+    public static AccountCreditDeposited depositCredits(AccountCreditDepositRequested request, AccountRepository repository){
+        notNull(request);
+        isTrue(repository.accountInExistence(request.email()), "Account does not exist.");
+        return new AccountCreditDeposited(request.email(), request.credits());
     }
 
     public AccountUserChanged changeUser(AccountUserChangeRequested request){
@@ -52,12 +60,6 @@ public class Account {
         notNull(request);
         isTrue(this.email.equals(request.email()));
         return new AccountDeleted(this.email());
-    }
-
-    public AccountCreditDeposited depositCredits(AccountCreditDepositRequested request){
-        notNull(request);
-        isTrue(this.email.equals(request.email()));
-        return new AccountCreditDeposited(this.email(), request.credits());
     }
 
     public AccountCreditWithdrawn charge(ItemOrdered request){

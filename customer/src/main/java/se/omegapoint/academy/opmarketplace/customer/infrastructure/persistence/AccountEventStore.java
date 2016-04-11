@@ -91,7 +91,7 @@ public class AccountEventStore implements AccountRepository {
                 .collect(Collectors.toList());
     }
 
-    public void append(PersistableEvent event) {
+    public PersistableEvent append(PersistableEvent event) {
         notNull(event);
         if (event instanceof AccountCreated) {
             createAccountRepository.save(new AccountCreatedModel((AccountCreated) event));
@@ -106,11 +106,13 @@ public class AccountEventStore implements AccountRepository {
         }  else {
             throw new IllegalArgumentException("Unsupported persistable event");
         }
+        return event;
     }
 
     @Override
     public boolean accountInExistence(Email email) {
         notNull(email);
-        return !createAccountRepository.findByEmailOrderByTime(email.address()).isEmpty();
+        List<AccountCreatedModel> events = createAccountRepository.findByEmailOrderByTime(email.address());
+        return !events.isEmpty();
     }
 }

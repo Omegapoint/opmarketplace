@@ -12,5 +12,5 @@ public interface AccountRepository  {
 
     boolean accountInExistence(Email email);
 
-    void append(PersistableEvent event);
+    PersistableEvent append(PersistableEvent event);
 }

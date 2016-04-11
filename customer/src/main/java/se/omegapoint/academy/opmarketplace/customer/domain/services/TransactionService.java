@@ -37,8 +37,7 @@ public class TransactionService {
     private static DomainEvent requestDeposit(ItemOrdered request, AccountRepository accountRepository) {
         Optional<Account> maybeSeller = accountRepository.account(request.order().sellerId());
         return maybeSeller
-                .map(seller -> DomainObjectResult.of(s -> s.depositCredits(request), seller)
-                        .map(n -> (DomainEvent)n)
+                .map(seller -> DomainObjectResult.of(() -> (DomainEvent)seller.depositCredits(request))
                         .orElseReason(reason -> new ItemPaymentNotCompleted(request.order().id(), reason)))
                 .orElse(new ItemPaymentNotCompleted(request.order().id(), "Seller does not have an account registered."));
     }
@@ -46,8 +45,7 @@ public class TransactionService {
     private static DomainEvent requestCharge(ItemOrdered request, AccountRepository accountRepository) {
         Optional<Account> maybeBuyer = accountRepository.account(request.order().buyerId());
         return maybeBuyer
-                .map(buyer -> DomainObjectResult.of(b -> b.charge(request), buyer)
-                        .map(n -> (DomainEvent)n)
+                .map(buyer -> DomainObjectResult.of(() -> (DomainEvent)buyer.charge(request))
                         .orElseReason(reason -> new ItemPaymentNotCompleted(request.order().id(), reason)))
                 .orElse(new ItemPaymentNotCompleted(request.order().id(), "Buyer does not have an account registered."));
     }
