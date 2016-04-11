@@ -1,6 +1,7 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects;
 
 import org.apache.commons.validator.routines.EmailValidator;
+import se.omegapoint.academy.opmarketplace.marketplace.MainConfiguration;
 
 import java.util.Objects;
 
@@ -16,10 +17,11 @@ public final class Email {
     private final String address;
 
     public Email(String address) {
-        notBlank(address);
-        address = address.trim();
-        isTrue(address.length() <= MAX_LENGTH, ILLEGAL_LENGTH);
-        isTrue(EmailValidator.getInstance().isValid(address), ILLEGAL_FORMAT);
+        String trimmedAddress = notBlank(address).trim();
+        if (MainConfiguration.VALIDATION) {
+            isTrue(trimmedAddress.length() <= MAX_LENGTH, ILLEGAL_LENGTH);
+            isTrue(EmailValidator.getInstance().isValid(trimmedAddress), ILLEGAL_FORMAT);
+        }
         this.address = address;
     }
 

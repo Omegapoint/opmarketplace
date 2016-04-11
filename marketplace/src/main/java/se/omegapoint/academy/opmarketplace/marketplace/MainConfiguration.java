@@ -19,6 +19,8 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 @EnableJpaRepositories(basePackageClasses = JpaRepositoryMarker.class)
 public class MainConfiguration {
 
+    public static boolean VALIDATION = true;
+
     @Bean
     ItemService createItemService(ItemRepository accountRepository, EventPublisher eventPublisher) {
         return new ItemService(accountRepository, eventPublisher);

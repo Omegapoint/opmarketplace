@@ -1,5 +1,7 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects;
 
+import se.omegapoint.academy.opmarketplace.marketplace.MainConfiguration;
+
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.*;
 
@@ -10,7 +12,10 @@ public class Quantity {
     private final int amount;
 
     public Quantity(int quantity) {
-        isTrue(notNull(quantity) >= 0, ILLEGAL_VALUE);
+        notNull(quantity);
+        if (MainConfiguration.VALIDATION) {
+            isTrue(quantity >= 0, ILLEGAL_VALUE);
+        }
         this.amount = quantity;
     }
 

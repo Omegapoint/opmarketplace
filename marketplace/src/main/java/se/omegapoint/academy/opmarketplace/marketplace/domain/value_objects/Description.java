@@ -1,5 +1,7 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects;
 
+import se.omegapoint.academy.opmarketplace.marketplace.MainConfiguration;
+
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notBlank;
 
@@ -13,10 +15,12 @@ public class Description {
     private final String text;
 
     public Description(String text) {
-        notBlank(text);
-        isTrue(text.length() <= MAX_LENGTH, ILLEGAL_LENGTH);
-        isTrue(text.matches("[\\w\\.,?%&@/ ]+"), ILLEGAL_CHARACTERS);
-        this.text = text;
+        String trimmedText = notBlank(text).trim();
+        if (MainConfiguration.VALIDATION) {
+            isTrue(trimmedText.length() <= MAX_LENGTH, ILLEGAL_LENGTH);
+            isTrue(trimmedText.matches("[\\w\\.,?%&@/ ]+"), ILLEGAL_CHARACTERS);
+        }
+        this.text = trimmedText;
     }
 
     public String text(){
