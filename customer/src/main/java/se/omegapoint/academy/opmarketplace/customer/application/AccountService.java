@@ -102,7 +102,6 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
 
     private DomainEvent obtainAccount(AccountRequested request) {
         Optional<Account> maybeAccount = accountRepository.account(request.email());
-
         return maybeAccount
                 .map((account) -> (DomainEvent) new AccountObtained(account))
                 .orElse(new AccountNotObtained("Account does not exist."));
@@ -110,25 +109,15 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
 
     private DomainEvent changeUserOfAccount(AccountUserChangeRequested request) {
         Optional<Account> maybeAccount = accountRepository.account(request.email());
-
         return maybeAccount
-                .map(account -> {
-                    PersistableEvent persistableEvent = account.changeUser(request);
-                    accountRepository.append(persistableEvent);
-                    return (DomainEvent) persistableEvent;
-                })
+                .map(account -> (DomainEvent)accountRepository.append(account.changeUser(request)))
                 .orElse(new AccountUserNotChanged("Account does not exist."));
     }
 
     private DomainEvent deleteAccount(AccountDeletionRequested request) {
         Optional<Account> maybeAccount = accountRepository.account(request.email());
-
         return maybeAccount
-                .map(account -> {
-                    PersistableEvent persistableEvent = account.deleteAccount(request);
-                    accountRepository.append(persistableEvent);
-                    return (DomainEvent) persistableEvent;
-                })
+                .map(account -> (DomainEvent)accountRepository.append(account.deleteAccount(request)))
                 .orElse(new AccountNotDeleted("Account does not exist."));
     }
 
