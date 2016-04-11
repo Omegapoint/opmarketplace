@@ -30,7 +30,7 @@ public class TransactionService {
         } else if (depositEvent instanceof  ItemPaymentNotCompleted){
             return depositEvent;
         } else {
-            return new ItemPaymentNotCompleted(order.id(), "Unknown failiure.");
+            return new ItemPaymentNotCompleted(order.id(), "Unknown failure.");
         }
     }
 
