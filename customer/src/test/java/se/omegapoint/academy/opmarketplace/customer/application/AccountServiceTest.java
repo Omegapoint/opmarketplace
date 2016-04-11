@@ -147,31 +147,57 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void performCreditTransaction(){
-        se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event request = new AccountCreationRequestedDTO("1",
-                "buyer@market.com",
-                new UserDTO("buyer", "market"));
+    public void should_perform_credit_transaction(){
+        String buyer = "buyer@market.com";
+        String seller = "seller@market.com";
+        se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event request = new AccountCreationRequestedDTO("1", buyer, new UserDTO("buyer", "market"));
         accountService.accept(Event.wrap(request));
 
-        request = new AccountCreationRequestedDTO("1", "seller@market.com", new UserDTO("seller", "market"));
+        request = new AccountCreationRequestedDTO("1", seller, new UserDTO("seller", "market"));
         accountService.accept(Event.wrap(request));
 
-        request = new AccountCreditDepositRequestedDTO("1", "buyer@market.com", 10);
+        request = new AccountCreditDepositRequestedDTO("1", buyer, 10);
         accountService.accept(Event.wrap(request));
 
-        request = new ItemOrderedDTO("1", new OrderDTO(UUID.randomUUID().toString(), 10, "seller@market.com", "buyer@market.com"));
+        request = new ItemOrderedDTO("1", new OrderDTO(UUID.randomUUID().toString(), 10, seller, buyer));
         accountService.accept(Event.wrap(request));
         ItemPaymentCompleted completed = (ItemPaymentCompleted) testPublisher.getLastEvent();
         assertEquals(10, completed.price().amount());
-        assertEquals("seller@market.com", completed.sellerId().address());
-        assertEquals("buyer@market.com", completed.buyerId().address());
+        assertEquals(seller, completed.sellerId().address());
+        assertEquals(buyer, completed.buyerId().address());
 
-        request = new AccountRequestedDTO("1", "seller@market.com");
+        request = new AccountRequestedDTO("1", seller);
         accountService.accept(Event.wrap(request));
         AccountObtained sellerAccount = (AccountObtained) testPublisher.getLastEvent();
         assertEquals(10, sellerAccount.account().vault().amount());
 
-        request = new AccountRequestedDTO("1", "buyer@market.com");
+        request = new AccountRequestedDTO("1", buyer);
+        accountService.accept(Event.wrap(request));
+        AccountObtained buyerAccount = (AccountObtained) testPublisher.getLastEvent();
+        assertEquals(0, buyerAccount.account().vault().amount());
+    }
+
+    @Test
+    public void should_not_perform_credit_transaction_due_to_buyer_insufficient_funds(){
+        String buyer = "poorbuyer@market.com";
+        String seller = "sadseller@market.com";
+        se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event request = new AccountCreationRequestedDTO("1", buyer, new UserDTO("buyer", "market"));
+        accountService.accept(Event.wrap(request));
+
+        request = new AccountCreationRequestedDTO("1", seller, new UserDTO("seller", "market"));
+        accountService.accept(Event.wrap(request));
+
+        request = new ItemOrderedDTO("1", new OrderDTO(UUID.randomUUID().toString(), 10, seller, buyer));
+        accountService.accept(Event.wrap(request));
+        ItemPaymentNotCompleted notCompleted = (ItemPaymentNotCompleted) testPublisher.getLastEvent();
+        assertEquals("Insufficient funds.", notCompleted.reason());
+
+        request = new AccountRequestedDTO("1", seller);
+        accountService.accept(Event.wrap(request));
+        AccountObtained sellerAccount = (AccountObtained) testPublisher.getLastEvent();
+        assertEquals(0, sellerAccount.account().vault().amount());
+
+        request = new AccountRequestedDTO("1", buyer);
         accountService.accept(Event.wrap(request));
         AccountObtained buyerAccount = (AccountObtained) testPublisher.getLastEvent();
         assertEquals(0, buyerAccount.account().vault().amount());

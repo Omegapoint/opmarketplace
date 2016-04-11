@@ -5,6 +5,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Credit;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
+import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import static se.sawano.java.commons.lang.validate.Validate.*;
 
@@ -62,7 +63,11 @@ public class Account {
     public AccountCreditWithdrawn charge(ItemOrdered request){
         notNull(request);
         isTrue(this.email.equals(request.order().buyerId()));
-        return new AccountCreditWithdrawn(this.email, request.order().sum());
+        if (request.order().sum().amount() <= this.vault.amount()) {
+            return new AccountCreditWithdrawn(this.email, request.order().sum());
+        } else {
+            throw new IllegalArgumentValidationException("Insufficient funds.");
+        }
     }
 
     public AccountCreditDeposited depositCredits(ItemOrdered request){
