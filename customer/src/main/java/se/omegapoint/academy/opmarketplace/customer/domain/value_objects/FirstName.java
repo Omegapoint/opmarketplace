@@ -1,10 +1,10 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.value_objects;
 
+import se.omegapoint.academy.opmarketplace.customer.MainConfiguration;
+
 import java.util.Objects;
 
-import static se.sawano.java.commons.lang.validate.Validate.isFalse;
-import static se.sawano.java.commons.lang.validate.Validate.isTrue;
-import static se.sawano.java.commons.lang.validate.Validate.notBlank;
+import static se.sawano.java.commons.lang.validate.Validate.*;
 
 public class FirstName {
     private final int NAME_LENGTH = 25;
@@ -16,9 +16,11 @@ public class FirstName {
     public FirstName(String name) {
         notBlank(name);
         String trimmedName = name.trim();
-        isTrue(trimmedName.length() <= NAME_LENGTH, ILLEGAL_LENGTH);
-        isTrue(trimmedName.matches("[\\w\\-]+"), ILLEGAL_FORMAT);
-        isFalse(trimmedName.contains("_"), ILLEGAL_FORMAT);
+        if (MainConfiguration.VALIDATION) {
+            isTrue(trimmedName.length() <= NAME_LENGTH, ILLEGAL_LENGTH);
+            isTrue(trimmedName.matches("[\\w\\-]+"), ILLEGAL_FORMAT);
+            isFalse(trimmedName.contains("_"), ILLEGAL_FORMAT);
+        }
         this.name = trimmedName;
     }
 

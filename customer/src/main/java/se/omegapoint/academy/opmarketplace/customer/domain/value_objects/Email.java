@@ -1,6 +1,8 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.value_objects;
 
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.omegapoint.academy.opmarketplace.customer.MainConfiguration;
 
 import java.util.Objects;
 
@@ -18,8 +20,10 @@ public final class Email {
     public Email(String address) {
         notBlank(address);
         address = address.trim();
-        isTrue(address.length() <= MAX_LENGTH, ILLEGAL_LENGTH);
-        isTrue(EmailValidator.getInstance().isValid(address), ILLEGAL_FORMAT);
+        if (MainConfiguration.VALIDATION) {
+            isTrue(address.length() <= MAX_LENGTH, ILLEGAL_LENGTH);
+            isTrue(EmailValidator.getInstance().isValid(address), ILLEGAL_FORMAT);
+        }
         this.address = address;
     }
 
