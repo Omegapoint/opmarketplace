@@ -23,10 +23,10 @@ public class CreateAccountRequest {
         for (String s : values) {
             MvcResult mvcResult = Requests.createUser(s, "valid", "valid", mockMvc)
                     .andReturn();
-            if (Requests.checkStatus(mvcResult)){
+            if (Requests.isBlock(mvcResult)){
                 res.registerBlock();
             } else {
-                res.registerFailiure(s);
+                res.registerNotBlocked(s);
             }
             System.out.print('.');
         }
@@ -39,10 +39,10 @@ public class CreateAccountRequest {
         for (String s : values) {
             MvcResult mvcResult = Requests.createUser("valid@valid.com", s, "valid", mockMvc)
                     .andReturn();
-            if (Requests.checkStatus(mvcResult)){
+            if (Requests.isBlock(mvcResult)){
                 res.registerBlock();
             } else {
-                res.registerFailiure(s);
+                res.registerNotBlocked(s);
             }
             System.out.print(".");
         }
@@ -55,10 +55,10 @@ public class CreateAccountRequest {
         for (String s : values) {
             MvcResult mvcResult = Requests.createUser("valid@valid.com", "valid", s, mockMvc)
                     .andReturn();
-            if (Requests.checkStatus(mvcResult)){
+            if (Requests.isBlock(mvcResult)){
                 res.registerBlock();
             } else {
-                res.registerFailiure(s);
+                res.registerNotBlocked(s);
             }
             System.out.print(".");
         }

@@ -14,11 +14,11 @@ public class Result {
     @JsonIgnore
     private int numBlocked;
     private String blocked;
-    private final List<String> failures;
+    private final List<String> notBlocked;
 
     public Result(int numTestCases) {
         this.numTestCases = notNull(numTestCases);
-        this.failures = new ArrayList<>();
+        this.notBlocked = new ArrayList<>();
         numBlocked = 0;
         blocked = numBlocked + "/" + numTestCases;
     }
@@ -29,15 +29,15 @@ public class Result {
         blocked = numBlocked + "/" + numTestCases;
     }
 
-    public void registerFailiure(String text){
-        failures.add(text);
+    public void registerNotBlocked(String text){
+        notBlocked.add(text);
     }
 
     public String getBlocked() {
         return blocked;
     }
 
-    public List<String> getFailures() {
-        return failures;
+    public List<String> getNotBlocked() {
+        return notBlocked;
     }
 }

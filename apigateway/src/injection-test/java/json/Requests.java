@@ -11,6 +11,9 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemCreationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemPurchaseRequestedDTO;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
@@ -18,6 +21,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
 public class Requests {
+
+    private static ObjectMapper json = new ObjectMapper();
 
     public static ResultActions createItem(String title, String description, int price, int quantity, String seller, MockMvc mockMvc) throws Exception {
         String content = itemCreationJson(title, description, price, quantity, seller);
@@ -163,7 +168,7 @@ public class Requests {
                         "\"supply\":" + quantity +
                         "}";
         // Validate content
-        new ObjectMapper().readValue(content, ItemChangeRequestedDTO.class);
+        json.readValue(content, ItemChangeRequestedDTO.class);
         return content;
     }
 
@@ -176,7 +181,7 @@ public class Requests {
                 "\"seller\":\"" + seller + "\"" +
                 "}";
         // Validate content
-        new ObjectMapper().readValue(content, ItemCreationRequestedDTO.class);
+        json.readValue(content, ItemCreationRequestedDTO.class);
         return content;
     }
 
@@ -189,7 +194,7 @@ public class Requests {
                         "\"buyerId\":\"" + buyerId + "\"" +
                         "}";
         // Validate content
-        new ObjectMapper().readValue(content, ItemPurchaseRequestedDTO.class);
+        json.readValue(content, ItemPurchaseRequestedDTO.class);
         return content;
     }
 
@@ -199,7 +204,7 @@ public class Requests {
                         "\"email\":\"" + email + "\"," +
                         "\"credit\":" + credit +
                         "}";
-        new ObjectMapper().readValue(content, AccountCreditDepositRequestedDTO.class);
+        json.readValue(content, AccountCreditDepositRequestedDTO.class);
         return content;
     }
 
@@ -212,12 +217,15 @@ public class Requests {
                         "\"lastName\":\"" + lastName + "\"" +
                         "}" +
                         "}";
-        new ObjectMapper().readValue(content, AccountUserChangeRequestedDTO.class);
+        json.readValue(content, AccountUserChangeRequestedDTO.class);
         return content;
     }
 
-    public static boolean checkStatus(MvcResult result){
+    public static boolean isBlock(MvcResult result) throws IOException {
         int status = result.getResponse().getStatus();
-        return status >= 400 && status < 500;
+        if (status >= 400 && status < 500){
+            return json.readValue(result.getResponse().getContentAsString(), ReasonExtractor.class).isValidationFailure();
+        }
+        return false;
     }
 }

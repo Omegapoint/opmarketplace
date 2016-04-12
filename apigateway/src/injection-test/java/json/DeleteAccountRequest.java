@@ -19,10 +19,10 @@ public class DeleteAccountRequest {
         for (String s : values) {
             MvcResult mvcResult = Requests.deleteUser(s, mockMvc)
                     .andReturn();
-            if (Requests.checkStatus(mvcResult)){
+            if (Requests.isBlock(mvcResult)){
                 res.registerBlock();
             } else {
-                res.registerFailiure(s);
+                res.registerNotBlocked(s);
             }
             System.out.print(".");
         }
