@@ -5,11 +5,11 @@ public class RateLimitFeatureDTO implements Command {
     public static final String TYPE = "RateLimitFeature";
 
     public final int interval;
-    public final String eventName;
+    public final int noSeconds;
 
-    public RateLimitFeatureDTO(int interval, String eventName) {
+    public RateLimitFeatureDTO(int interval, int noSeconds) {
         this.interval = interval;
-        this.eventName = eventName;
+        this.noSeconds = noSeconds;
     }
 
     @Override

@@ -77,7 +77,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
                 List<String> importantUsers = userValidator.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_LIMIT_SECONDS), IMPORTANT_USER_MIN_SPEND);
                 dispatchCommands(
                         new ValidateUsersDTO(DISABLE_DURATION_S, importantUsers),
-                        new RateLimitFeatureDTO(RATE_LIMIT_INTERVAL_MS, eventType));
+                        new RateLimitFeatureDTO(RATE_LIMIT_INTERVAL_MS, DISABLE_DURATION_S));
                 break;
         }
     }

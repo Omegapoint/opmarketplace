@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.omegapoint.academy.opmarketplace.apigateway.application.RuleEngine;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.commands.DisableFeatureDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.commands.RateLimitFeatureDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.commands.ValidateUsersDTO;
 
 import java.io.IOException;
@@ -33,13 +34,16 @@ public class CommandReceiverService {
             switch (commandType) {
                 case DisableFeatureDTO.TYPE:
                     DisableFeatureDTO disableCommand = mapper.readValue(data, DisableFeatureDTO.class);
-                    ruleEngine.deny(disableCommand.eventName, disableCommand.noSeconds);
+                    ruleEngine.disableEvent(disableCommand.eventName, disableCommand.noSeconds);
                     break;
                 case ValidateUsersDTO.TYPE:
                     ValidateUsersDTO validateUsersCommand = mapper.readValue(data, ValidateUsersDTO.class);
                     System.out.println(Arrays.toString(validateUsersCommand.users.toArray()));
                     ruleEngine.allowUsers(validateUsersCommand.users, validateUsersCommand.noSeconds);
                     break;
+                case RateLimitFeatureDTO.TYPE:
+                    RateLimitFeatureDTO rateLimitFeatureCommand = mapper.readValue(data, RateLimitFeatureDTO.class);
+                    ruleEngine.addRateLimiting(rateLimitFeatureCommand.interval, rateLimitFeatureCommand.noSeconds);
                 default:
                     System.err.println("Received unknown command: " + commandType);
                     break;

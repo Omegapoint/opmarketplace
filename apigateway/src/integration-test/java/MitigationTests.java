@@ -86,4 +86,44 @@ public class MitigationTests {
 
         Thread.sleep(10000);
     }
+
+    @Test
+    public void rate_limiting_is_activated_when_items_are_fetched_quickly() throws Exception {
+        // Add a user and an item.
+        String email = "gunlog@email.com";
+        TestRequests.createUser(email, "firstName", "lastName", mockMvc)
+                .andExpect(status().isOk());
+
+        MvcResult mvcResult = TestRequests.createItem("Example title", "Example description", 100, 1, email, mockMvc)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String itemId = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), ItemDTO.class).id;
+
+        // Make user "important"
+        Thread.sleep(5000);
+        TestRequests.addCredit(email, 200, mockMvc)
+                .andExpect(status().isOk());
+        TestRequests.purchaseItem(itemId, 1, email, mockMvc)
+                .andExpect(status().isOk());
+
+        // Initial requests, should succeed.
+        for (int i = 0; i < 10; i++) {
+            TestRequests.getItem(itemId, mockMvc)
+                    .andExpect(status().isOk());
+        }
+
+        // More request, should activate mitigation.
+        for (int i = 0; i < 20; i++) {
+            TestRequests.getItem(itemId, mockMvc);
+        }
+
+        TestRequests.getItemAuth(itemId, email, mockMvc)
+                .andExpect(status().isOk());
+
+        TestRequests.getItemAuth(itemId, email, mockMvc)
+                .andExpect(status().isForbidden());
+
+        Thread.sleep(10000);
+    }
 }
