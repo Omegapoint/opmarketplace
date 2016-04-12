@@ -24,14 +24,8 @@ public class ChangeUserRequest {
         for (String s : values) {
             MvcResult mvcResult = Requests.changeUser(s, "valid", "valid", mockMvc)
                     .andReturn();
-            if (Requests.isBlock(mvcResult)){
-                res.registerBlock();
-            } else {
-                res.registerNotBlocked(s);
-            }
-            System.out.print(".");
+            res.registerResult(mvcResult, s);
         }
-        System.out.println();
         return res;
     }
 
@@ -40,14 +34,8 @@ public class ChangeUserRequest {
         for (String s : values) {
             MvcResult mvcResult = Requests.changeUser("valid@valid.com", s, "valid", mockMvc)
                     .andReturn();
-            if (Requests.isBlock(mvcResult)){
-                res.registerBlock();
-            } else {
-                res.registerNotBlocked(s);
-            }
-            System.out.print(".");
+            res.registerResult(mvcResult, s);
         }
-        System.out.println();
         return res;
     }
 
@@ -56,14 +44,8 @@ public class ChangeUserRequest {
         for (String s : values) {
             MvcResult mvcResult = Requests.changeUser("valid@valid.com", "valid", s, mockMvc)
                     .andReturn();
-            if (Requests.isBlock(mvcResult)){
-                res.registerBlock();
-            } else {
-                res.registerNotBlocked(s);
-            }
-            System.out.print(".");
+            res.registerResult(mvcResult, s);
         }
-        System.out.println();
         return res;
     }
 }

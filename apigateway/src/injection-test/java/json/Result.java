@@ -1,6 +1,9 @@
 package json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +26,21 @@ public class Result {
         blocked = numBlocked + "/" + numTestCases;
     }
 
+    public void registerResult(MvcResult result, String input) throws IOException {
+        if (Requests.isBlock(result)){
+            registerBlock();
+        } else {
+            registerNotBlocked(input);
+        }
+    }
+
     public void registerBlock(){
         isTrue(numBlocked != numTestCases);
         numBlocked++;
         blocked = numBlocked + "/" + numTestCases;
     }
 
-    public void registerNotBlocked(String text){
+    private void registerNotBlocked(String text){
         notBlocked.add(text);
     }
 

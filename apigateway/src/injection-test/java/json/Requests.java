@@ -12,7 +12,6 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemPurchaseRequestedDTO;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -24,7 +23,7 @@ public class Requests {
 
     private static ObjectMapper json = new ObjectMapper();
 
-    public static ResultActions createItem(String title, String description, int price, int quantity, String seller, MockMvc mockMvc) throws Exception {
+    public static ResultActions createItem(String title, String description, String price, String quantity, String seller, MockMvc mockMvc) throws Exception {
         String content = itemCreationJson(title, description, price, quantity, seller);
         MvcResult mvcResult = mockMvc.perform(post("/items")
                 .contentType(APPLICATION_JSON)
@@ -63,7 +62,7 @@ public class Requests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    public static ResultActions changeItem(String id, String title, String description, int price, int quantity, MockMvc mockMvc) throws Exception {
+    public static ResultActions changeItem(String id, String title, String description, String price, String quantity, MockMvc mockMvc) throws Exception {
         String content = itemChangeJson(id, title, description, price, quantity);
         MvcResult mvcResult = mockMvc.perform(put("/items")
                 .contentType(APPLICATION_JSON)
@@ -158,7 +157,7 @@ public class Requests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    private static String itemChangeJson(String id, String title, String description, int price, int quantity) throws Exception {
+    private static String itemChangeJson(String id, String title, String description, String price, String quantity) throws Exception {
         String content =
                 "{" +
                         "\"id\":\"" + id + "\"," +
@@ -172,7 +171,7 @@ public class Requests {
         return content;
     }
 
-    private static String itemCreationJson(String title, String description, int price, int quantity, String seller) throws Exception {
+    private static String itemCreationJson(String title, String description, String price, String quantity, String seller) throws Exception {
         String content = "{" +
                 "\"title\":\"" + title + "\"," +
                 "\"description\":\"" + description + "\"," +

@@ -23,14 +23,8 @@ public class AddCreditRequest {
         for (String s : values) {
             MvcResult mvcResult = Requests.addCredit(s, "1", mockMvc)
                     .andReturn();
-            if (Requests.isBlock(mvcResult)){
-                res.registerBlock();
-            } else {
-                res.registerNotBlocked(s);
-            }
-            System.out.print(".");
+            res.registerResult(mvcResult, s);
         }
-        System.out.println();
         return res;
     }
 
@@ -40,17 +34,11 @@ public class AddCreditRequest {
             try {
                 MvcResult mvcResult = Requests.addCredit("valid@valid.com", s, mockMvc)
                         .andReturn();
-                if (Requests.isBlock(mvcResult)){
-                    res.registerBlock();
-                } else {
-                    res.registerNotBlocked(s);
-                }
+                res.registerResult(mvcResult, s);
             } catch (JsonParseException e){
                 res.registerBlock();
             }
-            System.out.print(".");
         }
-        System.out.println();
         return res;
     }
 }

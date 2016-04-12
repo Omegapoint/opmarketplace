@@ -32,16 +32,14 @@ public class OwaspSQLStrings {
 
     private SQLStrings sqlStrings;
 
-    private PrintWriter accountOutput;
-    private PrintWriter itemOutput;
+    private PrintWriter customerOutput;
+    private PrintWriter marketplaceOutput;
 
     private ObjectWriter json;
 
     public OwaspSQLStrings() throws IOException {
         json = new ObjectMapper().writerWithDefaultPrettyPrinter();
         sqlStrings = new SQLStrings(new File("src\\injection-test\\resources\\SQLStrings.txt"));
-        accountOutput = new PrintWriter(new File("src\\injection-test\\resources\\AccountRequestsInjectionLog.json"));
-        itemOutput = new PrintWriter(new File("src\\injection-test\\resources\\ItemRequestsInjectionLog.json"));
     }
 
     @Before
@@ -49,14 +47,9 @@ public class OwaspSQLStrings {
         mockMvc = webAppContextSetup(wac).build();
     }
 
-    @After
-    public void tearDown() throws Exception {
-        accountOutput.close();
-        itemOutput.close();
-    }
-
     @Test
-    public void validateAccount() throws Exception {
+    public void validateCustomer() throws Exception {
+
         CustomerLog log = new CustomerLog(
                 new CreateAccountRequest(sqlStrings.values(), mockMvc),
                 new ChangeUserRequest(sqlStrings.values(), mockMvc),
@@ -64,12 +57,19 @@ public class OwaspSQLStrings {
                 new GetAccountRequest(sqlStrings.values(), mockMvc),
                 new DeleteAccountRequest(sqlStrings.values(), mockMvc)
         );
-        accountOutput.write(json.writeValueAsString(log));
+        customerOutput = new PrintWriter(new File("src\\injection-test\\resources\\CustomerRequestsInjectionLog.json"));
+        customerOutput.write(json.writeValueAsString(log));
+        customerOutput.close();
     }
 
     @Test
-    public void validateItem() throws Exception {
-
+    public void validateMarketplace() throws Exception {
+        MarketplaceLog log = new MarketplaceLog(
+                new CreateItemRequest(sqlStrings.values(), mockMvc)
+        );
+        marketplaceOutput = new PrintWriter(new File("src\\injection-test\\resources\\MarketplaceRequestsInjectionLog.json"));
+        marketplaceOutput.write(json.writeValueAsString(log));
+        marketplaceOutput.close();
     }
 
 

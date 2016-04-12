@@ -20,14 +20,8 @@ public class GetAccountRequest {
         for (String s : values) {
             MvcResult mvcResult = Requests.getUser(s, mockMvc)
                     .andReturn();
-            if (Requests.isBlock(mvcResult)){
-                res.registerBlock();
-            } else {
-                res.registerNotBlocked(s);
-            }
-            System.out.print(".");
+            res.registerResult(mvcResult, s);
         }
-        System.out.println();
         return res;
     }
 }
