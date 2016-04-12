@@ -7,6 +7,7 @@ import java.util.Objects;
 import static se.sawano.java.commons.lang.validate.Validate.*;
 
 public class FirstName {
+
     private final int NAME_LENGTH = 25;
     private final String ILLEGAL_FORMAT = "First name can only contain letters and '-'";
     private final String ILLEGAL_LENGTH = "First name cannot be longer than " + NAME_LENGTH + " characters.";

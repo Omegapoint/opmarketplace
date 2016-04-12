@@ -1,5 +1,6 @@
 package se.omegapoint.academy.opmarketplace.marketplace;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,16 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 @EnableJpaRepositories(basePackageClasses = JpaRepositoryMarker.class)
 public class MainConfiguration {
 
-    public static boolean VALIDATION = true;
+    public static boolean VALIDATION;
+
+    @Value("${validation}")
+    private boolean validationInit;
+
+    @Bean
+    boolean isVALIDATION(){
+        VALIDATION = validationInit;
+        return VALIDATION;
+    }
 
     @Bean
     ItemService createItemService(ItemRepository accountRepository, EventPublisher eventPublisher) {

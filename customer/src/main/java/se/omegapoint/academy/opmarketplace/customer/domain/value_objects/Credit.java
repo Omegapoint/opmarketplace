@@ -1,6 +1,5 @@
 package se.omegapoint.academy.opmarketplace.customer.domain.value_objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import se.omegapoint.academy.opmarketplace.customer.MainConfiguration;
 
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
@@ -9,7 +8,6 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 public final class Credit {
 
     public static final int UPPER_LIMIT = 1000000;
-
     public static final String ILLEGAL_FORMAT = "Credit has to be an integer between 0 (inclusive) and " +
             UPPER_LIMIT + " (exclusive).";
 
