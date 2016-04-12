@@ -7,7 +7,7 @@ import static se.sawano.java.commons.lang.validate.Validate.*;
 
 public class Quantity {
 
-    protected final static String ILLEGAL_VALUE = "Quantity cannot be less than 0.";
+    protected final static String ILLEGAL_VALUE = "Illegal Format: Quantity cannot be less than 0.";
 
     private final int amount;
 

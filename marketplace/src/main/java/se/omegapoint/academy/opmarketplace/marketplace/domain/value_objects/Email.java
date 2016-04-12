@@ -11,8 +11,8 @@ import static se.sawano.java.commons.lang.validate.Validate.notBlank;
 public final class Email {
 
     private static final int MAX_LENGTH = 254;
-    public static final String ILLEGAL_LENGTH = "Email can only be " + MAX_LENGTH + " characters long.";
-    public static final String ILLEGAL_FORMAT = "Illegally formatted email.";
+    public static final String ILLEGAL_LENGTH = "Illegal Format: Email can only be " + MAX_LENGTH + " characters long.";
+    public static final String ILLEGAL_FORMAT = "Illegal Format: Illegally formatted email.";
 
     private final String address;
 

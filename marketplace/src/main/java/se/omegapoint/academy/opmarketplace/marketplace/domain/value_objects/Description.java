@@ -9,8 +9,8 @@ public class Description {
 
     protected final static int MAX_LENGTH = 5000;
 
-    protected final static String ILLEGAL_LENGTH = "Description cannot be longer than " + MAX_LENGTH + " characters.";
-    protected final static String ILLEGAL_CHARACTERS = "Description can only contain letters, digits and '.,%&@/'";
+    protected final static String ILLEGAL_LENGTH = "Illegal Format: Description cannot be longer than " + MAX_LENGTH + " characters.";
+    protected final static String ILLEGAL_CHARACTERS = "Illegal Format: Description can only contain letters, digits and '.,%&@/'";
 
     private final String text;
 
