@@ -20,6 +20,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
     private final long LIMIT_TIME_MS = 5000;
     private final int DISABLE_DURATION_S = 10;
     private final int IMPORTANT_USER_LIMIT_SECONDS = 5;
+    private final int IMPORTANT_USER_MIN_SPEND = 10;
 
     private EventBus eventBus;
     private HashMap<String, SlidingWindow> eventWindows;
@@ -70,7 +71,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
                 break;
             case "ItemRequested":
                 System.out.printf("DEBUG: Too many %s events.%n", eventType);
-                List<String> importantUsers = userValidator.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_LIMIT_SECONDS));
+                List<String> importantUsers = userValidator.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_LIMIT_SECONDS), IMPORTANT_USER_MIN_SPEND);
                 command = new ValidateUsersDTO(DISABLE_DURATION_S, importantUsers);
                 break;
         }

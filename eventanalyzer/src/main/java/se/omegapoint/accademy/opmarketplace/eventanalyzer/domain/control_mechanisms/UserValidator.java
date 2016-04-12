@@ -33,14 +33,13 @@ public class UserValidator {
         objectMapper = new ObjectMapper();
     }
 
-    public List<String> fetchList(LocalDateTime memberSince) {
+    public List<String> fetchList(LocalDateTime memberSince, int minSpend) {
         try {
 
             URIBuilder builder = new URIBuilder(fetchUsersURL);
             HttpGet httpGet = new HttpGet(builder
                     .addParameter("member_since", memberSince.toString())
-                    // TODO: 07/04/16 Implement min spend
-                    .addParameter("min_spend", "0")
+                    .addParameter("min_spend", String.valueOf(minSpend))
                     .build());
 
             CloseableHttpResponse response = httpClient.execute(httpGet);
