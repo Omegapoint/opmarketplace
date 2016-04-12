@@ -43,7 +43,6 @@ public class AccountServiceTest {
         testPublisher.clear();
     }
 
-    // TODO: 15/03/16 Maybe check that the account has actually been created?
     @Test
     public void should_create_account() throws Exception {
         addUser("test1@email.com", "first", "last");
