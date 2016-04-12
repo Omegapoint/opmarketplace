@@ -6,10 +6,12 @@ import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.Command;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.DisableFeatureDTO;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.RateLimitFeatureDTO;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.ValidateUsersDTO;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.control_mechanisms.UserValidator;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
     private final int DISABLE_DURATION_S = 10;
     private final int IMPORTANT_USER_LIMIT_SECONDS = 5;
     private final int IMPORTANT_USER_MIN_SPEND = 10;
+    private final int RATE_LIMIT_INTERVAL_MS = 500;
 
     private EventBus eventBus;
     private HashMap<String, SlidingWindow> eventWindows;
@@ -63,19 +66,25 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
     }
 
     private void takeMitigatingAction(String eventType) {
-        Command command = null;
         switch (eventType) {
             case "AccountCreationRequested":
                 System.out.printf("DEBUG: Disabling %s events for %d seconds.%n", eventType, DISABLE_DURATION_S);
-                command = new DisableFeatureDTO(DISABLE_DURATION_S, eventType);
+                dispatchCommands(
+                        new DisableFeatureDTO(DISABLE_DURATION_S, eventType));
                 break;
             case "ItemRequested":
                 System.out.printf("DEBUG: Too many %s events.%n", eventType);
                 List<String> importantUsers = userValidator.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_LIMIT_SECONDS), IMPORTANT_USER_MIN_SPEND);
-                command = new ValidateUsersDTO(DISABLE_DURATION_S, importantUsers);
+                dispatchCommands(
+                        new ValidateUsersDTO(DISABLE_DURATION_S, importantUsers),
+                        new RateLimitFeatureDTO(RATE_LIMIT_INTERVAL_MS, eventType));
                 break;
         }
+    }
 
-        eventBus.notify("command", Event.wrap(command));
+    private void dispatchCommands(Command... commands) {
+        for (Command command : commands) {
+            eventBus.notify("command", Event.wrap(command));
+        }
     }
 }
