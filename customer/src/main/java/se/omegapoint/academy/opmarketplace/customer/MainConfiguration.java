@@ -11,6 +11,7 @@ import reactor.bus.selector.Selectors;
 import se.omegapoint.academy.opmarketplace.customer.application.AccountService;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.data_extraction.UserDataShortcut;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_models.EntityMarker;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_persistance.*;
@@ -35,6 +36,11 @@ public class MainConfiguration {
     @Bean
     AccountService createAccountService(AccountRepository accountRepository, EventPublisher eventPublisher) {
         return new AccountService(accountRepository, eventPublisher);
+    }
+
+    @Bean
+    UserDataShortcut createUserDataShortcut() {
+        return new UserDataShortcut();
     }
 
     @Bean

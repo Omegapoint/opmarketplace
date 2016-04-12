@@ -56,47 +56,4 @@ public class MitigationTests {
 
         Thread.sleep(10000);
     }
-
-    @Test
-    public void user_validation_is_activated_when_items_are_fetched_quickly() throws Exception {
-        // Add a user and an item.
-        String userOneEmail = "user_one@email.com"; String userTwoEmail = "user_two@email.com";
-        TestRequests.createUser(userOneEmail, "firstName", "lastName", mockMvc)
-                .andExpect(status().isOk());
-
-        Thread.sleep(5000); // Make user "important"
-
-        MvcResult mvcResult = TestRequests.createItem("Example title", "Example description", 10, 1, "seller@email.com", mockMvc)
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String itemId = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), ItemDTO.class).id;
-
-        // Initial requests, should succeed.
-        for (int i = 0; i < 10; i++) {
-            TestRequests.getItem(itemId, mockMvc)
-                    .andExpect(status().isOk());
-        }
-
-        // More request, should activate mitigation.
-        for (int i = 0; i < 20; i++) {
-            TestRequests.getItem(itemId, mockMvc);
-        }
-
-
-        // User two is not "important"
-        TestRequests.createUser(userTwoEmail, "firstName", "lastName", mockMvc)
-                .andExpect(status().isOk());
-
-        TestRequests.getItemAuth(itemId, userOneEmail, mockMvc)
-                .andExpect(status().isOk());
-
-        TestRequests.getItemAuth(itemId, userTwoEmail, mockMvc)
-                .andExpect(status().isForbidden());
-
-        TestRequests.getItem(itemId, mockMvc)
-                .andExpect(status().isForbidden());
-
-        Thread.sleep(10000);
-    }
 }

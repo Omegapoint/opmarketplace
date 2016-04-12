@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface AccountCreditDepositedJPA extends JpaRepository<AccountCreditDepositedModel, Long> {
 
-    List<AccountCreditDepositedModel> findByEmailOrderByTime(String aggregateId);
+    List<AccountCreditDepositedModel> findByEmailOrderByTime(String email);
 }

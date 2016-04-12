@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface AccountCreditWithdrawnJPA extends JpaRepository<AccountCreditWithdrawnModel, Long> {
 
-    List<AccountCreditWithdrawnModel> findByEmailOrderByTime(String aggregateId);
+    List<AccountCreditWithdrawnModel> findByEmailOrderByTime(String email);
 }
