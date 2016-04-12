@@ -21,7 +21,7 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.e
 @EnableJpaRepositories(basePackageClasses = AccountCreditDepositedJPA.class)
 public class MainConfiguration {
 
-    public static boolean VALIDATION;
+    public static boolean VALIDATION = true;
 
     @Value("${validation}")
     private boolean validationInit;

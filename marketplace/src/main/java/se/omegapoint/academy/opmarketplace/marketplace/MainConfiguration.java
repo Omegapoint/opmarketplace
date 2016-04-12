@@ -20,7 +20,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 @EnableJpaRepositories(basePackageClasses = JpaRepositoryMarker.class)
 public class MainConfiguration {
 
-    public static boolean VALIDATION;
+    public static boolean VALIDATION = true;
 
     @Value("${validation}")
     private boolean validationInit;
