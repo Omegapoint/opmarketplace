@@ -26,8 +26,7 @@ public class RuleEngine {
     }
 
     public boolean shouldAllowUser(String email) {
-        notNull(email);
-        return LocalDateTime.now().isAfter(filterUsersUntil) || allowedUsers.contains(email);
+        return LocalDateTime.now().isAfter(filterUsersUntil) || email != null && allowedUsers.contains(email);
     }
 
     public void deny(String eventName, int noSeconds) {

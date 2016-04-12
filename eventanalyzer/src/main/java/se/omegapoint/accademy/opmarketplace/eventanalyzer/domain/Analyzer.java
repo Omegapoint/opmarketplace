@@ -19,7 +19,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
     private final int LIMIT_SIZE = 20;
     private final long LIMIT_TIME_MS = 5000;
     private final int DISABLE_DURATION_S = 10;
-    private final int IMPORTANT_USER_LIMIT_SECONDS = 10;
+    private final int IMPORTANT_USER_LIMIT_SECONDS = 5;
 
     private EventBus eventBus;
     private HashMap<String, SlidingWindow> eventWindows;

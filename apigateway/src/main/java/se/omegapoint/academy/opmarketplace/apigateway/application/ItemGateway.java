@@ -50,7 +50,7 @@ public class ItemGateway {
         notNull(request);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
 
-        if (email != null && !ruleEngine.shouldAllowUser(email)) {
+        if (!ruleEngine.shouldAllowUser(email)) {
             result.setResult(new ResponseEntity<>(HttpStatus.FORBIDDEN));
             return result;
         }

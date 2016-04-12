@@ -45,6 +45,20 @@ public class TestRequests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
+    public static ResultActions getItemAuth(String id, String email, MockMvc mockMvc) throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/items")
+                .contentType(APPLICATION_JSON)
+                .header("email", email)
+                .param("id", id)
+        )
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvcResult.getAsyncResult();
+
+        return mockMvc.perform(asyncDispatch(mvcResult));
+    }
+
     private static String itemCreationJson(String title, String description, int price, int quantity, String seller) throws Exception {
         String content = "{" +
                     "\"title\":\"" + title + "\"," +
