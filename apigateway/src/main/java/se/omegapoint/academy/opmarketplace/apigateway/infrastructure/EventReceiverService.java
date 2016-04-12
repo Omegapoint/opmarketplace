@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.account.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.incoming.item.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.*;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 import java.io.IOException;
+import java.util.HashSet;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -20,8 +23,8 @@ public class EventReceiverService {
 
     @Autowired
     private Router router;
-
-    private final ObjectMapper json = new ObjectMapper();
+    private final HashSet<String> internalEvents;
+    private final ObjectMapper json;
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> eventInput(@RequestBody JsonNode eventJson) {
@@ -97,12 +100,29 @@ public class EventReceiverService {
                     router.publish(json.readValue(event.data, ItemNotOrderedDTO.class));
                     break;
                 default:
-                    System.err.println("Received unknown event: " + event.type);
+                    if (!internalEvents.contains(event.type)) {
+                        System.err.println("Received unknown event: " + event.type);
+                    }
             }
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (IllegalArgumentValidationException | IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
+    }
+
+    public EventReceiverService() {
+        this.internalEvents = new HashSet<>();
+        internalEvents.add(AccountCreationRequestedDTO.TYPE);
+        internalEvents.add(AccountUserChangeRequestedDTO.TYPE);
+        internalEvents.add(AccountCreditDepositRequestedDTO.TYPE);
+        internalEvents.add(AccountRequestedDTO.TYPE);
+        internalEvents.add(AccountDeletionRequestedDTO.TYPE);
+        internalEvents.add(ItemCreationRequestedDTO.TYPE);
+        internalEvents.add(ItemRequestedDTO.TYPE);
+        internalEvents.add(ItemPurchaseRequestedDTO.TYPE);
+        internalEvents.add(ItemSearchRequestedDTO.TYPE);
+        internalEvents.add(ItemChangeRequestedDTO.TYPE);
+        this.json = new ObjectMapper();
     }
 }

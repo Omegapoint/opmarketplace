@@ -34,11 +34,22 @@ sourceSets {
 		}
 		resources.srcDir file("src/integration-test/resources")
 	}
+
+	injectionTest {
+		java {
+			compileClasspath += main.output + test.output
+			runtimeClasspath += main.output + test.output
+			srcDir file("src/injection-test/java")
+		}
+		resources.srcDir file("src/injection-test/resources")
+	}
 }
 
 configurations {
 	integrationTestCompile.extendsFrom testCompile
 	integrationTestRuntime.extendsFrom testRuntime
+	injectionTestCompile.extendsFrom testCompile
+	injectionTestRuntime.extendsFrom testRuntime
 }
 
 dependencies {
@@ -62,6 +73,12 @@ task wrapper(type: Wrapper) {
 task integrationTest(type: Test) {
 	testClassesDir = sourceSets.integrationTest.output.classesDir
 	classpath = sourceSets.integrationTest.runtimeClasspath
+	outputs.upToDateWhen { false }
+}
+
+task injectionTest(type: Test) {
+	testClassesDir = sourceSets.injectionTest.output.classesDir
+	classpath = sourceSets.injectionTest.runtimeClasspath
 	outputs.upToDateWhen { false }
 }
 
