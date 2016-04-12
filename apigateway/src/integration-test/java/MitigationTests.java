@@ -59,17 +59,12 @@ public class MitigationTests {
 
     @Test
     public void user_validation_is_activated_when_items_are_fetched_quickly() throws Exception {
-        // Add two user and an item.
+        // Add a user and an item.
         String userOneEmail = "user_one@email.com"; String userTwoEmail = "user_two@email.com";
         TestRequests.createUser(userOneEmail, "firstName", "lastName", mockMvc)
                 .andExpect(status().isOk());
 
         Thread.sleep(5000); // Make user "important"
-
-        // User two is not "important"
-        TestRequests.createUser(userTwoEmail, "firstName", "lastName", mockMvc)
-                .andExpect(status().isOk());
-
 
         MvcResult mvcResult = TestRequests.createItem("Example title", "Example description", 10, 1, "seller@email.com", mockMvc)
                 .andExpect(status().isOk())
@@ -87,6 +82,11 @@ public class MitigationTests {
         for (int i = 0; i < 20; i++) {
             TestRequests.getItem(itemId, mockMvc);
         }
+
+
+        // User two is not "important"
+        TestRequests.createUser(userTwoEmail, "firstName", "lastName", mockMvc)
+                .andExpect(status().isOk());
 
         TestRequests.getItemAuth(itemId, userOneEmail, mockMvc)
                 .andExpect(status().isOk());
