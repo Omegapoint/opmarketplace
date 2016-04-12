@@ -4,11 +4,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.cglib.core.Local;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreditDeposited;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreditWithdrawn;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.PersistableEvent;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Credit;
@@ -20,10 +19,12 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CustomerApplication.class)
+@ActiveProfiles("test")
 public class UserDataShortcutTest {
 
     @Autowired
