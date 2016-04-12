@@ -17,7 +17,6 @@ import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
 
 import java.io.*;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,6 +33,7 @@ public class OwaspSQLStrings {
     private SQLStrings sqlStrings;
 
     private PrintWriter accountOutput;
+    private PrintWriter itemOutput;
 
     private ObjectWriter json;
 
@@ -41,6 +41,7 @@ public class OwaspSQLStrings {
         json = new ObjectMapper().writerWithDefaultPrettyPrinter();
         sqlStrings = new SQLStrings(new File("src\\injection-test\\resources\\SQLStrings.txt"));
         accountOutput = new PrintWriter(new File("src\\injection-test\\resources\\AccountRequestsInjectionLog.json"));
+        itemOutput = new PrintWriter(new File("src\\injection-test\\resources\\ItemRequestsInjectionLog.json"));
     }
 
     @Before
@@ -51,11 +52,12 @@ public class OwaspSQLStrings {
     @After
     public void tearDown() throws Exception {
         accountOutput.close();
+        itemOutput.close();
     }
 
     @Test
     public void validateAccount() throws Exception {
-        AccountLog log = new AccountLog(
+        CustomerLog log = new CustomerLog(
                 new CreateAccountRequest(sqlStrings.values(), mockMvc),
                 new ChangeUserRequest(sqlStrings.values(), mockMvc),
                 new AddCreditRequest(sqlStrings.values(), mockMvc),
@@ -63,6 +65,11 @@ public class OwaspSQLStrings {
                 new DeleteAccountRequest(sqlStrings.values(), mockMvc)
         );
         accountOutput.write(json.writeValueAsString(log));
+    }
+
+    @Test
+    public void validateItem() throws Exception {
+
     }
 
 

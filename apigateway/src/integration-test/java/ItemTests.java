@@ -126,7 +126,7 @@ public class ItemTests {
         ItemDTO item = new ObjectMapper().readValue(content, ItemDTO.class);
         TestRequests.changeItem(item.id, "<Changed", "Changed", 200, 2, mockMvc)
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.reason").value("Title can only contain letters, digits and spaces"));
+                .andExpect(jsonPath("$.reason").value("Illegal Format: Title can only contain letters, digits and spaces"));
     }
 
     @Test

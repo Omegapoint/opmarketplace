@@ -62,7 +62,7 @@ public class AccountTests {
     public void should_not_create_account_with_ill_formatted_email() throws Exception {
         TestRequests.createUser("@test.com", "fistName", "lastName", mockMvc)
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("{\"reason\":\"Illegally formatted email.\"}"));
+                .andExpect(content().string("{\"reason\":\"Illegal Format: Illegally formatted email.\"}"));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class AccountTests {
     public void should_not_get_account_with_ill_formatted_email() throws Exception {
         TestRequests.getUser("@test.com", mockMvc)
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("{\"reason\":\"Illegally formatted email.\"}"));
+                .andExpect(content().string("{\"reason\":\"Illegal Format: Illegally formatted email.\"}"));
     }
 
     @Test
