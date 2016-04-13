@@ -1,23 +1,26 @@
-package json;
+package json.customer;
 
+import json.Requests;
+import json.Result;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
-public class DeleteAccountRequest {
+public class GetAccountRequest {
+
     public final Result email;
 
-    public DeleteAccountRequest(List<String> values, MockMvc mockMvc) throws Exception {
-        System.out.println("DeleteAccountRequest Validation Started");
+    public GetAccountRequest(List<String> values, MockMvc mockMvc) throws Exception {
+        System.out.println("GetAccountRequest Validation Started");
         this.email = email(values, mockMvc);
-        System.out.println("DeleteAccountRequest Validation Ended");
+        System.out.println("GetAccountRequest Validation Ended");
     }
 
     private Result email(List<String> values, MockMvc mockMvc) throws Exception {
         Result res = new Result(values.size());
         for (String s : values) {
-            MvcResult mvcResult = Requests.deleteUser(s, mockMvc)
+            MvcResult mvcResult = Requests.getUser(s, mockMvc)
                     .andReturn();
             res.registerResult(mvcResult, s);
         }

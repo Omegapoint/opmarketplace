@@ -1,4 +1,4 @@
-package json;
+package json.customer;
 
 public class CustomerLog {
     public final CreateAccountRequest createAccountRequest;

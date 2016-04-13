@@ -1,6 +1,8 @@
-package json;
+package json.customer;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import json.Requests;
+import json.Result;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 

@@ -1,7 +1,7 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import json.*;
-import org.junit.After;
+import json.customer.*;
+import json.marketplace.*;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -65,8 +65,10 @@ public class OwaspSQLStrings {
     @Test
     public void validateMarketplace() throws Exception {
         MarketplaceLog log = new MarketplaceLog(
-                new CreateItemRequest(sqlStrings.values(), mockMvc)
-        );
+                new CreateItemRequest(sqlStrings.values(), mockMvc),
+                new ChangeItemRequest(sqlStrings.values(), mockMvc),
+                new GetItemRequest(sqlStrings.values(), mockMvc),
+                new PurchaseItemRequest(sqlStrings.values(), mockMvc));
         marketplaceOutput = new PrintWriter(new File("src\\injection-test\\resources\\MarketplaceRequestsInjectionLog.json"));
         marketplaceOutput.write(json.writeValueAsString(log));
         marketplaceOutput.close();

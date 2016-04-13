@@ -76,7 +76,7 @@ public class Requests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    public static ResultActions purchaseItem(String itemId, int quantity, String buyerId, MockMvc mockMvc) throws Exception {
+    public static ResultActions purchaseItem(String itemId, String quantity, String buyerId, MockMvc mockMvc) throws Exception {
         String content = itemPurchaseRequestJson(itemId, quantity, buyerId);
         MvcResult mvcResult = mockMvc.perform(post("/items/purchase")
                 .contentType(APPLICATION_JSON)
@@ -185,7 +185,7 @@ public class Requests {
     }
 
 
-    private static String itemPurchaseRequestJson(String itemId, int quantity, String buyerId) throws Exception {
+    private static String itemPurchaseRequestJson(String itemId, String quantity, String buyerId) throws Exception {
         String content =
                 "{" +
                         "\"itemId\":\"" + itemId + "\"," +
