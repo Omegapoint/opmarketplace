@@ -66,7 +66,7 @@ public class ItemService implements Consumer<reactor.bus.Event<Event>> {
     private void handle(ItemRequestedDTO dto){
         DomainEvent event = DomainObjectResult.of(ItemRequestedDTO::domainObject, notNull(dto))
                 .map(request -> repository.item(request.itemId()))
-                .orElseReason(ItemNotCreated::new);
+                .orElseReason(ItemNotObtained::new);
         publisher.publish(event, dto.requestId());
     }
 
