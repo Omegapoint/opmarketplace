@@ -14,3 +14,17 @@ url:
 event:
   receiver:
     url: http://localhost:8010/event
+
+mitigation:
+  threshold:
+    window:
+      size: 20
+      time: 5000  # ms
+  disable:
+    duration: 10  # s
+  ratelimit:
+    interval: 500 # ms
+  importantuser:
+    memberfor: 5  # s
+    minspend: 10  # credits
+

@@ -1,5 +1,6 @@
 package se.omegapoint.accademy.opmarketplace.eventanalyzer.domain;
 
+import org.springframework.beans.factory.annotation.Value;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
@@ -11,19 +12,23 @@ import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.Valida
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.control_mechanisms.UserValidator;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public class Analyzer implements Consumer<Event<RemoteEvent>> {
 
-    // TODO: 04/04/16 Change to correct values
-    private final int LIMIT_SIZE = 20;
-    private final long LIMIT_TIME_MS = 5000;
-    private final int DISABLE_DURATION_S = 10;
-    private final int IMPORTANT_USER_LIMIT_SECONDS = 5;
-    private final int IMPORTANT_USER_MIN_SPEND = 10;
-    private final int RATE_LIMIT_INTERVAL_MS = 500;
+    @Value("${mitigation.threshold.window.size}")
+    private int THRESHOLD_WINDOW_SIZE;
+    @Value("${mitigation.threshold.window.time}")
+    private int THRESHOLD_WINDOW_TIME;
+    @Value("${mitigation.disable.duration}")
+    private int DISABLE_DURATION;
+    @Value("${mitigation.ratelimit.interval}")
+    private int RATE_LIMIT_INTERVAL;
+    @Value("${mitigation.importantuser.memberfor}")
+    private int IMPORTANT_USER_MEMBER_FOR;
+    @Value("${mitigation.importantuser.minspend}")
+    private int IMPORTANT_USER_MIN_SPEND;
 
     private EventBus eventBus;
     private HashMap<String, SlidingWindow> eventWindows;
@@ -59,7 +64,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
 
     private boolean isOverwhelmed(String eventType) {
         if (!eventWindows.containsKey(eventType)) {
-            eventWindows.put(eventType, new SlidingWindow(LIMIT_SIZE, LIMIT_TIME_MS));
+            eventWindows.put(eventType, new SlidingWindow(THRESHOLD_WINDOW_SIZE, THRESHOLD_WINDOW_TIME));
         }
 
         return eventWindows.get(eventType).isFull();
@@ -68,16 +73,16 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
     private void takeMitigatingAction(String eventType) {
         switch (eventType) {
             case "AccountCreationRequested":
-                System.out.printf("DEBUG: Disabling %s events for %d seconds.%n", eventType, DISABLE_DURATION_S);
+                System.out.printf("DEBUG: Disabling %s events for %d seconds.%n", eventType, DISABLE_DURATION);
                 dispatchCommands(
-                        new DisableFeatureDTO(DISABLE_DURATION_S, eventType));
+                        new DisableFeatureDTO(DISABLE_DURATION, eventType));
                 break;
             case "ItemRequested":
                 System.out.printf("DEBUG: Too many %s events.%n", eventType);
-                List<String> importantUsers = userValidator.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_LIMIT_SECONDS), IMPORTANT_USER_MIN_SPEND);
+                List<String> importantUsers = userValidator.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_MEMBER_FOR), IMPORTANT_USER_MIN_SPEND);
                 dispatchCommands(
-                        new ValidateUsersDTO(DISABLE_DURATION_S, importantUsers),
-                        new RateLimitFeatureDTO(RATE_LIMIT_INTERVAL_MS, DISABLE_DURATION_S));
+                        new ValidateUsersDTO(DISABLE_DURATION, importantUsers),
+                        new RateLimitFeatureDTO(RATE_LIMIT_INTERVAL, DISABLE_DURATION));
                 break;
         }
     }
