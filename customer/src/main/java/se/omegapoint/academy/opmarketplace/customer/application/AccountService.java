@@ -8,6 +8,7 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.Pe
 import se.omegapoint.academy.opmarketplace.customer.domain.services.AccountRepository;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.TransactionService;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Id;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.external_event.*;
 
 import java.util.Optional;
@@ -88,7 +89,7 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
     private void accountCreditTransaction(ItemOrderedDTO dto) {
         DomainEvent event = DomainObjectResult.of(ItemOrderedDTO::domainObject, dto)
                 .map(itemOrdered -> TransactionService.creditTransaction(itemOrdered, accountRepository))
-                .orElseReason(reason -> new ItemPaymentNotCompleted(UUID.fromString(dto.order.id), reason));
+                .orElseReason(reason -> new ItemPaymentNotCompleted(new Id(dto.order.id), reason));
 
         publisher.publish(event, dto.requestId());
     }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Credit;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
+import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Id;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Order;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.DTO;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Deserializer;
@@ -42,7 +43,8 @@ public class OrderDTO implements DTO, Serializer, Deserializer<Order> {
 
     @Override
     public Order domainObject() {
-        return new Order(UUID.fromString(id),
+        return new Order(
+                new Id(id),
                 new Email(sellerId),
                 new Credit(sum),
                 new Email(buyerId));
