@@ -1,6 +1,7 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable;
 
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Id;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -27,7 +28,7 @@ public class ItemCreated implements PersistableEvent {
         return item;
     }
 
-    public UUID itemId(){
+    public Id itemId(){
         return item.id();
     }
 

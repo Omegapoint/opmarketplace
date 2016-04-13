@@ -7,14 +7,13 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Deseri
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
 public class ItemCreatedEntity implements Deserializer<ItemCreated> {
 
-    @Id
+    @javax.persistence.Id
     @GeneratedValue
     private long eventId;
     private String id;
@@ -38,7 +37,8 @@ public class ItemCreatedEntity implements Deserializer<ItemCreated> {
     }
 
     public ItemCreated domainObject(){
-        return new ItemCreated(new Item(UUID.fromString(id),
+        return new ItemCreated(new Item(
+                new Id(id),
                 new Title(title),
                 new Description(description),
                 new Credit(price),

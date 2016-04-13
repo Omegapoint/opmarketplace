@@ -3,6 +3,7 @@ package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.exter
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemPaymentNotCompleted;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Id;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
 
@@ -36,6 +37,6 @@ public class ItemPaymentNotCompletedDTO implements Event, Deserializer<ItemPayme
 
     @Override
     public ItemPaymentNotCompleted domainObject() {
-        return new ItemPaymentNotCompleted(UUID.fromString(orderId));
+        return new ItemPaymentNotCompleted(new Id(orderId));
     }
 }

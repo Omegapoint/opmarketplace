@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemChangeRequested;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Credit;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
 
@@ -46,7 +43,7 @@ public class ItemChangeRequestedDTO implements Event, Deserializer<ItemChangeReq
     @Override
     public ItemChangeRequested domainObject() {
         return new ItemChangeRequested(
-                UUID.fromString(id),
+                new Id(id),
                 new Title(title),
                 new Description(description),
                 new Credit(price),

@@ -1,5 +1,6 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable;
 
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Id;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
 
 import java.sql.Timestamp;
@@ -9,16 +10,16 @@ import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class ItemOrderReversed implements PersistableEvent {
-    private final UUID originalOrderId;
-    private final UUID itemId;
+    private final Id originalOrderId;
+    private final Id itemId;
     private final Quantity quantity;
     private final Timestamp timestamp;
 
-    public ItemOrderReversed(UUID originalOrderId, UUID itemId,Quantity quantity){
+    public ItemOrderReversed(Id originalOrderId, Id itemId,Quantity quantity){
         this(originalOrderId, itemId, quantity, new Timestamp(System.currentTimeMillis()));
     }
 
-    public ItemOrderReversed(UUID originalOrderId, UUID itemId, Quantity quantity, Timestamp timestamp){
+    public ItemOrderReversed(Id originalOrderId, Id itemId, Quantity quantity, Timestamp timestamp){
         isTrue(notNull(timestamp).before(new Timestamp(System.currentTimeMillis() + 1)));
         this.originalOrderId = notNull(originalOrderId);
         this.itemId = notNull(itemId);
@@ -26,11 +27,11 @@ public class ItemOrderReversed implements PersistableEvent {
         this.timestamp = notNull(timestamp);
     }
 
-    public UUID originalOrderId(){
+    public Id originalOrderId(){
         return originalOrderId;
     }
 
-    public UUID itemId(){
+    public Id itemId(){
         return itemId;
     }
 

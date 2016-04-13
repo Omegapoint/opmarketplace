@@ -215,7 +215,7 @@ public class ItemServiceTest {
         request = new ItemPurchaseRequestedDTO(requestId, itemCreated.itemId().toString(), 5, "buy@buy.com");
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemOrdered itemOrdered = (ItemOrdered)publisher.getLatestEvent();
-        UUID orderId = itemOrdered.order().id();
+        Id orderId = itemOrdered.order().id();
         assertEquals(100, itemOrdered.order().sum().amount());
         assertEquals(5, itemOrdered.order().quantity().amount());
         assertEquals("sell@sell.com", itemOrdered.order().sellerId().address());

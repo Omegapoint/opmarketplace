@@ -34,7 +34,7 @@ public class DomainObjectResult<T>{
     public static <U, V> DomainObjectResult<U> of(Function<V, U> conversion, V ownerOfFunction){
         try {
             return new DomainObjectResult<>(conversion.apply(ownerOfFunction));
-        } catch (IllegalArgumentValidationException e){
+        } catch (IllegalArgumentValidationException | IllegalArgumentException e){
             return new DomainObjectResult<>(e.getMessage());
         }
     }

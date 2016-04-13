@@ -48,8 +48,9 @@ public class OrderDTO implements DTO, Serializer, Deserializer<Order> {
 
     @Override
     public Order domainObject() {
-        return new Order(UUID.fromString(id),
-                UUID.fromString(itemId),
+        return new Order(
+                new Id(id),
+                new Id(itemId),
                 new Email(sellerId),
                 new Quantity(quantity),
                 new Credit(sum),

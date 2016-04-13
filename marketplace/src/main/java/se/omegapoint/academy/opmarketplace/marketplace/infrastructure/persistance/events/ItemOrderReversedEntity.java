@@ -1,19 +1,19 @@
 package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events;
 
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrderReversed;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Id;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Deserializer;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
 public class ItemOrderReversedEntity implements Deserializer<ItemOrderReversed> {
 
-    @Id
+    @javax.persistence.Id
     @GeneratedValue
     private long eventId;
     private String originalOrderId;
@@ -31,8 +31,8 @@ public class ItemOrderReversedEntity implements Deserializer<ItemOrderReversed> 
     }
 
     public ItemOrderReversed domainObject(){
-        return new ItemOrderReversed(UUID.fromString(originalOrderId),
-                UUID.fromString(itemId),
+        return new ItemOrderReversed(new Id(originalOrderId),
+                new Id(itemId),
                 new Quantity(quantity),
                 time);
     }

@@ -7,6 +7,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.It
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemSearchCompleted;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Id;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.factories.ItemFactory;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemChangedEntity;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemCreatedEntity;
@@ -42,7 +43,7 @@ public class ItemEventStore implements ItemRepository {
     }
 
     @Override
-    public DomainEvent item(UUID id) {
+    public DomainEvent item(Id id) {
         String itemId = notNull(id).toString();
 
         List<PersistableEvent> events = new ArrayList<>();
@@ -64,7 +65,7 @@ public class ItemEventStore implements ItemRepository {
 
     @Override
     public ItemSearchCompleted search(String query) {
-        HashMap<UUID, List<PersistableEvent>> matches = new HashMap<>();
+        HashMap<Id, List<PersistableEvent>> matches = new HashMap<>();
 
         searchCreatedEvents(query).stream().forEach(itemCreated -> {
             if (!matches.containsKey(itemCreated.itemId())){
@@ -81,7 +82,7 @@ public class ItemEventStore implements ItemRepository {
         });
 
         List<Item> items = new ArrayList<>();
-        for (UUID id : matches.keySet()){
+        for (Id id : matches.keySet()){
             matches.get(id).addAll(retrieveItemOrderedEvents(id.toString()));
             matches.get(id).addAll(retrieveItemOrderReverseEvents(id.toString()));
             Collections.sort(matches.get(id), new PersistableEventComparator());
@@ -90,12 +91,12 @@ public class ItemEventStore implements ItemRepository {
         return new ItemSearchCompleted(items);
     }
     @Override
-    public Optional<ItemOrdered> order(UUID orderId){
+    public Optional<ItemOrdered> order(Id orderId){
         return retrieveItemOrderedEvent(orderId.toString());
     }
 
     @Override
-    public boolean itemInExistence(UUID id) {
+    public boolean itemInExistence(Id id) {
         return !itemCreatedRepository.findById(notNull(id).toString()).isEmpty();
     }
 

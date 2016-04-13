@@ -49,7 +49,8 @@ public class ItemDTO implements DTO, Serializer, Deserializer<Item> {
 
     @Override
     public Item domainObject() {
-        return new Item(UUID.fromString(id),
+        return new Item(
+                new Id(id),
                 new Title(title),
                 new Description(description),
                 new Credit(price),

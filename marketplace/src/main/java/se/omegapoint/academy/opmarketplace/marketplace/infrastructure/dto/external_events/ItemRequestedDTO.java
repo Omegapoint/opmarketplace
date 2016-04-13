@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemRequested;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Id;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Deserializer;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
 
@@ -28,7 +29,7 @@ public class ItemRequestedDTO implements Event, Deserializer<ItemRequested> {
 
     @Override
     public ItemRequested domainObject() {
-        return new ItemRequested(UUID.fromString(itemId));
+        return new ItemRequested(new Id(itemId));
     }
 
     @Override

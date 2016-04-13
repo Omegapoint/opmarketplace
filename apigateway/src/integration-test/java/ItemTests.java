@@ -99,7 +99,7 @@ public class ItemTests {
     }
 
     @Test
-    public void should_not_change_one_item_due_to_wrong_id_supplied() throws Exception {
+    public void should_not_change_one_item_due_to_wrong_id() throws Exception {
         TestRequests.createItem("NotToBeChanged", "NotToBeChanged", 100, 1, "hej@hej.com", mockMvc)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("NotToBeChanged"))
@@ -110,6 +110,20 @@ public class ItemTests {
         TestRequests.changeItem(UUID.randomUUID().toString(), "Changed", "Changed", 200, 2, mockMvc)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.reason").value("Item does not exist."));
+    }
+
+    @Test
+    public void should_not_change_one_item_due_to_illegal_format_id() throws Exception {
+        TestRequests.createItem("NotToBeChangedIllegalId", "NotToBeChangedIllegalId", 100, 1, "hej@hej.com", mockMvc)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("NotToBeChangedIllegalId"))
+                .andExpect(jsonPath("$.description").value("NotToBeChangedIllegalId"))
+                .andExpect(jsonPath("$.price").value(100))
+                .andExpect(jsonPath("$.supply").value(1))
+                .andExpect(jsonPath("$.seller").value("hej@hej.com"));
+        TestRequests.changeItem("illegalId", "Changed", "Changed", 200, 2, mockMvc)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.reason").value("Illegal Format: Id does not conform to UUID."));
     }
 
     @Test

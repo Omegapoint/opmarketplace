@@ -5,15 +5,13 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Deserializer;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
 public class ItemOrderEntity implements Deserializer<ItemOrdered> {
 
-    @Id
+    @javax.persistence.Id
     private String orderId;
     private String id;
     private Integer quantity;
@@ -45,8 +43,8 @@ public class ItemOrderEntity implements Deserializer<ItemOrdered> {
     }
 
     public ItemOrdered domainObject(){
-        return new ItemOrdered(new Order(UUID.fromString(orderId),
-                UUID.fromString(id),
+        return new ItemOrdered(new Order(new Id(orderId),
+                new Id(id),
                 new Email(sellerId),
                 new Quantity(quantity),
                 new Credit(sum),

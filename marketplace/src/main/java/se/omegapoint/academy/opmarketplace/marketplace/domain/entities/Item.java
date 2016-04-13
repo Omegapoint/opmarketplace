@@ -1,6 +1,5 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.entities;
 
-import se.omegapoint.academy.opmarketplace.marketplace.domain.IdentifiedDomainObject;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemChangeRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemPurchaseRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
@@ -10,25 +9,28 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.It
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
-import java.util.UUID;
-
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public final class Item extends IdentifiedDomainObject {
+public final class Item {
+    private final Id id;
     private final Title title;
     private final Description description;
     private final Credit price;
     private final Quantity supply;
     private final Email seller;
 
-    public Item(UUID id, Title title, Description description, Credit price, Quantity supply, Email seller) {
-        super(notNull(id));
+    public Item(Id id, Title title, Description description, Credit price, Quantity supply, Email seller) {
+        this.id = notNull(id);
         this.title = notNull(title);
         this.description = notNull(description);
         this.price = notNull(price);
         this.supply = notNull(supply);
         this.seller = notNull(seller);
+    }
+
+    public Id id(){
+        return this.id;
     }
 
     public Title title() {
@@ -53,7 +55,7 @@ public final class Item extends IdentifiedDomainObject {
 
     public static ItemCreated createItem(ItemCreationRequested request){
         notNull(request);
-        return new ItemCreated(new Item(UUID.randomUUID(),
+        return new ItemCreated(new Item(new Id(),
                 request.title(),
                 request.description(),
                 request.price(),

@@ -5,18 +5,18 @@ import java.util.UUID;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class Order {
-    private final UUID id;
-    private final UUID itemId;
+    private final Id id;
+    private final Id itemId;
     private final Quantity quantity;
     private final Credit sum;
     private final Email sellerId;
     private final Email buyerId;
 
-    public Order(UUID itemId, Email sellerId, Quantity quantity, Credit sum, Email buyerId){
-        this(UUID.randomUUID(), itemId, sellerId, quantity, sum, buyerId);
+    public Order(Id itemId, Email sellerId, Quantity quantity, Credit sum, Email buyerId){
+        this(new Id(), itemId, sellerId, quantity, sum, buyerId);
     }
 
-    public Order(UUID id, UUID itemId, Email sellerId, Quantity quantity, Credit sum, Email buyerId){
+    public Order(Id id, Id itemId, Email sellerId, Quantity quantity, Credit sum, Email buyerId){
         this.id = notNull(id);
         this.itemId = notNull(itemId);
         this.quantity = notNull(quantity);
@@ -25,11 +25,11 @@ public class Order {
         this.sellerId = notNull(sellerId);
     }
 
-    public UUID id() {
+    public Id id() {
         return id;
     }
 
-    public UUID itemId() {
+    public Id itemId() {
         return itemId;
     }
 

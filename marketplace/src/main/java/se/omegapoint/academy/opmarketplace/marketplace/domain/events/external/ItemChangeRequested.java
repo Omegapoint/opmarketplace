@@ -1,22 +1,19 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.events.external;
 
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Description;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Credit;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Quantity;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Title;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 
 import java.util.UUID;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class ItemChangeRequested {
-    private final UUID itemId;
+    private final Id itemId;
     private final Title title;
     private final Description description;
     private final Credit price;
     private final Quantity supply;
 
-    public ItemChangeRequested(UUID itemId, Title title, Description description, Credit price, Quantity supply){
+    public ItemChangeRequested(Id itemId, Title title, Description description, Credit price, Quantity supply){
         this.itemId = notNull(itemId);
         this.title = notNull(title);
         this.description = notNull(description);
@@ -24,7 +21,7 @@ public class ItemChangeRequested {
         this.supply = notNull(supply);
     }
 
-    public UUID itemId(){
+    public Id itemId(){
         return itemId;
     }
 

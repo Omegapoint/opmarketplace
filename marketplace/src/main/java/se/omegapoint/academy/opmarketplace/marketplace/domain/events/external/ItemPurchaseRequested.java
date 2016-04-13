@@ -7,17 +7,17 @@ import java.util.UUID;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class ItemPurchaseRequested {
-    private UUID itemId;
+    private Id itemId;
     private Quantity quantity;
     private Email buyer;
 
-    public ItemPurchaseRequested(UUID itemId, Quantity quantity, Email buyer) {
+    public ItemPurchaseRequested(Id itemId, Quantity quantity, Email buyer) {
         this.buyer = notNull(buyer);
         this.quantity = notNull(quantity);
         this.itemId = notNull(itemId);
     }
 
-    public UUID itemId() {
+    public Id itemId() {
         return itemId;
     }
 
