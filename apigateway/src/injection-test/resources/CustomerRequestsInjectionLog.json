@@ -1,0 +1,292 @@
+{
+  "createAccountRequest" : {
+    "email" : {
+      "blocked" : "125/125",
+      "notBlocked" : [ ]
+    },
+    "firstName" : {
+      "blocked" : "105/125",
+      "notBlocked" : [ {
+        "input" : "-",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "--",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "PRINT",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "select",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "insert",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "as",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "or",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "procedure",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "limit",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "asc",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "desc",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "delete",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "update",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "distinct",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "having",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "truncate",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "replace",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "like",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "handler",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "bfilename",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      } ]
+    },
+    "lastName" : {
+      "blocked" : "105/125",
+      "notBlocked" : [ {
+        "input" : "-",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "--",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "PRINT",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "select",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "insert",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "as",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "or",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "procedure",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "limit",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "asc",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "desc",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "delete",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "update",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "distinct",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "having",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "truncate",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "replace",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "like",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "handler",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      }, {
+        "input" : "bfilename",
+        "response" : "{\"reason\":\"Account already exists.\"}"
+      } ]
+    }
+  },
+  "changeUserRequest" : {
+    "email" : {
+      "blocked" : "125/125",
+      "notBlocked" : [ ]
+    },
+    "firstName" : {
+      "blocked" : "105/125",
+      "notBlocked" : [ {
+        "input" : "-",
+        "response" : ""
+      }, {
+        "input" : "--",
+        "response" : ""
+      }, {
+        "input" : "PRINT",
+        "response" : ""
+      }, {
+        "input" : "select",
+        "response" : ""
+      }, {
+        "input" : "insert",
+        "response" : ""
+      }, {
+        "input" : "as",
+        "response" : ""
+      }, {
+        "input" : "or",
+        "response" : ""
+      }, {
+        "input" : "procedure",
+        "response" : ""
+      }, {
+        "input" : "limit",
+        "response" : ""
+      }, {
+        "input" : "asc",
+        "response" : ""
+      }, {
+        "input" : "desc",
+        "response" : ""
+      }, {
+        "input" : "delete",
+        "response" : ""
+      }, {
+        "input" : "update",
+        "response" : ""
+      }, {
+        "input" : "distinct",
+        "response" : ""
+      }, {
+        "input" : "having",
+        "response" : ""
+      }, {
+        "input" : "truncate",
+        "response" : ""
+      }, {
+        "input" : "replace",
+        "response" : ""
+      }, {
+        "input" : "like",
+        "response" : ""
+      }, {
+        "input" : "handler",
+        "response" : ""
+      }, {
+        "input" : "bfilename",
+        "response" : ""
+      } ]
+    },
+    "lastName" : {
+      "blocked" : "105/125",
+      "notBlocked" : [ {
+        "input" : "-",
+        "response" : ""
+      }, {
+        "input" : "--",
+        "response" : ""
+      }, {
+        "input" : "PRINT",
+        "response" : ""
+      }, {
+        "input" : "select",
+        "response" : ""
+      }, {
+        "input" : "insert",
+        "response" : ""
+      }, {
+        "input" : "as",
+        "response" : ""
+      }, {
+        "input" : "or",
+        "response" : ""
+      }, {
+        "input" : "procedure",
+        "response" : ""
+      }, {
+        "input" : "limit",
+        "response" : ""
+      }, {
+        "input" : "asc",
+        "response" : ""
+      }, {
+        "input" : "desc",
+        "response" : ""
+      }, {
+        "input" : "delete",
+        "response" : ""
+      }, {
+        "input" : "update",
+        "response" : ""
+      }, {
+        "input" : "distinct",
+        "response" : ""
+      }, {
+        "input" : "having",
+        "response" : ""
+      }, {
+        "input" : "truncate",
+        "response" : ""
+      }, {
+        "input" : "replace",
+        "response" : ""
+      }, {
+        "input" : "like",
+        "response" : ""
+      }, {
+        "input" : "handler",
+        "response" : ""
+      }, {
+        "input" : "bfilename",
+        "response" : ""
+      } ]
+    }
+  },
+  "addCreditRequest" : {
+    "email" : {
+      "blocked" : "125/125",
+      "notBlocked" : [ ]
+    },
+    "credit" : {
+      "blocked" : "125/125",
+      "notBlocked" : [ ]
+    }
+  },
+  "getAccountRequest" : {
+    "email" : {
+      "blocked" : "125/125",
+      "notBlocked" : [ ]
+    }
+  },
+  "deleteAccountRequest" : {
+    "email" : {
+      "blocked" : "125/125",
+      "notBlocked" : [ ]
+    }
+  }
+}

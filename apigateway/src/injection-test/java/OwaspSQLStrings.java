@@ -68,7 +68,8 @@ public class OwaspSQLStrings {
                 new CreateItemRequest(sqlStrings.values(), mockMvc),
                 new ChangeItemRequest(sqlStrings.values(), mockMvc),
                 new GetItemRequest(sqlStrings.values(), mockMvc),
-                new PurchaseItemRequest(sqlStrings.values(), mockMvc));
+                new PurchaseItemRequest(sqlStrings.values(), mockMvc),
+                new SearchItemRequest(sqlStrings.values(), mockMvc));
         marketplaceOutput = new PrintWriter(new File("src\\injection-test\\resources\\MarketplaceRequestsInjectionLog.json"));
         marketplaceOutput.write(json.writeValueAsString(log));
         marketplaceOutput.close();

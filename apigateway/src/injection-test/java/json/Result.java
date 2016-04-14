@@ -17,7 +17,7 @@ public class Result {
     @JsonIgnore
     private int numBlocked;
     private String blocked;
-    private final List<String> notBlocked;
+    private final List<NoBlock> notBlocked;
 
     public Result(int numTestCases) {
         this.numTestCases = notNull(numTestCases);
@@ -30,7 +30,7 @@ public class Result {
         if (Requests.isBlock(result)){
             registerBlock();
         } else {
-            registerNotBlocked(input);
+            registerNotBlocked(input, result.getResponse().getContentAsString());
         }
     }
 
@@ -40,15 +40,15 @@ public class Result {
         blocked = numBlocked + "/" + numTestCases;
     }
 
-    private void registerNotBlocked(String text){
-        notBlocked.add(text);
+    private void registerNotBlocked(String text, String response){
+        notBlocked.add(new NoBlock(text, response));
     }
 
     public String getBlocked() {
         return blocked;
     }
 
-    public List<String> getNotBlocked() {
+    public List<NoBlock> getNotBlocked() {
         return notBlocked;
     }
 }
