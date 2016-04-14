@@ -11,6 +11,7 @@ import reactor.bus.selector.Selectors;
 import se.omegapoint.academy.opmarketplace.marketplace.application.ItemService;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.data_extraction.ItemDataShortcut;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.EntityMarker;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.*;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.ItemEventStore;
@@ -55,5 +56,10 @@ public class MainConfiguration {
                                          ItemOrderJPARepository itemOrderRepository,
                                          ItemOrderReverseJPARepository itemOrderReverseRepository){
         return new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository, itemOrderReverseRepository);
+    }
+
+    @Bean
+    ItemDataShortcut createItemDataShortcut() {
+        return new ItemDataShortcut();
     }
 }

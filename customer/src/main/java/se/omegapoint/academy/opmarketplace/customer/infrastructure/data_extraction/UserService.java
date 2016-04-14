@@ -23,7 +23,6 @@ public class UserService {
             @RequestParam("member_since") String memberSince,
             @RequestParam("min_spend") int minSpend) {
 
-        // TODO: 06/04/16 Implement min spend.
         LocalDateTime dateTime = LocalDateTime.parse(memberSince);
         Timestamp timestamp = new Timestamp(dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 
