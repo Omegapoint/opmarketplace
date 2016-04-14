@@ -8,6 +8,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.It
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Id;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Query;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.factories.ItemFactory;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemChangedEntity;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemCreatedEntity;
@@ -44,51 +45,20 @@ public class ItemEventStore implements ItemRepository {
 
     @Override
     public DomainEvent item(Id id) {
-        String itemId = notNull(id).toString();
-
-        List<PersistableEvent> events = new ArrayList<>();
-        retrieveCreatedEvent(itemId)
-                .map(events::add)
-                .orElse(false);
-
+        List<PersistableEvent> events = eventStream(id);
         if (events.isEmpty()){
             return new ItemNotObtained(ITEM_DOES_NOT_EXIST);
         }
-
-        events.addAll(retrieveChangedEvent(itemId));
-        events.addAll(retrieveItemOrderedEvents(itemId));
-        events.addAll(retrieveItemOrderReverseEvents(itemId));
-        Collections.sort(events, new PersistableEventComparator());
-
         return new ItemObtained(ItemFactory.fromPersistableEvents(events));
     }
 
     @Override
-    public ItemSearchCompleted search(String query) {
-        HashMap<Id, List<PersistableEvent>> matches = new HashMap<>();
+    public ItemSearchCompleted search(Query query) {
+        HashSet<Id> match = searchCreatedEvents(query);
+        match = searchChangedEvents(query, match);
 
-        searchCreatedEvents(query).stream().forEach(itemCreated -> {
-            if (!matches.containsKey(itemCreated.itemId())){
-                matches.put(itemCreated.itemId(), new ArrayList<>());
-            }
-            matches.get(itemCreated.itemId()).add(itemCreated);
-        });
-
-        searchChangedEvents(query).stream().forEach(itemChanged -> {
-            if (!matches.containsKey(itemChanged.itemId())){
-                matches.put(itemChanged.itemId(), new ArrayList<>());
-            }
-            matches.get(itemChanged.itemId()).add(itemChanged);
-        });
-
-        List<Item> items = new ArrayList<>();
-        for (Id id : matches.keySet()){
-            matches.get(id).addAll(retrieveItemOrderedEvents(id.toString()));
-            matches.get(id).addAll(retrieveItemOrderReverseEvents(id.toString()));
-            Collections.sort(matches.get(id), new PersistableEventComparator());
-            items.add(ItemFactory.fromPersistableEvents(matches.get(id)));
-        }
-        return new ItemSearchCompleted(items);
+        List<Item> items = match.stream().map(id -> ItemFactory.fromPersistableEvents(eventStream(id))).collect(Collectors.toList());
+        return new ItemSearchCompleted(items.stream().filter(item -> itemFilter(item, query)).collect(Collectors.toList()));
     }
     @Override
     public Optional<ItemOrdered> order(Id orderId){
@@ -115,14 +85,42 @@ public class ItemEventStore implements ItemRepository {
         return event;
     }
 
-    private List<ItemCreated> searchCreatedEvents(String query){
-        return itemCreatedRepository.findByTitleContainingOrDescriptionContainingAllIgnoreCase(query, query).stream()
-                .map(ItemCreatedEntity::domainObject).collect(Collectors.toList());
+    private boolean itemFilter(Item item, Query query){
+        for (String term : query.terms()){
+            if (item.title().text().toLowerCase().contains(term) || item.description().text().toLowerCase().contains(term)){
+                return true;
+            }
+        }
+        return false;
     }
 
-    private List<ItemChanged> searchChangedEvents(String query) {
-        return itemChangedRepository.findByTitleContainingOrDescriptionContainingAllIgnoreCase(query, query).stream()
-                .map(ItemChangedEntity::domainObject).collect(Collectors.toList());
+    private List<PersistableEvent> eventStream(Id id){
+        List<PersistableEvent> events = new ArrayList<>();
+        String itemId = id.toString();
+        if (retrieveCreatedEvent(itemId)
+                .map(events::add)
+                .orElse(false)){
+            events.addAll(retrieveChangedEvent(itemId));
+            events.addAll(retrieveItemOrderedEvents(itemId));
+            events.addAll(retrieveItemOrderReverseEvents(itemId));
+            Collections.sort(events, new PersistableEventComparator());
+        }
+        return events;
+    }
+
+    private HashSet<Id> searchCreatedEvents(Query query){
+        HashSet<Id> match = new HashSet<>();
+        query.terms().stream()
+                .forEach(term -> itemCreatedRepository.findByTitleContainingOrDescriptionContainingAllIgnoreCase(term, term).stream()
+                        .forEach(itemCreatedEntity -> match.add(itemCreatedEntity.domainObject().itemId())));
+        return match;
+    }
+
+    private HashSet<Id> searchChangedEvents(Query query, HashSet<Id> match) {
+        query.terms().stream()
+                .forEach(term -> itemChangedRepository.findByTitleContainingOrDescriptionContainingAllIgnoreCase(term, term).stream()
+                        .forEach(itemChangedEntity -> match.add(itemChangedEntity.domainObject().itemId())));
+        return match;
     }
 
     private Optional<ItemCreated> retrieveCreatedEvent(String id) {

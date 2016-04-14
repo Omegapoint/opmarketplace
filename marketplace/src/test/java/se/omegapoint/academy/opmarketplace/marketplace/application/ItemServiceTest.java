@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import se.omegapoint.academy.opmarketplace.marketplace.Application;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemChangeRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
@@ -100,28 +101,39 @@ public class ItemServiceTest {
                 new Credit(100),
                 new Quantity(1),
                 new Email("find@find.com"));
+        ItemCreated item = Item.createItem(match1);
+        repository.append(item);
+
+        ItemChangeRequested noMatchChange = new ItemChangeRequested(
+                new Id(item.itemId().toString()),
+                new Title("Not Found"),
+                new Description("Not here either"),
+                new Credit(100),
+                new Quantity(1));
+        repository.append(item.item().handle(noMatchChange));
+
         ItemCreationRequested match2 = new ItemCreationRequested(
                 new Title("What find"),
                 new Description("no match"),
                 new Credit(100),
                 new Quantity(1),
                 new Email("find@find.com"));
+        repository.append(Item.createItem(match2));
+
         ItemCreationRequested match3 = new ItemCreationRequested(
                 new Title("No match"),
                 new Description("Dude find"),
                 new Credit(100),
                 new Quantity(1),
                 new Email("find@find.com"));
+        repository.append(Item.createItem(match3));
+
         ItemCreationRequested noMatch = new ItemCreationRequested(
                 new Title("no match"),
                 new Description("no match fin d"),
                 new Credit(100),
                 new Quantity(1),
                 new Email("find@find.com"));
-
-        repository.append(Item.createItem(match1));
-        repository.append(Item.createItem(match2));
-        repository.append(Item.createItem(match3));
         repository.append(Item.createItem(noMatch));
 
         ItemSearchRequestedDTO request = new ItemSearchRequestedDTO(
@@ -130,7 +142,7 @@ public class ItemServiceTest {
 
         itemService.accept(reactor.bus.Event.wrap(request));
         ItemSearchCompleted searchCompleted = (ItemSearchCompleted) publisher.getLatestEvent();
-        assertEquals(3, searchCompleted.items().size());
+        assertEquals(2, searchCompleted.items().size());
     }
 
     @Test
