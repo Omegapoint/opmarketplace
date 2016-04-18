@@ -20,7 +20,7 @@ public class ItemService {
     @Autowired
     ItemDataShortcut dataShortcut;
 
-    @RequestMapping(value = "most_popular_item/", method = GET)
+    @RequestMapping(value = "/most_popular_item", method = GET)
     public ItemDTO getMostPopularItem(
             @RequestParam("since") String since) {
 
