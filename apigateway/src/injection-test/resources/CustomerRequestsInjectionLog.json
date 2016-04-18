@@ -8,7 +8,7 @@
       "blocked" : "105/125",
       "notBlocked" : [ {
         "input" : "-",
-        "response" : "{\"reason\":\"Account already exists.\"}"
+        "response" : ""
       }, {
         "input" : "--",
         "response" : "{\"reason\":\"Account already exists.\"}"
