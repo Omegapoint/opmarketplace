@@ -1,9 +1,13 @@
 package se.omegapoint.academy.opmarketplace.apigateway.application;
 
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.ItemDTO;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -20,11 +24,15 @@ public class RuleEngine {
     private LocalDateTime rateLimitUsersUntil;
     private long intervalInNano;
 
+    private LocalDateTime defaultSearchResultUntil;
+    private ItemDTO defaultSearchResult;
+
     public RuleEngine() {
         prohibitedEvents = new ConcurrentHashMap<>();
         allowedUsers = new HashSet<>();
         filterUsersUntil = LocalDateTime.MIN;
         rateLimitUsersUntil = LocalDateTime.MIN;
+        defaultSearchResultUntil = LocalDateTime.MIN;
         lastRequests = new HashMap<>();
     }
 
@@ -35,6 +43,14 @@ public class RuleEngine {
 
     public boolean shouldAllowUser(String email) {
         return LocalDateTime.now().isAfter(filterUsersUntil) || email != null && allowedUsers.contains(email);
+    }
+
+    public Optional<ItemDTO> getDefaultSearchResult() {
+        if (LocalDateTime.now().isAfter(defaultSearchResultUntil)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(defaultSearchResult);
+        }
     }
 
     public boolean shouldAllowRequestRate(String email, String eventName) {
@@ -51,6 +67,8 @@ public class RuleEngine {
 
         return allow;
     }
+
+
 
     public void disableEvent(String eventName, int noSeconds) {
         notNull(eventName); notNull(noSeconds);
@@ -70,5 +88,10 @@ public class RuleEngine {
         rateLimitUsersUntil = LocalDateTime.now().plusSeconds(noSeconds);
         this.intervalInNano = TimeUnit.MILLISECONDS.toNanos(interval);
         System.out.printf("Rate limiting users until %s. Min time between requests is %d ms%n", rateLimitUsersUntil, interval);
+    }
+
+    public void setDefaultSearchResult(ItemDTO item, int noSeconds) {
+        this.defaultSearchResult = item;
+        this.defaultSearchResultUntil = LocalDateTime.now().plusSeconds(noSeconds);
     }
 }

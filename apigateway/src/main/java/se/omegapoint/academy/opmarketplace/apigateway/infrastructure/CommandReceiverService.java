@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.omegapoint.academy.opmarketplace.apigateway.application.RuleEngine;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.commands.DefaultSearchResultDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.commands.DisableFeatureDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.commands.RateLimitFeatureDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.commands.ValidateUsersDTO;
@@ -44,6 +45,10 @@ public class CommandReceiverService {
                 case RateLimitFeatureDTO.TYPE:
                     RateLimitFeatureDTO rateLimitFeatureCommand = mapper.readValue(data, RateLimitFeatureDTO.class);
                     ruleEngine.addRateLimiting(rateLimitFeatureCommand.interval, rateLimitFeatureCommand.noSeconds);
+                case DefaultSearchResultDTO.TYPE:
+                    DefaultSearchResultDTO defaultSearchResultCommand = mapper.readValue(data, DefaultSearchResultDTO.class);
+                    ruleEngine.setDefaultSearchResult(defaultSearchResultCommand.item, defaultSearchResultCommand.noSeconds);
+                    break;
                 default:
                     System.err.println("Received unknown command: " + commandType);
                     break;

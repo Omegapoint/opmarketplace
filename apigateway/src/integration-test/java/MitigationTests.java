@@ -15,7 +15,7 @@ import org.springframework.web.context.WebApplicationContext;
 import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.ItemDTO;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -125,5 +125,31 @@ public class MitigationTests {
                 .andExpect(status().isForbidden());
 
         Thread.sleep(10000);
+    }
+
+    @Test
+    public void default_search_is_activated_when_load_is_high() throws Exception {
+        String email = "robert@email.com";
+        MvcResult mvcResult = TestRequests.createItem("Special title", "Example description", 100, 1, "test@email.com", mockMvc)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        TestRequests.createUser(email, "Robert", "lastName", mockMvc);
+
+        String itemId = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), ItemDTO.class).id;
+
+        TestRequests.purchaseItem(itemId, 1, email, mockMvc);
+
+        for (int i = 0; i < 10; i++) {
+            TestRequests.searchItems("Hello", mockMvc)
+                    .andExpect(content().string("[]"));
+        }
+
+        for (int i = 0; i < 20; i++) {
+            TestRequests.searchItems("Hello", mockMvc);
+        }
+
+        TestRequests.searchItems("Hello", mockMvc)
+                .andExpect(jsonPath("$[0].id").value(itemId));
     }
 }
