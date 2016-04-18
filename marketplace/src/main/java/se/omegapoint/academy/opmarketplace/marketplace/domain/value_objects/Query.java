@@ -4,6 +4,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.MainConfiguration;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notBlank;
@@ -26,8 +27,9 @@ public class Query {
             isTrue(trimmedQuery.matches("[\\w\\.,?%&@/ ]+"), ILLEGAL_CHARACTERS);
             isTrue(trimmedQuery.split(" ").length <= SEARCH_TERMS, ILLEGAL_AMOUNT_OF_TERMS);
         }
-        terms = Arrays.asList(trimmedQuery.split(" "));
-        terms.stream().forEach(String::toLowerCase);
+        terms = Arrays.asList(trimmedQuery.split(" ")).stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toList());
     }
 
     public List<String> terms(){
