@@ -1,6 +1,8 @@
 package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.data_extraction;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +23,7 @@ public class ItemService {
     ItemDataShortcut dataShortcut;
 
     @RequestMapping(value = "/most_popular_item", method = GET)
-    public ItemDTO getMostPopularItem(
+    public ResponseEntity<ItemDTO> getMostPopularItem(
             @RequestParam("since") String since) {
 
         LocalDateTime dateTime = LocalDateTime.parse(since);
@@ -29,6 +31,7 @@ public class ItemService {
 
         Optional<Item> maybeItem = dataShortcut.getMostPopularItemSince(timestamp);
 
-        return maybeItem.map(ItemDTO::new).orElse(null);
+        return maybeItem.map(item -> new ResponseEntity<>(new ItemDTO(item), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

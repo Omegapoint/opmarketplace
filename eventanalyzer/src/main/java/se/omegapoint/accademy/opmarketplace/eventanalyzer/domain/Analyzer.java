@@ -5,11 +5,10 @@ import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.bus.selector.Selectors;
 import reactor.fn.Consumer;
-import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.Command;
-import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.DisableFeatureDTO;
-import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.RateLimitFeatureDTO;
-import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.ValidateUsersDTO;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.*;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.data_adapters.ItemAdapter;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.data_adapters.UserAdapter;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.infrastructure.json_representations.ItemDTO;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -29,14 +28,18 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
     private int IMPORTANT_USER_MEMBER_FOR;
     @Value("${mitigation.importantuser.minspend}")
     private int IMPORTANT_USER_MIN_SPEND;
+    @Value("${mitigation.importantitem.duration}")
+    private int IMPORTANT_ITEM_DURATION;
 
     private EventBus eventBus;
     private HashMap<String, SlidingWindow> eventWindows;
     private UserAdapter userAdapter;
+    private ItemAdapter itemAdapter;
 
-    public Analyzer(EventBus eventBus, UserAdapter userAdapter) {
+    public Analyzer(EventBus eventBus, UserAdapter userAdapter, ItemAdapter itemAdapter) {
         this.eventBus = eventBus;
         this.userAdapter = userAdapter;
+        this.itemAdapter = itemAdapter;
         eventBus.on(Selectors.object("events"), this);
         eventWindows = new HashMap<>();
     }
@@ -49,6 +52,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
         switch (eventType) { // Filter events
             case "AccountCreationRequested":
             case "ItemRequested":
+            case "ItemSearchRequested":
                 analyze(eventType);
                 break;
         }
@@ -84,6 +88,14 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
                         new ValidateUsersDTO(DISABLE_DURATION, importantUsers),
                         new RateLimitFeatureDTO(RATE_LIMIT_INTERVAL, DISABLE_DURATION));
                 break;
+            case "ItemSearchRequested":
+                System.out.println("DEBUG: Initiating default search response");
+                ItemDTO mostImportantItem = itemAdapter.fetchMostImportantItemSince(LocalDateTime.now().minusDays(IMPORTANT_ITEM_DURATION));
+                dispatchCommands(
+                        new DefaultSearchResultDTO(DISABLE_DURATION, mostImportantItem));
+                break;
+            default:
+                throw new IllegalStateException("Unknown event received.");
         }
     }
 

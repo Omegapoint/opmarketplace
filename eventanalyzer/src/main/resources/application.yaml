@@ -10,6 +10,8 @@ url:
     users: http://localhost:8002/command
   customer:
     users: http://localhost:8001/users
+  marketplace:
+    items: http://localhost:8003//most_popular_item
 
 event:
   receiver:
@@ -27,4 +29,6 @@ mitigation:
   importantuser:
     memberfor: 5  # s
     minspend: 10  # credits
+  importantitem:
+    duration: 1 # days
 

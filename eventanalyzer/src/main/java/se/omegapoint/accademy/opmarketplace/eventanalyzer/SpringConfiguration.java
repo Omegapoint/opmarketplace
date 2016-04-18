@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import reactor.bus.EventBus;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.Analyzer;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.data_adapters.ItemAdapter;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.data_adapters.UserAdapter;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.infrastructure.EventPublisher;
 
@@ -16,13 +17,18 @@ public class SpringConfiguration {
     }
 
     @Bean
-    UserAdapter createUserValidator() {
+    UserAdapter createUserAdapter() {
         return new UserAdapter();
     }
 
     @Bean
-    Analyzer createAnalyzer(EventBus eventBus, UserAdapter userAdapter) {
-        return new Analyzer(eventBus, userAdapter);
+    ItemAdapter createItemAdapter() {
+        return new ItemAdapter();
+    }
+
+    @Bean
+    Analyzer createAnalyzer(EventBus eventBus, UserAdapter userAdapter, ItemAdapter itemAdapter) {
+        return new Analyzer(eventBus, userAdapter, itemAdapter);
     }
 
     @Bean
