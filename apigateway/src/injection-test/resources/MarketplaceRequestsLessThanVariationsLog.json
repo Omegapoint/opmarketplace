@@ -1,0 +1,99 @@
+{
+  "createItemRequest" : {
+    "title" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "description" : {
+      "blocked" : "67/70",
+      "notBlocked" : [ {
+        "input" : "%3C",
+        "response" : "{\"id\":\"0e1dfe06-bf5c-4321-87e3-7f8c7a85ad8b\",\"title\":\"valid\",\"description\":\"%3C\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
+      }, {
+        "input" : "&lt",
+        "response" : "{\"id\":\"736313b2-22e7-4728-b8c1-5fe5100a5342\",\"title\":\"valid\",\"description\":\"&lt\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
+      }, {
+        "input" : "&LT",
+        "response" : "{\"id\":\"9c8a2eaa-52a0-4197-bec4-79a4aa0fa30a\",\"title\":\"valid\",\"description\":\"&LT\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
+      } ]
+    },
+    "price" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "supply" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "seller" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    }
+  },
+  "changeItemRequest" : {
+    "id" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "title" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "description" : {
+      "blocked" : "67/70",
+      "notBlocked" : [ {
+        "input" : "%3C",
+        "response" : "{\"reason\":\"Item does not exist.\"}"
+      }, {
+        "input" : "&lt",
+        "response" : "{\"reason\":\"Item does not exist.\"}"
+      }, {
+        "input" : "&LT",
+        "response" : "{\"reason\":\"Item does not exist.\"}"
+      } ]
+    },
+    "price" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "supply" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    }
+  },
+  "getItemRequest" : {
+    "id" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    }
+  },
+  "purchaseItemRequest" : {
+    "itemId" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "quantity" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "buyerId" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    }
+  },
+  "searchItemRequest" : {
+    "id" : {
+      "blocked" : "67/70",
+      "notBlocked" : [ {
+        "input" : "%3C",
+        "response" : "[]"
+      }, {
+        "input" : "&lt",
+        "response" : "[{\"id\":\"736313b2-22e7-4728-b8c1-5fe5100a5342\",\"title\":\"valid\",\"description\":\"&lt\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"},{\"id\":\"9c8a2eaa-52a0-4197-bec4-79a4aa0fa30a\",\"title\":\"valid\",\"description\":\"&LT\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}]"
+      }, {
+        "input" : "&LT",
+        "response" : "[]"
+      } ]
+    }
+  }
+}

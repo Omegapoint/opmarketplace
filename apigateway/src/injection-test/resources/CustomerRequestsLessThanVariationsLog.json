@@ -1,0 +1,52 @@
+{
+  "createAccountRequest" : {
+    "email" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "firstName" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "lastName" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    }
+  },
+  "changeUserRequest" : {
+    "email" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "firstName" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "lastName" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    }
+  },
+  "addCreditRequest" : {
+    "email" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "credit" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    }
+  },
+  "getAccountRequest" : {
+    "email" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    }
+  },
+  "deleteAccountRequest" : {
+    "email" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    }
+  }
+}

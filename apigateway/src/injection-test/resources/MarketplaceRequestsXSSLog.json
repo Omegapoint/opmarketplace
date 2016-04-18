@@ -1,0 +1,72 @@
+{
+  "createItemRequest" : {
+    "title" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    },
+    "description" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    },
+    "price" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    },
+    "supply" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    },
+    "seller" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    }
+  },
+  "changeItemRequest" : {
+    "id" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    },
+    "title" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    },
+    "description" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    },
+    "price" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    },
+    "supply" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    }
+  },
+  "getItemRequest" : {
+    "id" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    }
+  },
+  "purchaseItemRequest" : {
+    "itemId" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    },
+    "quantity" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    },
+    "buyerId" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    }
+  },
+  "searchItemRequest" : {
+    "id" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
+    }
+  }
+}
