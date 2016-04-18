@@ -146,10 +146,10 @@ public class ItemTests {
     @Test
     public void should_purchase_item() throws Exception {
         TestRequests.createUser("master@seller.com", "master", "seller", mockMvc)
-                .andExpect(status().isOk());
+                .andReturn();
 
         TestRequests.createUser("master@buyer.com", "master", "buyer", mockMvc)
-                .andExpect(status().isOk());
+                .andReturn();
 
         TestRequests.addCredit("master@buyer.com", 400, mockMvc)
                 .andExpect(status().isOk());

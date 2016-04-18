@@ -9,7 +9,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.bus.Event;
-import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
+import se.omegapoint.academy.opmarketplace.customer.Application;
 import se.omegapoint.academy.opmarketplace.customer.TestConfiguration;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CustomerApplication.class)
+@SpringApplicationConfiguration(classes = Application.class)
 @ActiveProfiles("test")
 public class AccountServiceTest {
 

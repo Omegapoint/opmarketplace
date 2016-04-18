@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import se.omegapoint.academy.opmarketplace.customer.CustomerApplication;
+import se.omegapoint.academy.opmarketplace.customer.Application;
 import se.omegapoint.academy.opmarketplace.customer.domain.entities.Account;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountUserChangeRequested;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
@@ -14,11 +14,10 @@ import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.User;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.AccountCreationRequested;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 
 import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CustomerApplication.class)
+@SpringApplicationConfiguration(classes = Application.class)
 @ActiveProfiles("test")
 public class AccountRepositoryTest {
 
