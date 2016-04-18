@@ -9,7 +9,7 @@ import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.Comman
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.DisableFeatureDTO;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.RateLimitFeatureDTO;
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.commands.ValidateUsersDTO;
-import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.control_mechanisms.UserValidator;
+import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.data_adapters.UserAdapter;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -32,11 +32,11 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
 
     private EventBus eventBus;
     private HashMap<String, SlidingWindow> eventWindows;
-    private UserValidator userValidator;
+    private UserAdapter userAdapter;
 
-    public Analyzer(EventBus eventBus, UserValidator userValidator) {
+    public Analyzer(EventBus eventBus, UserAdapter userAdapter) {
         this.eventBus = eventBus;
-        this.userValidator = userValidator;
+        this.userAdapter = userAdapter;
         eventBus.on(Selectors.object("events"), this);
         eventWindows = new HashMap<>();
     }
@@ -79,7 +79,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
                 break;
             case "ItemRequested":
                 System.out.printf("DEBUG: Too many %s events.%n", eventType);
-                List<String> importantUsers = userValidator.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_MEMBER_FOR), IMPORTANT_USER_MIN_SPEND);
+                List<String> importantUsers = userAdapter.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_MEMBER_FOR), IMPORTANT_USER_MIN_SPEND);
                 dispatchCommands(
                         new ValidateUsersDTO(DISABLE_DURATION, importantUsers),
                         new RateLimitFeatureDTO(RATE_LIMIT_INTERVAL, DISABLE_DURATION));
