@@ -55,17 +55,4 @@ public class MainConfiguration {
         eventBus.on(Selectors.object("Account"), accountService);
         return eventBus;
     }
-
-    @Bean
-    AccountEventStore createAccountEventStore(AccountCreatedJPA accountCreatedRepository,
-                                              AccountUserChangedJPA accountUserChangedRepository,
-                                              AccountDeletedJPA accountDeletedRepository,
-                                              AccountCreditDepositedJPA creditDepositRepository,
-                                              AccountCreditWithdrawnJPA creditWithdrawnRepository){
-        return new AccountEventStore(accountCreatedRepository,
-                accountUserChangedRepository,
-                accountDeletedRepository,
-                creditDepositRepository,
-                creditWithdrawnRepository);
-    }
 }

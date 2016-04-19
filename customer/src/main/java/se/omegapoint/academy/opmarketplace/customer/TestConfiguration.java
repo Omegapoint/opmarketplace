@@ -7,12 +7,28 @@ import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.AccountEventStore;
+import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.event_persistance.*;
 
 import java.util.HashMap;
 
 @Configuration
 @Profile("test")
 public class TestConfiguration {
+
+
+    @Bean
+    AccountEventStore createAccountEventStore(AccountCreatedJPA accountCreatedRepository,
+                                              AccountUserChangedJPA accountUserChangedRepository,
+                                              AccountDeletedJPA accountDeletedRepository,
+                                              AccountCreditDepositedJPA creditDepositRepository,
+                                              AccountCreditWithdrawnJPA creditWithdrawnRepository){
+        return new AccountEventStore(accountCreatedRepository,
+                accountUserChangedRepository,
+                accountDeletedRepository,
+                creditDepositRepository,
+                creditWithdrawnRepository);
+    }
 
     @Bean
     public TestPublisher createTestPublisher() {
