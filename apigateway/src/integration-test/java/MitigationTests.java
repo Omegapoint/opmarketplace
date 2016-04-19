@@ -138,7 +138,9 @@ public class MitigationTests {
 
         String itemId = new ObjectMapper().readValue(mvcResult.getResponse().getContentAsString(), ItemDTO.class).id;
 
-        TestRequests.purchaseItem(itemId, 1, email, mockMvc);
+        for (int i = 0; i < 10; i++) { // Buy 10 times to make it "important"
+            TestRequests.purchaseItem(itemId, 1, email, mockMvc);
+        }
 
         for (int i = 0; i < 10; i++) {
             TestRequests.searchItems("Hello", mockMvc)
