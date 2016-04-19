@@ -151,5 +151,7 @@ public class MitigationTests {
 
         TestRequests.searchItems("Hello", mockMvc)
                 .andExpect(jsonPath("$[0].id").value(itemId));
+
+        Thread.sleep(10000);
     }
 }
