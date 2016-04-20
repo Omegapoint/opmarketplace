@@ -50,7 +50,7 @@ public class SearchTest {
 
     @Test
     public void searchItemsValidation() throws Exception {
-        int num_searches = 20;
+        int num_searches = 50;
         int num_search_terms = 5;
         List<String> dictionary = Dictionary.getWordList();
         int responseTime = Requests.getAverageResponseTimeForSearch(num_searches, num_search_terms, dictionary, mockMvc);
@@ -59,8 +59,8 @@ public class SearchTest {
 
     @Test
     public void searchItemsNoValidation() throws Exception {
-        int num_searches = 20;
-        int num_search_terms = 100;
+        int num_searches = 50;
+        int num_search_terms = 500;
         List<String> dictionary = Dictionary.getWordList();
         int responseTime = Requests.getAverageResponseTimeForSearch(num_searches, num_search_terms, dictionary, mockMvc);
         System.out.println("Average response time: " + responseTime + "ms");
