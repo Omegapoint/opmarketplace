@@ -34,12 +34,6 @@ public class ItemTest {
 
     private MockMvc mockMvc;
 
-    private ObjectWriter json;
-
-    public ItemTest() throws IOException {
-        json = new ObjectMapper().writerWithDefaultPrettyPrinter();
-    }
-
     @Before
     public void setUp() throws Exception {
         mockMvc = webAppContextSetup(wac).build();
@@ -47,7 +41,7 @@ public class ItemTest {
 
     @Test
     public void searchItems() throws Exception {
-        int num_searches = 20;
+        int num_searches = 50;
         int num_search_terms = 5;
         List<String> dictionary = Dictionary.getWordList();
         Random random = new Random();
