@@ -18,20 +18,9 @@ import se.omegapoint.academy.opmarketplace.customer.infrastructure.persistence.e
 
 
 @Configuration
-@EntityScan(basePackageClasses = EntityMarker.class)
-@EnableJpaRepositories(basePackageClasses = AccountCreditDepositedJPA.class)
 public class MainConfiguration {
 
     public static boolean VALIDATION = true;
-
-    @Value("${validation}")
-    private boolean validationInit;
-
-    @Bean
-    boolean isVALIDATION(){
-        VALIDATION = validationInit;
-        return VALIDATION;
-    }
 
     @Bean
     AccountService createAccountService(AccountRepository accountRepository, EventPublisher eventPublisher) {

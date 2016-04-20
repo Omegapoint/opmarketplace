@@ -83,7 +83,7 @@ public class AccountGateway {
     }
 
     @RequestMapping(value = "/credit", method = PUT, produces = APPLICATION_JSON_VALUE)
-    public DeferredResult<ResponseEntity<String>> changeUser(@RequestBody final AccountCreditDepositRequestedDTO change) {
+    public DeferredResult<ResponseEntity<String>> depositCredit(@RequestBody final AccountCreditDepositRequestedDTO change) {
         notNull(change);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         AccountCreditDepositedListener listener =  new AccountCreditDepositedListener(result);

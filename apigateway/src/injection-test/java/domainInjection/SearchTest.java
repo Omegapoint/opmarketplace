@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringApplicationConfiguration(classes = ApigatewayApplication.class)
 @WebIntegrationTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SearchWithValidation {
+public class SearchTest {
 
     @Autowired
     private WebApplicationContext wac;
@@ -38,7 +39,7 @@ public class SearchWithValidation {
 
     private ObjectWriter json;
 
-    public SearchWithValidation() throws IOException {
+    public SearchTest() throws IOException {
         json = new ObjectMapper().writerWithDefaultPrettyPrinter();
     }
 
@@ -48,22 +49,20 @@ public class SearchWithValidation {
     }
 
     @Test
-    public void searchItems() throws Exception {
+    public void searchItemsValidation() throws Exception {
         int num_searches = 20;
-        ArrayList<String> dictionary = new ArrayList<>(1000);
-        Files.lines(Paths.get("src\\injection-test\\resources\\dictionary.txt")).forEach(dictionary::add);
-        Random random = new Random();
-        int responseTime = 0;
-        for (int i = 0; i < num_searches; i++) {
-            String query = "";
-            for (int j = 0; j < 5; j++) {
-                query = query + " " + dictionary.get(random.nextInt(1000));
-            }
-            long start = System.currentTimeMillis();
-            Requests.searchItems(query, mockMvc)
-                    .andExpect(status().isOk());
-            responseTime += System.currentTimeMillis() - start;
-        }
-        System.out.println("Average response time: " + (responseTime / num_searches) + "ms");
+        int num_search_terms = 5;
+        List<String> dictionary = Dictionary.getWordList();
+        int responseTime = Requests.getAverageResponseTimeForSearch(num_searches, num_search_terms, dictionary, mockMvc);
+        System.out.println("Average response time: " + responseTime + "ms");
+    }
+
+    @Test
+    public void searchItemsNoValidation() throws Exception {
+        int num_searches = 20;
+        int num_search_terms = 100;
+        List<String> dictionary = Dictionary.getWordList();
+        int responseTime = Requests.getAverageResponseTimeForSearch(num_searches, num_search_terms, dictionary, mockMvc);
+        System.out.println("Average response time: " + responseTime + "ms");
     }
 }
