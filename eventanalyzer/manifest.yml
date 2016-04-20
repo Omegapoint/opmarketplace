@@ -9,7 +9,7 @@ applications:
     URL_APIGATEWAY_COMMAND: http://apigateway-opm.cfapps.io/command
     EVENT_RECEIVER_URL: http://eventanalyzer-opm.cfapps.io/event
     ### Mitigation properties ###
-    MITIGATION_THRESHOLD_WINDOW_SIZE: 500
+    MITIGATION_THRESHOLD_WINDOW_SIZE: 100
     MITIGATION_THRESHOLD_WINDOW_TIME: 1000        # ms
     MITIGATION_DISABLE_DURATION: 20               # s
     MITIGATION_RATELIMIT_INTERVAL: 500            # ms
