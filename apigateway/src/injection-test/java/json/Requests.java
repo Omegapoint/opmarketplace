@@ -176,6 +176,20 @@ public class Requests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
+    public static ResultActions withdrawCredit(String email, String credit, MockMvc mockMvc) throws Exception {
+        String content = creditJson(email, credit);
+        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/withdraw")
+                .contentType(APPLICATION_JSON)
+                .content(content)
+        )
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvcResult.getAsyncResult();
+
+        return mockMvc.perform(asyncDispatch(mvcResult));
+    }
+
     private static String itemChangeJson(String id, String title, String description, String price, String quantity) throws Exception {
         String content =
                 "{" +
