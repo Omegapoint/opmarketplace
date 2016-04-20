@@ -62,6 +62,16 @@ public class Account {
         return new AccountDeleted(this.email());
     }
 
+    public AccountCreditWithdrawn withdrawCredits(AccountCreditWithdrawalRequested request){
+        notNull(request);
+        isTrue(this.email.equals(request.email()));
+        if (request.credits().amount() <= this.vault.amount()) {
+            return new AccountCreditWithdrawn(this.email, request.credits());
+        } else {
+            throw new IllegalArgumentValidationException("Insufficient funds.");
+        }
+    }
+
     public AccountCreditWithdrawn charge(ItemOrdered request){
         notNull(request);
         isTrue(this.email.equals(request.order().buyerId()));

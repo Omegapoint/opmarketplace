@@ -137,12 +137,23 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void should_add_credit_to_user() throws Exception {
-        addUser("add@credit.com", "first", "last");
-        depositCredits("add@credit.com", 10);
-        depositCredits("add@credit.com", 20);
-        getUser("add@credit.com");
+    public void should_deposit_credit_to_user() throws Exception {
+        addUser("deposit@credit.com", "first", "last");
+        depositCredits("deposit@credit.com", 10);
+        depositCredits("deposit@credit.com", 20);
+        getUser("deposit@credit.com");
         assertEquals(30, ((AccountObtained)testPublisher.getLastEvent()).account().vault().amount());
+    }
+
+    @Test
+    public void should_withdraw_credit_from_user() throws Exception {
+        addUser("withdraw@credit.com", "first", "last");
+        depositCredits("withdraw@credit.com", 10);
+        depositCredits("withdraw@credit.com", 20);
+        withdrawCredits("withdraw@credit.com", 10);
+        withdrawCredits("withdraw@credit.com", 20);
+        getUser("withdraw@credit.com");
+        assertEquals(0, ((AccountObtained)testPublisher.getLastEvent()).account().vault().amount());
     }
 
     @Test
@@ -237,6 +248,14 @@ public class AccountServiceTest {
                 "\"credit\":" + credit + "}";
 
         AccountCreditDepositRequestedDTO model = objectMapper.readValue(inputData, AccountCreditDepositRequestedDTO.class);
+        accountService.accept(Event.wrap(model));
+    }
+
+    private void withdrawCredits(String email, int credit) throws IOException {
+        String inputData = "{\"requestId\":\"abc\",\"email\":\"" + email +"\"," +
+                "\"credit\":" + credit + "}";
+
+        AccountCreditWithdrawalRequestedDTO model = objectMapper.readValue(inputData, AccountCreditWithdrawalRequestedDTO.class);
         accountService.accept(Event.wrap(model));
     }
 }

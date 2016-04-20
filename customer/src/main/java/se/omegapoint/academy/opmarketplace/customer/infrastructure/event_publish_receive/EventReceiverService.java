@@ -47,6 +47,9 @@ public class EventReceiverService {
                 case AccountCreditDepositRequestedDTO.TYPE:
                     eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountCreditDepositRequestedDTO.class)));
                     break;
+                case AccountCreditWithdrawalRequestedDTO.TYPE:
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, AccountCreditWithdrawalRequestedDTO.class)));
+                    break;
                 case ItemOrderedDTO.TYPE:
                     eventBus.notify(channel, Event.wrap(json.readValue(event.data, ItemOrderedDTO.class)));
                     break;

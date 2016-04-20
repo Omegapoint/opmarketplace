@@ -41,6 +41,8 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
             accountDeletionRequested((AccountDeletionRequestedDTO) dto);
         } else if (dto instanceof AccountCreditDepositRequestedDTO) {
             accountCreditDepositRequested((AccountCreditDepositRequestedDTO) dto);
+        } else if (dto instanceof AccountCreditWithdrawalRequestedDTO) {
+            accountCreditWithdrawalRequested((AccountCreditWithdrawalRequestedDTO) dto);
         } else if (dto instanceof ItemOrderedDTO) {
             accountCreditTransaction((ItemOrderedDTO) dto);
         }
@@ -85,6 +87,14 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
 
         publisher.publish(event, dto.requestId());
     }
+    private void accountCreditWithdrawalRequested(AccountCreditWithdrawalRequestedDTO dto) {
+        DomainEvent event = DomainObjectResult.of(AccountCreditWithdrawalRequestedDTO::domainObject, dto)
+                .map(this::withdrawCreditsFromAccount)
+                .orElseReason(AccountCreditNotWithdrawn::new);
+
+        publisher.publish(event, dto.requestId());
+    }
+
 
     private void accountCreditTransaction(ItemOrderedDTO dto) {
         DomainEvent event = DomainObjectResult.of(ItemOrderedDTO::domainObject, dto)
@@ -126,5 +136,14 @@ public class AccountService implements Consumer<Event<se.omegapoint.academy.opma
         return DomainObjectResult.of(() -> (DomainEvent)Account.depositCredits(request, accountRepository))
                 .map(event -> (DomainEvent)accountRepository.append((PersistableEvent) event))
                 .orElseReason(AccountCreditNotDeposited::new);
+    }
+
+    private DomainEvent withdrawCreditsFromAccount(AccountCreditWithdrawalRequested request) {
+        Optional<Account> maybeAccount = accountRepository.account(request.email());
+        return maybeAccount
+                .map(account -> DomainObjectResult.of(() -> (DomainEvent)account.withdrawCredits(request))
+                        .map(event -> (DomainEvent)accountRepository.append((PersistableEvent) event))
+                        .orElseReason(AccountCreditNotWithdrawn::new))
+                .orElse(new AccountCreditNotWithdrawn("Account does not exist."));
     }
 }

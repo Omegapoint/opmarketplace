@@ -9,10 +9,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.springframework.beans.factory.annotation.Value;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.*;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreditDeposited;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountDeleted;
-import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountUserChanged;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.*;
 import se.omegapoint.academy.opmarketplace.customer.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.customer.infrastructure.dto.OutgoingRemoteEvent;
@@ -62,6 +59,10 @@ public class EventRemotePublisherService implements EventPublisher {
             dispatch(new AccountCreditDepositedDTO((AccountCreditDeposited) event, requestId));
         } else if (event instanceof AccountCreditNotDeposited) {
             dispatch(new AccountCreditNotDepositedDTO((AccountCreditNotDeposited) event, requestId));
+        }  else if (event instanceof AccountCreditWithdrawn) {
+            dispatch(new AccountCreditWithdrawnDTO((AccountCreditWithdrawn) event, requestId));
+        } else if (event instanceof AccountCreditNotWithdrawn) {
+            dispatch(new AccountCreditNotWithdrawnDTO((AccountCreditNotWithdrawn) event, requestId));
         } else if (event instanceof ItemPaymentCompleted) {
             dispatch(new ItemPaymentCompletedDTO((ItemPaymentCompleted) event, requestId));
         } else if (event instanceof ItemPaymentNotCompleted) {

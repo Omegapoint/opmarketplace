@@ -102,7 +102,7 @@ public class MitigationTests {
 
         // Make user "important"
         Thread.sleep(5000);
-        TestRequests.addCredit(email, 200, mockMvc)
+        TestRequests.depositCredit(email, 200, mockMvc)
                 .andExpect(status().isOk());
         TestRequests.purchaseItem(itemId, 1, email, mockMvc)
                 .andExpect(status().isOk());

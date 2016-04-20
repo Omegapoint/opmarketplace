@@ -215,9 +215,23 @@ public class TestRequests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    public static ResultActions addCredit(String email, int credit, MockMvc mockMvc) throws Exception {
+    public static ResultActions depositCredit(String email, int credit, MockMvc mockMvc) throws Exception {
         String content = creditJson(email, credit);
         MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/deposit")
+                .contentType(APPLICATION_JSON)
+                .content(content)
+        )
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mvcResult.getAsyncResult();
+
+        return mockMvc.perform(asyncDispatch(mvcResult));
+    }
+
+    public static ResultActions withdrawCredit(String email, int credit, MockMvc mockMvc) throws Exception {
+        String content = creditJson(email, credit);
+        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/withdraw")
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )

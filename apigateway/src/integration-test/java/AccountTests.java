@@ -1,5 +1,3 @@
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -10,19 +8,11 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 import se.omegapoint.academy.opmarketplace.apigateway.ApigatewayApplication;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountCreditDepositRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountUserChangeRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account.UserDTO;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -128,9 +118,9 @@ public class AccountTests {
     public void should_add_credits_to_account() throws Exception {
         TestRequests.createUser("toBe@rich.com", "ToBe", "Rich", mockMvc)
                 .andExpect(status().isOk());
-        TestRequests.addCredit("toBe@rich.com", 10, mockMvc)
+        TestRequests.depositCredit("toBe@rich.com", 10, mockMvc)
                 .andExpect(status().isOk());
-        TestRequests.addCredit("toBe@rich.com", 20, mockMvc)
+        TestRequests.depositCredit("toBe@rich.com", 20, mockMvc)
                 .andExpect(status().isOk());
         TestRequests.getUser("toBe@rich.com", mockMvc)
                 .andExpect(jsonPath("$.vault").value(30));
@@ -138,11 +128,55 @@ public class AccountTests {
 
     @Test
     public void should_not_add_negative_credits_to_account() throws Exception {
-        TestRequests.createUser("toRemain@poor.com", "ToBe", "Rich", mockMvc)
+        TestRequests.createUser("toRemain@poor.com", "ToRemain", "Poor", mockMvc)
                 .andExpect(status().isOk());
-        TestRequests.addCredit("toRemain@poor.com", -1, mockMvc)
+        TestRequests.depositCredit("toRemain@poor.com", -1, mockMvc)
                 .andExpect(status().isBadRequest());
         TestRequests.getUser("toRemain@poor.com", mockMvc)
                 .andExpect(jsonPath("$.vault").value(0));
+    }
+
+    @Test
+    public void should_withdraw_credits_from_account() throws Exception {
+        TestRequests.createUser("toBe@poor.com", "ToBe", "Poor", mockMvc)
+                .andExpect(status().isOk());
+
+        TestRequests.depositCredit("toBe@poor.com", 10, mockMvc)
+                .andExpect(status().isOk());
+        TestRequests.depositCredit("toBe@poor.com", 20, mockMvc)
+                .andExpect(status().isOk());
+
+        TestRequests.withdrawCredit("toBe@poor.com", 10, mockMvc)
+                .andExpect(status().isOk());
+        TestRequests.withdrawCredit("toBe@poor.com", 20, mockMvc)
+                .andExpect(status().isOk());
+
+        TestRequests.getUser("toBe@poor.com", mockMvc)
+                .andExpect(jsonPath("$.vault").value(0));
+    }
+
+    @Test
+    public void should_not_withdraw_beyond_zero_credits_from_account() throws Exception {
+        TestRequests.createUser("toRemain@asis.com", "ToRemain", "AsIs", mockMvc)
+                .andExpect(status().isOk());
+        TestRequests.withdrawCredit("toRemain@asis.com", 1, mockMvc)
+                .andExpect(status().isBadRequest());
+        TestRequests.getUser("toRemain@asis.com", mockMvc)
+                .andExpect(jsonPath("$.vault").value(0));
+    }
+
+    @Test
+    public void should_not_withdraw_negative_credits_from_account() throws Exception {
+        TestRequests.createUser("toRemain@rich.com", "ToRemain", "Rich", mockMvc)
+                .andExpect(status().isOk());
+
+        TestRequests.depositCredit("toRemain@rich.com", 10, mockMvc)
+                .andExpect(status().isOk());
+
+        TestRequests.withdrawCredit("toRemain@rich.com", -1, mockMvc)
+                .andExpect(status().isBadRequest());
+
+        TestRequests.getUser("toRemain@rich.com", mockMvc)
+                .andExpect(jsonPath("$.vault").value(10));
     }
 }
