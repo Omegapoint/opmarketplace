@@ -17,20 +17,9 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.ItemEventStore;
 
 @Configuration
-@EntityScan(basePackageClasses = EntityMarker.class)
-@EnableJpaRepositories(basePackageClasses = JpaRepositoryMarker.class)
 public class MainConfiguration {
 
     public static boolean VALIDATION = true;
-
-    @Value("${validation}")
-    private boolean validationInit;
-
-    @Bean
-    boolean isVALIDATION(){
-        VALIDATION = validationInit;
-        return VALIDATION;
-    }
 
     @Bean
     ItemService createItemService(ItemRepository accountRepository, EventPublisher eventPublisher) {
@@ -48,14 +37,6 @@ public class MainConfiguration {
         EventBus eventBus = EventBus.create(env, Environment.THREAD_POOL);
         eventBus.on(Selectors.object("Item"), itemService);
         return eventBus;
-    }
-
-    @Bean
-    public ItemEventStore itemRepository(ItemCreatedJPARepository itemCreatedRepository,
-                                         ItemChangedJPARepository itemChangedRepository,
-                                         ItemOrderJPARepository itemOrderRepository,
-                                         ItemOrderReverseJPARepository itemOrderReverseRepository){
-        return new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository, itemOrderReverseRepository);
     }
 
     @Bean

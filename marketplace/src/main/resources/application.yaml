@@ -11,4 +11,3 @@ event:
     url: http://localhost:8003/event
   publisher:
     url: http://localhost:8000/event
-validation: true

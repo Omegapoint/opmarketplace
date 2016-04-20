@@ -7,7 +7,7 @@ import static se.sawano.java.commons.lang.validate.Validate.notBlank;
 
 public class Description {
 
-    protected final static int MAX_LENGTH = 5000;
+    public final static int MAX_LENGTH = 500;
 
     protected final static String ILLEGAL_LENGTH = "Illegal Format: Description cannot be longer than " + MAX_LENGTH + " characters.";
     protected final static String ILLEGAL_CHARACTERS = "Illegal Format: Description can only contain letters, digits and '.,%&@/'";

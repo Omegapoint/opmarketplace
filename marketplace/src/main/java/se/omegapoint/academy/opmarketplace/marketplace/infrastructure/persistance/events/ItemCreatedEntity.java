@@ -5,8 +5,10 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Deserializer;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Lob;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -18,6 +20,8 @@ public class ItemCreatedEntity implements Deserializer<ItemCreated> {
     private long eventId;
     private String id;
     private String title;
+    @Lob
+    @Column(columnDefinition = "TEXT", length = 65535)
     private String description;
     private Integer price;
     private Integer supply;

@@ -9,7 +9,7 @@ import static se.sawano.java.commons.lang.validate.Validate.notBlank;
 
 public final class Title {
 
-    protected static final int MAX_LENGTH = 50;
+    public static final int MAX_LENGTH = 50;
     public static final String ILLEGAL_LENGTH = "Illegal Format: Title can only be " + MAX_LENGTH + " characters long.";
     public static final String ILLEGAL_CHARACTERS = "Illegal Format: Title can only contain letters, digits and spaces";
 
