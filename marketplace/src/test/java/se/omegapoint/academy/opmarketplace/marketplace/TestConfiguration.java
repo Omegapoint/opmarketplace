@@ -17,7 +17,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 public class TestConfiguration {
 
     @Bean
-    boolean isVALIDATION(){
+    Boolean isVALIDATION(){
         MainConfiguration.VALIDATION = true;
         return MainConfiguration.VALIDATION;
     }
@@ -31,7 +31,8 @@ public class TestConfiguration {
     public ItemEventStore itemRepository(ItemCreatedJPARepository itemCreatedRepository,
                                          ItemChangedJPARepository itemChangedRepository,
                                          ItemOrderJPARepository itemOrderRepository,
-                                         ItemOrderReverseJPARepository itemOrderReverseRepository){
+                                         ItemOrderReverseJPARepository itemOrderReverseRepository,
+                                         Boolean isVALIDATION){
         return new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository, itemOrderReverseRepository);
     }
 }

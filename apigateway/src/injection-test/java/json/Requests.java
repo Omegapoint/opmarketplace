@@ -12,16 +12,35 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_repres
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemPurchaseRequestedDTO;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Random;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class Requests {
 
     private static ObjectMapper json = new ObjectMapper();
+
+    public static int getAverageResponseTimeForSearch(int num_searches, int num_search_terms, List<String> dictionary, MockMvc mockMvc) throws Exception {
+        Random random = new Random();
+        int responseTime = 0;
+        for (int i = 0; i < num_searches; i++) {
+            String query = "";
+            for (int j = 0; j < num_search_terms; j++) {
+                query = query + " " + dictionary.get(random.nextInt(1000));
+            }
+            long start = System.currentTimeMillis();
+            searchItems(query, mockMvc)
+                    .andExpect(status().isOk());
+            responseTime += System.currentTimeMillis() - start;
+        }
+        return responseTime/num_searches;
+    }
 
     public static ResultActions createItem(String title, String description, String price, String quantity, String seller, MockMvc mockMvc) throws Exception {
         String content = itemCreationJson(title, description, price, quantity, seller);

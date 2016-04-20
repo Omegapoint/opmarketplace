@@ -1,7 +1,5 @@
 package se.omegapoint.academy.opmarketplace.marketplace;
 
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +8,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.event_publish_receive.EventRemotePublisherService;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.event_publish_receive.SubscriberInitializer;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.ItemEventStore;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.EntityMarker;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.*;
@@ -21,32 +17,19 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.stream.Stream;
 
 @Configuration
 @EntityScan(basePackageClasses = EntityMarker.class)
 @EnableJpaRepositories(basePackageClasses = JpaRepositoryMarker.class)
-@Profile("divc")
-public class DomainInjectionWithValidationConfiguration {
-
-    @Bean
-    boolean isVALIDATION(){
-        MainConfiguration.VALIDATION = true;
-        return MainConfiguration.VALIDATION;
-    }
-
-    @Bean(destroyMethod = "cleanup")
-    EventRemotePublisherService createEventPublisher(){
-        CloseableHttpAsyncClient httpClient = HttpAsyncClients.createDefault();
-        httpClient.start();
-        return new EventRemotePublisherService(httpClient);
-    }
+@Profile("itemLimit")
+public class DomainInjectionItemLimitConfiguration {
 
     @Bean
     public ItemEventStore itemRepository(ItemCreatedJPARepository itemCreatedRepository,
                                          ItemChangedJPARepository itemChangedRepository,
                                          ItemOrderJPARepository itemOrderRepository,
-                                         ItemOrderReverseJPARepository itemOrderReverseRepository){
+                                         ItemOrderReverseJPARepository itemOrderReverseRepository,
+                                         Boolean isVALIDATION){
         ItemEventStore eventStore = new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository, itemOrderReverseRepository);
 
         ArrayList<String> dictionary = new ArrayList<>(1000);
@@ -58,17 +41,17 @@ public class DomainInjectionWithValidationConfiguration {
         Random random = new Random();
         for (int i = 0; i < 1000; i++){
             String title = "";
-            String newWord = dictionary.get(random.nextInt(1000));
-            while ((title + newWord).length() < Title.MAX_LENGTH){
-                title += newWord;
-                newWord = dictionary.get(random.nextInt(1000));
+            String newString = title + dictionary.get(random.nextInt(1000));
+            while (newString.length() < Title.MAX_LENGTH){
+                title = newString;
+                newString = title + " " + dictionary.get(random.nextInt(1000));
             }
 
             String description = "";
-            newWord = dictionary.get(random.nextInt(1000));
-            while ((description + newWord).length() < Description.MAX_LENGTH){
-                description += newWord;
-                newWord = dictionary.get(random.nextInt(1000));
+            newString = description + dictionary.get(random.nextInt(1000));
+            while (newString.length() < Description.MAX_LENGTH){
+                description = newString;
+                newString = description + " " + dictionary.get(random.nextInt(1000));
             }
 
             eventStore.append(
@@ -81,10 +64,5 @@ public class DomainInjectionWithValidationConfiguration {
                             new Email("seller@market.com"))));
         }
         return eventStore;
-    }
-
-    @Bean
-    SubscriberInitializer createSubscriberInitializer() {
-        return new SubscriberInitializer();
     }
 }
