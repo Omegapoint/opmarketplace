@@ -16,8 +16,15 @@ public class LoaderVerifyer {
                 "robotsAllowed" : "robotsDisallowed";
     }
 
-    @RequestMapping(value = "/loaderio-17880d673a082f6f7006736ce03099a0.txt", method = RequestMethod.GET)
+    // CloudFoundry
+//    @RequestMapping(value = "/loaderio-17880d673a082f6f7006736ce03099a0.txt", method = RequestMethod.GET)
+//    public String getVerification() {
+//        return "loaderio-17880d673a082f6f7006736ce03099a0";
+//    }
+
+    // Heroku
+    @RequestMapping(value = "/loaderio-2a4ac599cd85805f9f1f46b178c11bfa.txt", method = RequestMethod.GET)
     public String getVerification() {
-        return "loaderio-17880d673a082f6f7006736ce03099a0";
+        return "loaderio-2a4ac599cd85805f9f1f46b178c11bfa";
     }
 }
