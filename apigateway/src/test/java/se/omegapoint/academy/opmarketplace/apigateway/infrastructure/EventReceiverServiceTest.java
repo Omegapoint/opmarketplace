@@ -108,21 +108,4 @@ public class EventReceiverServiceTest {
         assertTrue(registration.isCancelled());
     }
 
-
-//    @Test
-//    public void should_receive_account_deleted_confirmation() throws Exception {
-//        Registration<Object, Consumer<? extends Event<?>>> registration =
-//                eventBus.on(Selectors.object(Router.CHANNEL.ACCOUNTUSERCHANGE.NAME + "test@test.com"), event -> {}).cancelAfterUse();
-//
-//        String content = "{" +
-//                "   \"type\":\"AccountDeleted\"," +
-//                "   \"data\":\"hej\""+
-//                "}";
-//        mockMvc.perform(post("/event")
-//                .contentType(APPLICATION_JSON)
-//                .content(content)).andExpect(status().isOk());
-//        Thread.sleep(50);
-//        assertTrue(registration.isCancelled());
-//    }
-
 }

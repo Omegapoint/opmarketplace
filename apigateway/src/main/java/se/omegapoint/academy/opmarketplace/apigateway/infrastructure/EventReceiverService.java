@@ -65,6 +65,12 @@ public class EventReceiverService {
                 case AccountCreditNotDepositedDTO.TYPE:
                     router.publish(json.readValue(event.data, AccountCreditNotDepositedDTO.class));
                     break;
+                case AccountCreditWithdrawnDTO.TYPE:
+                    router.publish(json.readValue(event.data, AccountCreditWithdrawnDTO.class));
+                    break;
+                case AccountCreditNotWithdrawnDTO.TYPE:
+                    router.publish(json.readValue(event.data, AccountCreditNotWithdrawnDTO.class));
+                    break;
                 // Item Events
                 case ItemCreatedDTO.TYPE:
                     router.publish(json.readValue(event.data, ItemCreatedDTO.class));
@@ -116,6 +122,7 @@ public class EventReceiverService {
         internalEvents.add(AccountCreationRequestedDTO.TYPE);
         internalEvents.add(AccountUserChangeRequestedDTO.TYPE);
         internalEvents.add(AccountCreditDepositRequestedDTO.TYPE);
+        internalEvents.add(AccountCreditWithdrawalRequestedDTO.TYPE);
         internalEvents.add(AccountRequestedDTO.TYPE);
         internalEvents.add(AccountDeletionRequestedDTO.TYPE);
         internalEvents.add(ItemCreationRequestedDTO.TYPE);

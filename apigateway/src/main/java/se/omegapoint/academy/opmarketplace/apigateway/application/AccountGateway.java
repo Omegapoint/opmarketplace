@@ -82,11 +82,21 @@ public class AccountGateway {
         return result;
     }
 
-    @RequestMapping(value = "/credit", method = PUT, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/credit/deposit", method = PUT, produces = APPLICATION_JSON_VALUE)
     public DeferredResult<ResponseEntity<String>> depositCredit(@RequestBody final AccountCreditDepositRequestedDTO change) {
         notNull(change);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         AccountCreditDepositedListener listener =  new AccountCreditDepositedListener(result);
+        router.subscribe(change.requestId(), listener);
+        publisher.publish(new OutgoingRemoteEvent(change), "Account");
+        return result;
+    }
+
+    @RequestMapping(value = "/credit/withdraw", method = PUT, produces = APPLICATION_JSON_VALUE)
+    public DeferredResult<ResponseEntity<String>> withdrawCredit(@RequestBody final AccountCreditWithdrawalRequestedDTO change) {
+        notNull(change);
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
+        AccountCreditWithdrawnListener listener =  new AccountCreditWithdrawnListener(result);
         router.subscribe(change.requestId(), listener);
         publisher.publish(new OutgoingRemoteEvent(change), "Account");
         return result;

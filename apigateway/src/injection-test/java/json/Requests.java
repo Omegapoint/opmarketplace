@@ -164,7 +164,7 @@ public class Requests {
 
     public static ResultActions addCredit(String email, String credit, MockMvc mockMvc) throws Exception {
         String content = creditJson(email, credit);
-        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit")
+        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/deposit")
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )
