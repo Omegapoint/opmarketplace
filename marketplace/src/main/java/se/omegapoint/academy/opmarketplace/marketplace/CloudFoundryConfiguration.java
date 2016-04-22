@@ -47,9 +47,9 @@ public class CloudFoundryConfiguration {
         eventStore.append(new ItemCreated(new Item(new Id("e161e16b-4295-4213-9c6e-8943003e5479"),
                 new Title("This is a title"),
                 new Description("This is a description"),
-                new Credit(10),
-                new Quantity(10),
-                new Email("test@test.com"))));
+                new Credit(1),
+                new Quantity(1000000),
+                new Email("luke@tatooine.com"))));
 
         System.out.println("----- FINISHED ADDING DUMMY DATA -----");
 
