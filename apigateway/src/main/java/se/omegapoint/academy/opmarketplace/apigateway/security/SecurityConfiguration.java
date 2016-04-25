@@ -20,6 +20,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/accounts").authenticated()
                 .antMatchers("/accounts/credit/deposit").authenticated()
                 .antMatchers("/accounts/credit/withdraw").authenticated()
+                .antMatchers(HttpMethod.POST, "/items").authenticated()
+                .antMatchers(HttpMethod.PUT, "/items").authenticated()
+                .antMatchers("/items/purchase").authenticated()
                 .anyRequest().permitAll()
                 .and().httpBasic();
     }

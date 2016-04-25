@@ -8,6 +8,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -31,9 +32,16 @@ public class ItemTests {
 
     private MockMvc mockMvc;
 
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
+
     @Before
     public void setUp() throws Exception {
-        mockMvc = webAppContextSetup(wac).build();
+        mockMvc = webAppContextSetup(wac)
+                .addFilter(springSecurityFilterChain)
+                .build();
+        TestRequests.createUser("hej@hej.com", "Hej", "Halla", mockMvc)
+            .andReturn();
     }
 
     @Test
@@ -76,7 +84,7 @@ public class ItemTests {
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         ItemDTO item = new ObjectMapper().readValue(content, ItemDTO.class);
-        TestRequests.changeItem(item.id, "Changed", "Changed", 200, 2, mockMvc)
+        TestRequests.changeItem("hej@hej.com", item.id, "Changed", "Changed", 200, 2, mockMvc)
                 .andExpect(jsonPath("$.title").value("Changed"))
                 .andExpect(jsonPath("$.description").value("Changed"))
                 .andExpect(jsonPath("$.price").value(200))
@@ -99,7 +107,7 @@ public class ItemTests {
                 .andExpect(jsonPath("$.price").value(100))
                 .andExpect(jsonPath("$.supply").value(1))
                 .andExpect(jsonPath("$.seller").value("hej@hej.com"));
-        TestRequests.changeItem(UUID.randomUUID().toString(), "Changed", "Changed", 200, 2, mockMvc)
+        TestRequests.changeItem("hej@hej.com", UUID.randomUUID().toString(), "Changed", "Changed", 200, 2, mockMvc)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.reason").value("Item does not exist."));
     }
@@ -113,7 +121,7 @@ public class ItemTests {
                 .andExpect(jsonPath("$.price").value(100))
                 .andExpect(jsonPath("$.supply").value(1))
                 .andExpect(jsonPath("$.seller").value("hej@hej.com"));
-        TestRequests.changeItem("illegalId", "Changed", "Changed", 200, 2, mockMvc)
+        TestRequests.changeItem("hej@hej.com", "illegalId", "Changed", "Changed", 200, 2, mockMvc)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.reason").value("Illegal Format: Id does not conform to UUID."));
     }
@@ -130,7 +138,7 @@ public class ItemTests {
                 .andReturn();
         String content = result.getResponse().getContentAsString();
         ItemDTO item = new ObjectMapper().readValue(content, ItemDTO.class);
-        TestRequests.changeItem(item.id, "<Changed", "Changed", 200, 2, mockMvc)
+        TestRequests.changeItem("hej@hej.com", item.id, "<Changed", "Changed", 200, 2, mockMvc)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.reason").value("Illegal Format: Title can only contain letters, digits and spaces"));
     }

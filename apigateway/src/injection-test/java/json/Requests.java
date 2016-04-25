@@ -46,8 +46,8 @@ public class Requests {
     }
 
     public static ResultActions createItem(String title, String description, String price, String quantity, String seller, MockMvc mockMvc) throws Exception {
-        String content = itemCreationJson(title, description, price, quantity, seller);
-        MvcResult mvcResult = mockMvc.perform(post("/items")
+        String content = itemCreationJson(title, description, price, quantity);
+        MvcResult mvcResult = mockMvc.perform(post("/items").with(httpBasic(seller, ""))
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )
@@ -99,8 +99,8 @@ public class Requests {
     }
 
     public static ResultActions purchaseItem(String itemId, String quantity, String buyerId, MockMvc mockMvc) throws Exception {
-        String content = itemPurchaseRequestJson(itemId, quantity, buyerId);
-        MvcResult mvcResult = mockMvc.perform(post("/items/purchase")
+        String content = itemPurchaseRequestJson(itemId, quantity);
+        MvcResult mvcResult = mockMvc.perform(post("/items/purchase").with(httpBasic(buyerId, ""))
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )
@@ -205,13 +205,12 @@ public class Requests {
         return content;
     }
 
-    private static String itemCreationJson(String title, String description, String price, String quantity, String seller) throws Exception {
+    private static String itemCreationJson(String title, String description, String price, String quantity) throws Exception {
         String content = "{" +
                 "\"title\":\"" + title + "\"," +
                 "\"description\":\"" + description + "\"," +
                 "\"price\":" + price + "," +
-                "\"supply\":" + quantity + "," +
-                "\"seller\":\"" + seller + "\"" +
+                "\"supply\":" + quantity +
                 "}";
         // Validate content
         json.readValue(content, ItemCreationRequestedDTO.class);
@@ -219,12 +218,11 @@ public class Requests {
     }
 
 
-    private static String itemPurchaseRequestJson(String itemId, String quantity, String buyerId) throws Exception {
+    private static String itemPurchaseRequestJson(String itemId, String quantity) throws Exception {
         String content =
                 "{" +
                         "\"itemId\":\"" + itemId + "\"," +
-                        "\"quantity\":" + quantity + "," +
-                        "\"buyerId\":\"" + buyerId + "\"" +
+                        "\"quantity\":" + quantity +
                         "}";
         // Validate content
         json.readValue(content, ItemPurchaseRequestedDTO.class);

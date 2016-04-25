@@ -14,16 +14,26 @@ public class ItemPurchaseRequestedDTO implements Event {
     public final String requestId;
     public final String itemId;
     public final int quantity;
-    public final String buyerId;
+    private String buyerId;
 
     @JsonCreator
     public ItemPurchaseRequestedDTO(@JsonProperty("itemId") String itemId,
-                                    @JsonProperty("quantity") int quantity,
-                                    @JsonProperty("buyerId") String buyerId) {
+                                    @JsonProperty("quantity") int quantity) {
         this.requestId = randomString();
         this.itemId = notNull(itemId);
         this.quantity = notNull(quantity);
-        this.buyerId = notNull(buyerId);
+    }
+
+    public boolean setBuyerId(String buyerId) {
+        if (this.buyerId == null) {
+            this.buyerId = buyerId;
+            return true;
+        }
+        return false;
+    }
+
+    public String getBuyerId() {
+        return buyerId;
     }
 
     @Override

@@ -18,21 +18,31 @@ public class ItemCreationRequestedDTO implements Event {
     public final String description;
     public final int price;
     public final int supply;
-    public final String seller;
+    private String seller;
 
     @JsonCreator
     public ItemCreationRequestedDTO(
             @JsonProperty("title") String title,
             @JsonProperty("description") String description,
             @JsonProperty("price") int price,
-            @JsonProperty("supply") int supply,
-            @JsonProperty("seller") String seller) {
+            @JsonProperty("supply") int supply) {
         this.requestId = randomString();
         this.title = notNull(title) ;
         this.description = notNull(description);
         this.price = notNull(price);
         this.supply = notNull(supply);
-        this.seller = notNull(seller);
+    }
+
+    public boolean setSeller(String seller){
+        if (this.seller == null){
+            this.seller = seller;
+            return true;
+        }
+        return false;
+    }
+
+    public String getSeller() {
+        return seller;
     }
 
     @Override

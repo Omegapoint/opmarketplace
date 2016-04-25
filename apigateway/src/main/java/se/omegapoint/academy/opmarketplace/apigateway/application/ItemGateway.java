@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
@@ -14,6 +15,7 @@ import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_liste
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.OutgoingRemoteEvent;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.ItemDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.security.AuthenticationAccount;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +24,7 @@ import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 @RestController
@@ -47,6 +50,8 @@ public class ItemGateway {
     @RequestMapping(method = POST, produces = APPLICATION_JSON_VALUE)
     public DeferredResult<ResponseEntity<String>> createItem(@RequestBody final ItemCreationRequestedDTO newItem) {
         notNull(newItem);
+        AuthenticationAccount principal = (AuthenticationAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        isTrue(newItem.setSeller(principal.getUsername()));
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         ItemCreatedListener listener =  new ItemCreatedListener(result);
         router.subscribe(newItem.requestId(), listener);
@@ -103,6 +108,8 @@ public class ItemGateway {
     @RequestMapping(value = "/purchase", method = POST, produces = APPLICATION_JSON_VALUE)
     public DeferredResult<ResponseEntity<String>> createItem(@RequestBody final ItemPurchaseRequestedDTO newItem) {
         notNull(newItem);
+        AuthenticationAccount principal = (AuthenticationAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        isTrue(newItem.setBuyerId(principal.getUsername()));
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         ItemPurchaseListener listener =  new ItemPurchaseListener(result);
         router.subscribe(newItem.requestId(), listener);

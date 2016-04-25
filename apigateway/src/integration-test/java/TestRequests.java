@@ -5,8 +5,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountCreationRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountCreditDepositRequestedDTO;
-import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountUserChangeRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemChangeRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemCreationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemPurchaseRequestedDTO;
@@ -22,8 +20,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 public class TestRequests {
 
     public static ResultActions createItem(String title, String description, int price, int quantity, String seller, MockMvc mockMvc) throws Exception {
-        String content = itemCreationJson(title, description, price, quantity, seller);
-        MvcResult mvcResult = mockMvc.perform(post("/items")
+        String content = itemCreationJson(title, description, price, quantity);
+        MvcResult mvcResult = mockMvc.perform(post("/items").with(httpBasic(seller, ""))
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )
@@ -62,13 +60,12 @@ public class TestRequests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    private static String itemCreationJson(String title, String description, int price, int quantity, String seller) throws Exception {
+    private static String itemCreationJson(String title, String description, int price, int quantity) throws Exception {
         String content = "{" +
                     "\"title\":\"" + title + "\"," +
                     "\"description\":\"" + description + "\"," +
                     "\"price\":" + price + "," +
-                    "\"supply\":" + quantity + "," +
-                    "\"seller\":\"" + seller + "\"" +
+                    "\"supply\":" + quantity +
                 "}";
         // Validate content
         new ObjectMapper().readValue(content, ItemCreationRequestedDTO.class);
@@ -87,9 +84,9 @@ public class TestRequests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    public static ResultActions changeItem(String id, String title, String description, int price, int quantity, MockMvc mockMvc) throws Exception {
+    public static ResultActions changeItem(String seller, String id, String title, String description, int price, int quantity, MockMvc mockMvc) throws Exception {
         String content = itemChangeJson(id, title, description, price, quantity);
-        MvcResult mvcResult = mockMvc.perform(put("/items")
+        MvcResult mvcResult = mockMvc.perform(put("/items").with(httpBasic(seller, ""))
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )
@@ -116,8 +113,8 @@ public class TestRequests {
     }
 
     public static ResultActions purchaseItem(String itemId, int quantity, String buyerId, MockMvc mockMvc) throws Exception {
-        String content = itemPurchaseRequestJson(itemId, quantity, buyerId);
-        MvcResult mvcResult = mockMvc.perform(post("/items/purchase")
+        String content = itemPurchaseRequestJson(itemId, quantity);
+        MvcResult mvcResult = mockMvc.perform(post("/items/purchase").with(httpBasic(buyerId, ""))
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )
@@ -129,12 +126,11 @@ public class TestRequests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    private static String itemPurchaseRequestJson(String itemId, int quantity, String buyerId) throws Exception {
+    private static String itemPurchaseRequestJson(String itemId, int quantity) throws Exception {
         String content =
                 "{" +
                     "\"itemId\":\"" + itemId + "\"," +
-                    "\"quantity\":" + quantity + "," +
-                    "\"buyerId\":\"" + buyerId + "\"" +
+                    "\"quantity\":" + quantity +
                 "}";
         // Validate content
         new ObjectMapper().readValue(content, ItemPurchaseRequestedDTO.class);
