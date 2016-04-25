@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.apigateway;
+package se.omegapoint.academy.opmarketplace.apigateway.security;
 
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -19,6 +17,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http    .csrf().disable()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.PUT, "/accounts").authenticated()
                 .antMatchers("/accounts/credit/deposit").authenticated()
                 .antMatchers("/accounts/credit/withdraw").authenticated()
                 .anyRequest().permitAll()
@@ -26,7 +25,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean(destroyMethod = "cleanup")
-    AccountRetrieverService accountAuthService(){
+    AccountRetrieverService accountRetrieverService(){
         return new AccountRetrieverService(HttpClients.createDefault());
     }
 

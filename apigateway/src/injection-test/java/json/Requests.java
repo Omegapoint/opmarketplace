@@ -5,11 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountCreationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountCreditDepositRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.account.AccountUserChangeRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemChangeRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemCreationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemPurchaseRequestedDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account.UserDTO;
 
 import java.io.IOException;
 import java.util.List;
@@ -136,7 +138,7 @@ public class Requests {
     }
 
     public static ResultActions createUser(String email, String firstName, String lastName, MockMvc mockMvc) throws Exception {
-        String content = userJson(email, firstName, lastName);
+        String content = newUserJson(email, firstName, lastName);
         MvcResult mvcResult = mockMvc.perform(post("/accounts")
                 .contentType(APPLICATION_JSON)
                 .content(content)
@@ -150,8 +152,8 @@ public class Requests {
     }
 
     public static ResultActions changeUser(String email, String firstName, String lastName, MockMvc mockMvc) throws Exception {
-        String content = userJson(email, firstName, lastName);
-        MvcResult mvcResult = mockMvc.perform(put("/accounts")
+        String content = userJson(firstName, lastName);
+        MvcResult mvcResult = mockMvc.perform(put("/accounts").with(httpBasic(email, ""))
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )
@@ -229,7 +231,17 @@ public class Requests {
         return content;
     }
 
-    public static String userJson(String email, String firstName, String lastName) throws Exception {
+    public static String userJson(String firstName, String lastName) throws Exception {
+        String content =
+                "{" +
+                    "\"firstName\":\"" + firstName + "\"," +
+                    "\"lastName\":\"" + lastName + "\"" +
+                "}";
+        json.readValue(content, UserDTO.class);
+        return content;
+    }
+
+    public static String newUserJson(String email, String firstName, String lastName) throws Exception {
         String content =
                 "{" +
                         "\"email\":\"" + email + "\"," +
@@ -238,7 +250,7 @@ public class Requests {
                         "\"lastName\":\"" + lastName + "\"" +
                         "}" +
                         "}";
-        json.readValue(content, AccountUserChangeRequestedDTO.class);
+        json.readValue(content, AccountCreationRequestedDTO.class);
         return content;
     }
 

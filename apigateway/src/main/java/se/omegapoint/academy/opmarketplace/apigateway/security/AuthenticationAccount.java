@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.apigateway;
+package se.omegapoint.academy.opmarketplace.apigateway.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,11 +9,11 @@ import java.util.Collection;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
-public class AccountAuth implements UserDetails {
+public class AuthenticationAccount implements UserDetails {
 
     private final AccountDTO accountDTO;
 
-    public AccountAuth(AccountDTO accountDTO) {
+    public AuthenticationAccount(AccountDTO accountDTO) {
         this.accountDTO = notNull(accountDTO);
     }
 

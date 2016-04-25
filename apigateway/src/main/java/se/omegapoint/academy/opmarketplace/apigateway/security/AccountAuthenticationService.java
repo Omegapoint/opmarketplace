@@ -1,4 +1,4 @@
-package se.omegapoint.academy.opmarketplace.apigateway;
+package se.omegapoint.academy.opmarketplace.apigateway.security;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,7 +21,7 @@ public class AccountAuthenticationService implements AuthenticationProvider{
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         try {
-            AccountAuth account = (AccountAuth) accounts.loadUserByUsername(username);
+            AuthenticationAccount account = (AuthenticationAccount) accounts.loadUserByUsername(username);
             return new UsernamePasswordAuthenticationToken(account, "", account.getAuthorities());
         } catch (UsernameNotFoundException e){
             throw new BadCredentialsException(e.getMessage());

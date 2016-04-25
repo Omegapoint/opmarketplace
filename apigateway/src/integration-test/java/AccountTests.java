@@ -65,8 +65,6 @@ public class AccountTests {
     public void should_get_correct_account() throws Exception {
         TestRequests.createUser("test3@test.com", "firstName", "lastName", mockMvc);
 
-        TestRequests.userJson("test3@test.com", "firstName", "lastName");
-
         TestRequests.getUser("test3@test.com", mockMvc)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("test3@test.com"));

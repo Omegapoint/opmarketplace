@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
-import se.omegapoint.academy.opmarketplace.apigateway.AccountAuth;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account.UserDTO;
+import se.omegapoint.academy.opmarketplace.apigateway.security.AuthenticationAccount;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.account.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
@@ -65,12 +66,14 @@ public class AccountGateway {
     }
 
     @RequestMapping(method = PUT, produces = APPLICATION_JSON_VALUE)
-    public DeferredResult<ResponseEntity<String>> changeUser(@RequestBody final AccountUserChangeRequestedDTO change) {
+    public DeferredResult<ResponseEntity<String>> changeUser(@RequestBody final UserDTO change) {
         notNull(change);
+        AuthenticationAccount principal = (AuthenticationAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AccountUserChangeRequestedDTO changeRequested = new AccountUserChangeRequestedDTO(principal.getUsername(), change);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         AccountUserChangedListener listener =  new AccountUserChangedListener(result);
-        router.subscribe(change.requestId(), listener);
-        publisher.publish(new OutgoingRemoteEvent(change), "Account");
+        router.subscribe(changeRequested.requestId(), listener);
+        publisher.publish(new OutgoingRemoteEvent(changeRequested), "Account");
         return result;
     }
 
@@ -87,7 +90,7 @@ public class AccountGateway {
     @RequestMapping(value = "/credit/deposit", method = PUT, produces = APPLICATION_JSON_VALUE)
     public DeferredResult<ResponseEntity<String>> depositCredit(@RequestParam("credit") final int credit) {
         notNull(credit);
-        AccountAuth principal = (AccountAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AuthenticationAccount principal = (AuthenticationAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AccountCreditDepositRequestedDTO change = new AccountCreditDepositRequestedDTO(principal.getUsername(), credit);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         AccountCreditDepositedListener listener =  new AccountCreditDepositedListener(result);
@@ -99,7 +102,7 @@ public class AccountGateway {
     @RequestMapping(value = "/credit/withdraw", method = PUT, produces = APPLICATION_JSON_VALUE)
     public DeferredResult<ResponseEntity<String>> withdrawCredit(@RequestParam("credit") final int credit) {
         notNull(credit);
-        AccountAuth principal = (AccountAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AuthenticationAccount principal = (AuthenticationAccount) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AccountCreditWithdrawalRequestedDTO change = new AccountCreditWithdrawalRequestedDTO(principal.getUsername(), credit);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
         AccountCreditWithdrawnListener listener =  new AccountCreditWithdrawnListener(result);
