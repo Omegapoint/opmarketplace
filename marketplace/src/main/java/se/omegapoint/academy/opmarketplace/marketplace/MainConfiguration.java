@@ -1,5 +1,7 @@
 package se.omegapoint.academy.opmarketplace.marketplace;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +22,12 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 public class MainConfiguration {
 
     public static boolean VALIDATION = true;
+
+    @Bean
+    Logger createLogger(){
+        return LoggerFactory.getLogger(Application.class);
+    }
+
 
     @Bean
     ItemService createItemService(ItemRepository accountRepository, EventPublisher eventPublisher) {
