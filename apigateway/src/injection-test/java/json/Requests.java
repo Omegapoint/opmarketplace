@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -163,10 +164,9 @@ public class Requests {
     }
 
     public static ResultActions addCredit(String email, String credit, MockMvc mockMvc) throws Exception {
-        String content = creditJson(email, credit);
-        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/deposit")
+        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/deposit?credit=" + credit).with(httpBasic(email, ""))
                 .contentType(APPLICATION_JSON)
-                .content(content)
+                .content("")
         )
                 .andExpect(request().asyncStarted())
                 .andReturn();
@@ -177,10 +177,9 @@ public class Requests {
     }
 
     public static ResultActions withdrawCredit(String email, String credit, MockMvc mockMvc) throws Exception {
-        String content = creditJson(email, credit);
-        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/withdraw")
+        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/withdraw?credit=" + credit).with(httpBasic(email, ""))
                 .contentType(APPLICATION_JSON)
-                .content(content)
+                .content("")
         )
                 .andExpect(request().asyncStarted())
                 .andReturn();
@@ -227,16 +226,6 @@ public class Requests {
                         "}";
         // Validate content
         json.readValue(content, ItemPurchaseRequestedDTO.class);
-        return content;
-    }
-
-    private static String creditJson(String email, String credit) throws Exception {
-        String content =
-                "{" +
-                        "\"email\":\"" + email + "\"," +
-                        "\"credit\":" + credit +
-                        "}";
-        json.readValue(content, AccountCreditDepositRequestedDTO.class);
         return content;
     }
 

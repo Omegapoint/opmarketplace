@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 public class TestRequests {
 
@@ -138,17 +139,6 @@ public class TestRequests {
         return content;
     }
 
-
-    private static String creditJson(String email, int credit) throws Exception {
-        String content =
-                "{" +
-                    "\"email\":\"" + email + "\"," +
-                    "\"credit\":" + credit +
-                "}";
-        new ObjectMapper().readValue(content, AccountCreditDepositRequestedDTO.class);
-        return content;
-    }
-
     public static String userJson(String email, String firstName, String lastName) throws Exception {
         String content =
                 "{" +
@@ -216,10 +206,9 @@ public class TestRequests {
     }
 
     public static ResultActions depositCredit(String email, int credit, MockMvc mockMvc) throws Exception {
-        String content = creditJson(email, credit);
-        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/deposit")
+        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/deposit?credit=" + credit).with(httpBasic(email, ""))
                 .contentType(APPLICATION_JSON)
-                .content(content)
+                .content("")
         )
                 .andExpect(request().asyncStarted())
                 .andReturn();
@@ -230,10 +219,9 @@ public class TestRequests {
     }
 
     public static ResultActions withdrawCredit(String email, int credit, MockMvc mockMvc) throws Exception {
-        String content = creditJson(email, credit);
-        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/withdraw")
+        MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/withdraw?credit=" + credit).with(httpBasic(email, ""))
                 .contentType(APPLICATION_JSON)
-                .content(content)
+                .content("")
         )
                 .andExpect(request().asyncStarted())
                 .andReturn();
