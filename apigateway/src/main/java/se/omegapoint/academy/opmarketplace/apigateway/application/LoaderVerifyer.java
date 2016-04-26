@@ -17,14 +17,14 @@ public class LoaderVerifyer {
     }
 
     // CloudFoundry
-//    @RequestMapping(value = "/loaderio-17880d673a082f6f7006736ce03099a0.txt", method = RequestMethod.GET)
-//    public String getVerification() {
-//        return "loaderio-17880d673a082f6f7006736ce03099a0";
-//    }
+    @RequestMapping(value = "/loaderio-17880d673a082f6f7006736ce03099a0.txt", method = RequestMethod.GET)
+    public String getCloudFoundryVerification() {
+        return "loaderio-17880d673a082f6f7006736ce03099a0";
+    }
 
     // Heroku
     @RequestMapping(value = "/loaderio-2a4ac599cd85805f9f1f46b178c11bfa.txt", method = RequestMethod.GET)
-    public String getVerification() {
+    public String getHerokuVerification() {
         return "loaderio-2a4ac599cd85805f9f1f46b178c11bfa";
     }
 }

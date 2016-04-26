@@ -42,7 +42,7 @@ public class CloudFoundryConfiguration {
                 creditWithdrawnRepository);
 
         // Create a couple of users
-        String[] users = {"sofie@email.com", "jakob@email.com", "anna@email.com", "emil@email.com"};
+        String[] users = {"luke@tatooine.com", "leia@alderaan.com"};
         for (String email: users) {
             eventStore.append(new AccountCreated(new Email(email), new User("firstName", "lastName")));
         }

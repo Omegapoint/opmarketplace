@@ -5,6 +5,7 @@ applications:
   host: marketplace-opm
   path: build/libs/marketplace-0.0.1-SNAPSHOT.jar
   env:
+    SPRING_PROFILES_ACTIVE: cloudfoundry
     SUBSCRIPTION_URL: http://messageservice-opm.cfapps.io/subscribe
     EVENT_PUBLISHER_URL: http://messageservice-opm.cfapps.io/event
     EVENT_RECEIVER_URL: http://marketplace-opm.cfapps.io/event
