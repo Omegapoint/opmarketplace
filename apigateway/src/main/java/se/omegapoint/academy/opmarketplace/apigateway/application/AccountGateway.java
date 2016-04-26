@@ -25,7 +25,7 @@ public class AccountGateway {
 
     @Value("${event.timeout}")
     private long TIMEOUT;
-    private final ResponseEntity<String> TIMEOUT_RESPONSE = ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("");
+    private final ResponseEntity<String> TIMEOUT_RESPONSE = ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body("");
 
     @Autowired
     private Router router;
