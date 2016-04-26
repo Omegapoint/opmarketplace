@@ -25,19 +25,19 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringApplicationConfiguration(classes = ApigatewayApplication.class)
 @WebIntegrationTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class OwaspXssStrings {
+public class OwaspSqlStringsContextTest {
     @Autowired
     private WebApplicationContext wac;
 
     private MockMvc mockMvc;
 
-    private XssStrings xssStrings;
+    private SqlStringsContext sqlStringsContext;
 
     private ObjectWriter json;
 
-    public OwaspXssStrings() throws IOException {
+    public OwaspSqlStringsContextTest() throws IOException {
         json = new ObjectMapper().writerWithDefaultPrettyPrinter();
-        xssStrings = new XssStrings();
+        sqlStringsContext = new SqlStringsContext();
     }
 
     @Before
@@ -49,13 +49,13 @@ public class OwaspXssStrings {
     public void validateCustomer() throws Exception {
 
         CustomerLog log = new CustomerLog(
-                new CreateAccountRequest(xssStrings.values(), mockMvc),
-                new ChangeUserRequest(xssStrings.values(), mockMvc),
-                new AddCreditRequest(xssStrings.values(), mockMvc),
-                new GetAccountRequest(xssStrings.values(), mockMvc),
-                new DeleteAccountRequest(xssStrings.values(), mockMvc)
+                new CreateAccountRequest(sqlStringsContext.values(), mockMvc),
+                new ChangeUserRequest(sqlStringsContext.values(), mockMvc),
+                new AddCreditRequest(sqlStringsContext.values(), mockMvc),
+                new GetAccountRequest(sqlStringsContext.values(), mockMvc),
+                new DeleteAccountRequest(sqlStringsContext.values(), mockMvc)
         );
-        PrintWriter customerOutput = new PrintWriter(new File("src\\injection-test\\resources\\CustomerRequestsXSSLog.json"));
+        PrintWriter customerOutput = new PrintWriter(new File("src\\injection-test\\resources\\CustomerRequestsSqlContextLog.json"));
         customerOutput.write(json.writeValueAsString(log));
         customerOutput.close();
     }
@@ -63,12 +63,12 @@ public class OwaspXssStrings {
     @Test
     public void validateMarketplace() throws Exception {
         MarketplaceLog log = new MarketplaceLog(
-                new CreateItemRequest(xssStrings.values(), mockMvc),
-                new ChangeItemRequest(xssStrings.values(), mockMvc),
-                new GetItemRequest(xssStrings.values(), mockMvc),
-                new PurchaseItemRequest(xssStrings.values(), mockMvc),
-                new SearchItemRequest(xssStrings.values(), mockMvc));
-        PrintWriter marketplaceOutput = new PrintWriter(new File("src\\injection-test\\resources\\MarketplaceRequestsXSSLog.json"));
+                new CreateItemRequest(sqlStringsContext.values(), mockMvc),
+                new ChangeItemRequest(sqlStringsContext.values(), mockMvc),
+                new GetItemRequest(sqlStringsContext.values(), mockMvc),
+                new PurchaseItemRequest(sqlStringsContext.values(), mockMvc),
+                new SearchItemRequest(sqlStringsContext.values(), mockMvc));
+        PrintWriter marketplaceOutput = new PrintWriter(new File("src\\injection-test\\resources\\MarketplaceRequestsSqlContextLog.json"));
         marketplaceOutput.write(json.writeValueAsString(log));
         marketplaceOutput.close();
     }

@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringApplicationConfiguration(classes = ApigatewayApplication.class)
 @WebIntegrationTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class OwaspSQLStrings {
+public class OwaspSQLStringsTest {
 
     @Autowired
     private WebApplicationContext wac;
@@ -34,7 +34,7 @@ public class OwaspSQLStrings {
 
     private ObjectWriter json;
 
-    public OwaspSQLStrings() throws IOException {
+    public OwaspSQLStringsTest() throws IOException {
         json = new ObjectMapper().writerWithDefaultPrettyPrinter();
         sqlStrings = new SQLStrings();
     }
