@@ -10,6 +10,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -31,6 +32,9 @@ public class OwaspLessThanVariationStringsTest {
 
     private MockMvc mockMvc;
 
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
+
     private LessThanVariationStrings lessThanVariationStrings;
 
     private ObjectWriter json;
@@ -42,7 +46,9 @@ public class OwaspLessThanVariationStringsTest {
 
     @Before
     public void setUp() throws Exception {
-        mockMvc = webAppContextSetup(wac).build();
+        mockMvc = webAppContextSetup(wac)
+                .addFilter(springSecurityFilterChain)
+                .build();
     }
 
     @Test
@@ -51,7 +57,8 @@ public class OwaspLessThanVariationStringsTest {
         CustomerLog log = new CustomerLog(
                 new CreateAccountRequest(lessThanVariationStrings.values(), mockMvc),
                 new ChangeUserRequest(lessThanVariationStrings.values(), mockMvc),
-                new AddCreditRequest(lessThanVariationStrings.values(), mockMvc),
+                new DepositCreditRequest(lessThanVariationStrings.values(), mockMvc),
+                new WithdrawCreditRequest(lessThanVariationStrings.values(), mockMvc),
                 new GetAccountRequest(lessThanVariationStrings.values(), mockMvc),
                 new DeleteAccountRequest(lessThanVariationStrings.values(), mockMvc)
         );

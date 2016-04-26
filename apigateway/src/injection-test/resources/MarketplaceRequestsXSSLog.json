@@ -41,6 +41,10 @@
     "supply" : {
       "blocked" : "110/110",
       "notBlocked" : [ ]
+    },
+    "seller" : {
+      "blocked" : "110/110",
+      "notBlocked" : [ ]
     }
   },
   "getItemRequest" : {

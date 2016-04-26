@@ -2,6 +2,8 @@ package json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -51,8 +53,14 @@ public class Requests {
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )
-                .andExpect(request().asyncStarted())
                 .andReturn();
+
+        if (!mvcResult.getRequest().isAsyncStarted()){
+            if (mvcResult.getResolvedException() != null){
+                throw mvcResult.getResolvedException();
+            }
+            throw new AuthenticationCredentialsNotFoundException("Login failed.");
+        }
 
         mvcResult.getAsyncResult();
 
@@ -84,14 +92,20 @@ public class Requests {
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    public static ResultActions changeItem(String id, String title, String description, String price, String quantity, MockMvc mockMvc) throws Exception {
+    public static ResultActions changeItem(String id, String title, String description, String price, String quantity, String seller, MockMvc mockMvc) throws Exception {
         String content = itemChangeJson(id, title, description, price, quantity);
-        MvcResult mvcResult = mockMvc.perform(put("/items")
+        MvcResult mvcResult = mockMvc.perform(put("/items").with(httpBasic(seller, ""))
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )
-                .andExpect(request().asyncStarted())
                 .andReturn();
+
+        if (!mvcResult.getRequest().isAsyncStarted()){
+            if (mvcResult.getResolvedException() != null){
+                throw mvcResult.getResolvedException();
+            }
+            throw new AuthenticationCredentialsNotFoundException("Login failed.");
+        }
 
         mvcResult.getAsyncResult();
 
@@ -104,8 +118,14 @@ public class Requests {
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )
-                .andExpect(request().asyncStarted())
                 .andReturn();
+
+        if (!mvcResult.getRequest().isAsyncStarted()){
+            if (mvcResult.getResolvedException() != null){
+                throw mvcResult.getResolvedException();
+            }
+            throw new AuthenticationCredentialsNotFoundException("Login failed.");
+        }
 
         mvcResult.getAsyncResult();
 
@@ -157,21 +177,33 @@ public class Requests {
                 .contentType(APPLICATION_JSON)
                 .content(content)
         )
-                .andExpect(request().asyncStarted())
                 .andReturn();
+
+        if (!mvcResult.getRequest().isAsyncStarted()){
+            if (mvcResult.getResolvedException() != null){
+                throw mvcResult.getResolvedException();
+            }
+            throw new AuthenticationCredentialsNotFoundException("Login failed.");
+        }
 
         mvcResult.getAsyncResult();
 
         return mockMvc.perform(asyncDispatch(mvcResult));
     }
 
-    public static ResultActions addCredit(String email, String credit, MockMvc mockMvc) throws Exception {
+    public static ResultActions depositCredit(String email, String credit, MockMvc mockMvc) throws Exception {
         MvcResult mvcResult = mockMvc.perform(put("/accounts/credit/deposit?credit=" + credit).with(httpBasic(email, ""))
                 .contentType(APPLICATION_JSON)
                 .content("")
         )
-                .andExpect(request().asyncStarted())
                 .andReturn();
+
+        if (!mvcResult.getRequest().isAsyncStarted()){
+            if (mvcResult.getResolvedException() != null){
+                throw mvcResult.getResolvedException();
+            }
+            throw new AuthenticationCredentialsNotFoundException("Login failed.");
+        }
 
         mvcResult.getAsyncResult();
 
@@ -183,8 +215,14 @@ public class Requests {
                 .contentType(APPLICATION_JSON)
                 .content("")
         )
-                .andExpect(request().asyncStarted())
                 .andReturn();
+
+        if (!mvcResult.getRequest().isAsyncStarted()){
+            if (mvcResult.getResolvedException() != null){
+                throw mvcResult.getResolvedException();
+            }
+            throw new AuthenticationCredentialsNotFoundException("Login failed.");
+        }
 
         mvcResult.getAsyncResult();
 

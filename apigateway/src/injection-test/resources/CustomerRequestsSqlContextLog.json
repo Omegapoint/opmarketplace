@@ -1,61 +1,67 @@
 {
   "createAccountRequest" : {
     "email" : {
-      "blocked" : "110/110",
+      "blocked" : "39/39",
       "notBlocked" : [ ]
     },
     "firstName" : {
-      "blocked" : "110/110",
+      "blocked" : "39/39",
       "notBlocked" : [ ]
     },
     "lastName" : {
-      "blocked" : "110/110",
+      "blocked" : "39/39",
       "notBlocked" : [ ]
     }
   },
   "changeUserRequest" : {
     "email" : {
-      "blocked" : "110/110",
+      "blocked" : "39/39",
       "notBlocked" : [ ]
     },
     "firstName" : {
-      "blocked" : "110/110",
+      "blocked" : "39/39",
       "notBlocked" : [ ]
     },
     "lastName" : {
-      "blocked" : "110/110",
+      "blocked" : "39/39",
       "notBlocked" : [ ]
     }
   },
   "depositCreditRequest" : {
     "email" : {
-      "blocked" : "110/110",
+      "blocked" : "39/39",
       "notBlocked" : [ ]
     },
     "credit" : {
-      "blocked" : "110/110",
-      "notBlocked" : [ ]
+      "blocked" : "38/39",
+      "notBlocked" : [ {
+        "input" : "1 && 1 = 1",
+        "response" : ""
+      } ]
     }
   },
   "withdrawCreditRequest" : {
     "email" : {
-      "blocked" : "110/110",
+      "blocked" : "39/39",
       "notBlocked" : [ ]
     },
     "credit" : {
-      "blocked" : "110/110",
-      "notBlocked" : [ ]
+      "blocked" : "38/39",
+      "notBlocked" : [ {
+        "input" : "1 && 1 = 1",
+        "response" : ""
+      } ]
     }
   },
   "getAccountRequest" : {
     "email" : {
-      "blocked" : "110/110",
+      "blocked" : "39/39",
       "notBlocked" : [ ]
     }
   },
   "deleteAccountRequest" : {
     "email" : {
-      "blocked" : "110/110",
+      "blocked" : "39/39",
       "notBlocked" : [ ]
     }
   }

@@ -27,7 +27,17 @@
       "notBlocked" : [ ]
     }
   },
-  "addCreditRequest" : {
+  "depositCreditRequest" : {
+    "email" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    },
+    "credit" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
+    }
+  },
+  "withdrawCreditRequest" : {
     "email" : {
       "blocked" : "70/70",
       "notBlocked" : [ ]

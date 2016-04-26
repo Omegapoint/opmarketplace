@@ -3,29 +3,35 @@ package json.customer;
 import com.fasterxml.jackson.core.JsonParseException;
 import json.Requests;
 import json.Result;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
 
-public class AddCreditRequest {
+public class DepositCreditRequest {
 
     public final Result email;
     public final Result credit;
 
-    public AddCreditRequest(List<String> values, MockMvc mockMvc) throws Exception {
-        System.out.println("AddCreditRequest Validation Started");
+    public DepositCreditRequest(List<String> values, MockMvc mockMvc) throws Exception {
+        System.out.println("DepositCreditRequest Validation Started");
         this.email = email(values, mockMvc);
         this.credit = credit(values, mockMvc);
-        System.out.println("AddCreditRequest Validation Ended");
+        System.out.println("DepositCreditRequest Validation Ended");
     }
 
     private Result email(List<String> values, MockMvc mockMvc) throws Exception {
         Result res = new Result(values.size());
         for (String s : values) {
-            MvcResult mvcResult = Requests.addCredit(s, "1", mockMvc)
-                    .andReturn();
-            res.registerResult(mvcResult, s);
+            try{
+                MvcResult mvcResult = Requests.depositCredit(s, "1", mockMvc)
+                        .andReturn();
+                res.registerResult(mvcResult, s);
+            } catch (AuthenticationCredentialsNotFoundException e){
+                res.registerBlock();
+            }
         }
         return res;
     }
@@ -34,10 +40,10 @@ public class AddCreditRequest {
         Result res = new Result(values.size());
         for (String s : values) {
             try {
-                MvcResult mvcResult = Requests.addCredit("valid@valid.com", s, mockMvc)
+                MvcResult mvcResult = Requests.depositCredit("valid@valid.com", s, mockMvc)
                         .andReturn();
                 res.registerResult(mvcResult, s);
-            } catch (JsonParseException e){
+            } catch (MethodArgumentTypeMismatchException | IllegalArgumentException e){
                 res.registerBlock();
             }
         }

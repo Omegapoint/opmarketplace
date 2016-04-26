@@ -8,13 +8,13 @@
       "blocked" : "67/70",
       "notBlocked" : [ {
         "input" : "%3C",
-        "response" : "{\"id\":\"3e4c6833-d6a6-4088-9771-00e9967aa13e\",\"title\":\"valid\",\"description\":\"%3C\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
+        "response" : "{\"id\":\"f25dd37e-09f0-4d53-bc89-74401f64d90b\",\"title\":\"valid\",\"description\":\"%3C\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
       }, {
         "input" : "&lt",
-        "response" : "{\"id\":\"2a86586e-1714-48d4-b5c4-0b435281c94a\",\"title\":\"valid\",\"description\":\"&lt\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
+        "response" : "{\"id\":\"b05bfb9b-485b-4e78-9581-8f81cec64815\",\"title\":\"valid\",\"description\":\"&lt\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
       }, {
         "input" : "&LT",
-        "response" : "{\"id\":\"e30677b6-28c8-416f-9af5-b890e16dcbfa\",\"title\":\"valid\",\"description\":\"&LT\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
+        "response" : "{\"id\":\"38b19bad-8a78-47be-9fdb-4d64df06de61\",\"title\":\"valid\",\"description\":\"&LT\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
       } ]
     },
     "price" : {
@@ -59,6 +59,10 @@
     "supply" : {
       "blocked" : "70/70",
       "notBlocked" : [ ]
+    },
+    "seller" : {
+      "blocked" : "70/70",
+      "notBlocked" : [ ]
     }
   },
   "getItemRequest" : {
@@ -86,13 +90,13 @@
       "blocked" : "67/70",
       "notBlocked" : [ {
         "input" : "%3C",
-        "response" : "[{\"id\":\"3e4c6833-d6a6-4088-9771-00e9967aa13e\",\"title\":\"valid\",\"description\":\"%3C\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}]"
+        "response" : "[{\"id\":\"f25dd37e-09f0-4d53-bc89-74401f64d90b\",\"title\":\"valid\",\"description\":\"%3C\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}]"
       }, {
         "input" : "&lt",
-        "response" : "[{\"id\":\"e30677b6-28c8-416f-9af5-b890e16dcbfa\",\"title\":\"valid\",\"description\":\"&LT\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"},{\"id\":\"2a86586e-1714-48d4-b5c4-0b435281c94a\",\"title\":\"valid\",\"description\":\"&lt\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}]"
+        "response" : "[{\"id\":\"b05bfb9b-485b-4e78-9581-8f81cec64815\",\"title\":\"valid\",\"description\":\"&lt\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"},{\"id\":\"38b19bad-8a78-47be-9fdb-4d64df06de61\",\"title\":\"valid\",\"description\":\"&LT\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}]"
       }, {
         "input" : "&LT",
-        "response" : "[{\"id\":\"e30677b6-28c8-416f-9af5-b890e16dcbfa\",\"title\":\"valid\",\"description\":\"&LT\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"},{\"id\":\"2a86586e-1714-48d4-b5c4-0b435281c94a\",\"title\":\"valid\",\"description\":\"&lt\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}]"
+        "response" : "[{\"id\":\"b05bfb9b-485b-4e78-9581-8f81cec64815\",\"title\":\"valid\",\"description\":\"&lt\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"},{\"id\":\"38b19bad-8a78-47be-9fdb-4d64df06de61\",\"title\":\"valid\",\"description\":\"&LT\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}]"
       } ]
     }
   }

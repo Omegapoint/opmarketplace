@@ -3,6 +3,7 @@ package json.marketplace;
 import com.fasterxml.jackson.core.JsonParseException;
 import json.Requests;
 import json.Result;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -76,11 +77,15 @@ public class CreateItemRequest {
 
     private Result seller(List<String> values, MockMvc mockMvc) throws Exception {
         Result res = new Result(values.size());
-        for (String s : values) {
-            MvcResult mvcResult = Requests.createItem("valid", "valid", "1", "1", s, mockMvc)
-                    .andReturn();
-            res.registerResult(mvcResult, s);
-        }
+            for (String s : values) {
+                try{
+                    MvcResult mvcResult = Requests.createItem("valid", "valid", "1", "1", s, mockMvc)
+                            .andReturn();
+                    res.registerResult(mvcResult, s);
+                } catch (AuthenticationCredentialsNotFoundException e){
+                    res.registerBlock();
+                }
+            }
         return res;
     }
 }

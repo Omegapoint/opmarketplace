@@ -1,0 +1,40 @@
+@variable
+,@variable
+PRINT
+PRINT @@variable
+select
+insert
+as
+or
+procedure
+limit
+order by
+asc
+desc
+delete
+update
+distinct
+having
+truncate
+replace
+like
+handler
+bfilename
+exec xp
+exec sp
+to_timestamp_tz
+tz_offset
+char%4039%41%2b%40SELECT
+%7C
+%2A%7C
+%2A%28%7C%28mail%3D%2A%29%29
+%2A%28%7C%28objectclass%3D%2A%29%29
+%28
+%29
+&
+%26
+%21
+/
+//
+-
+--

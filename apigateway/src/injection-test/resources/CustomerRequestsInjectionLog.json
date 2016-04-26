@@ -267,7 +267,17 @@
       } ]
     }
   },
-  "addCreditRequest" : {
+  "depositCreditRequest" : {
+    "email" : {
+      "blocked" : "125/125",
+      "notBlocked" : [ ]
+    },
+    "credit" : {
+      "blocked" : "125/125",
+      "notBlocked" : [ ]
+    }
+  },
+  "withdrawCreditRequest" : {
     "email" : {
       "blocked" : "125/125",
       "notBlocked" : [ ]

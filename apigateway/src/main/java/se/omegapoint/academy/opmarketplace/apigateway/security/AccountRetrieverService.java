@@ -12,6 +12,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.account.AccountDTO;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
@@ -27,7 +28,7 @@ public class AccountRetrieverService implements UserDetailsService{
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            HttpGet httpGet = new HttpGet("http://localhost:8002/accounts/?email=" + username);
+            HttpGet httpGet = new HttpGet("http://localhost:8002/accounts/?email=" + URLEncoder.encode(username, "UTF-8"));
             httpGet.addHeader("Content-Type", "application/json");
             CloseableHttpResponse response = http.execute(httpGet);
             if (response.getStatusLine().getStatusCode() == 200){

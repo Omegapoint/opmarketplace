@@ -10,6 +10,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -31,6 +32,9 @@ public class OwaspXssStringsTest {
 
     private MockMvc mockMvc;
 
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
+
     private XssStrings xssStrings;
 
     private ObjectWriter json;
@@ -42,7 +46,9 @@ public class OwaspXssStringsTest {
 
     @Before
     public void setUp() throws Exception {
-        mockMvc = webAppContextSetup(wac).build();
+        mockMvc = webAppContextSetup(wac)
+                .addFilter(springSecurityFilterChain)
+                .build();
     }
 
     @Test
@@ -51,7 +57,8 @@ public class OwaspXssStringsTest {
         CustomerLog log = new CustomerLog(
                 new CreateAccountRequest(xssStrings.values(), mockMvc),
                 new ChangeUserRequest(xssStrings.values(), mockMvc),
-                new AddCreditRequest(xssStrings.values(), mockMvc),
+                new DepositCreditRequest(xssStrings.values(), mockMvc),
+                new WithdrawCreditRequest(xssStrings.values(), mockMvc),
                 new GetAccountRequest(xssStrings.values(), mockMvc),
                 new DeleteAccountRequest(xssStrings.values(), mockMvc)
         );

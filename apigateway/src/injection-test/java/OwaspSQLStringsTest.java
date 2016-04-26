@@ -10,6 +10,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
@@ -30,6 +31,9 @@ public class OwaspSQLStringsTest {
 
     private MockMvc mockMvc;
 
+    @Autowired
+    private FilterChainProxy springSecurityFilterChain;
+
     private SQLStrings sqlStrings;
 
     private ObjectWriter json;
@@ -41,7 +45,9 @@ public class OwaspSQLStringsTest {
 
     @Before
     public void setUp() throws Exception {
-        mockMvc = webAppContextSetup(wac).build();
+        mockMvc = webAppContextSetup(wac)
+                .addFilter(springSecurityFilterChain)
+                .build();
     }
 
     @Test
@@ -50,7 +56,8 @@ public class OwaspSQLStringsTest {
         CustomerLog log = new CustomerLog(
                 new CreateAccountRequest(sqlStrings.values(), mockMvc),
                 new ChangeUserRequest(sqlStrings.values(), mockMvc),
-                new AddCreditRequest(sqlStrings.values(), mockMvc),
+                new DepositCreditRequest(sqlStrings.values(), mockMvc),
+                new WithdrawCreditRequest(sqlStrings.values(), mockMvc),
                 new GetAccountRequest(sqlStrings.values(), mockMvc),
                 new DeleteAccountRequest(sqlStrings.values(), mockMvc)
         );

@@ -1,0 +1,100 @@
+{
+  "createItemRequest" : {
+    "title" : {
+      "blocked" : "38/39",
+      "notBlocked" : [ {
+        "input" : "OR 2 between 3 and 1",
+        "response" : "{\"id\":\"994865cb-cb8e-4e46-af0b-d18479cde4d8\",\"title\":\"OR 2 between 3 and 1\",\"description\":\"valid\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
+      } ]
+    },
+    "description" : {
+      "blocked" : "36/39",
+      "notBlocked" : [ {
+        "input" : "1 UNION SELECT 1, @@version limit 1, 1",
+        "response" : "{\"id\":\"2becdfd0-ce21-469a-9cab-9653e1468539\",\"title\":\"valid\",\"description\":\"1 UNION SELECT 1, @@version limit 1, 1\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
+      }, {
+        "input" : "1 UNION ALL SELECT table,1,1 FROM otherTable",
+        "response" : "{\"id\":\"fae4a989-d35c-4336-9628-bb4b558a46a5\",\"title\":\"valid\",\"description\":\"1 UNION ALL SELECT table,1,1 FROM otherTable\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
+      }, {
+        "input" : "OR 2 between 3 and 1",
+        "response" : "{\"id\":\"e94415e5-a5d8-43da-911e-4901844965a4\",\"title\":\"valid\",\"description\":\"OR 2 between 3 and 1\",\"price\":1,\"supply\":1,\"seller\":\"valid@valid.com\"}"
+      } ]
+    },
+    "price" : {
+      "blocked" : "39/39",
+      "notBlocked" : [ ]
+    },
+    "supply" : {
+      "blocked" : "39/39",
+      "notBlocked" : [ ]
+    },
+    "seller" : {
+      "blocked" : "39/39",
+      "notBlocked" : [ ]
+    }
+  },
+  "changeItemRequest" : {
+    "id" : {
+      "blocked" : "39/39",
+      "notBlocked" : [ ]
+    },
+    "title" : {
+      "blocked" : "38/39",
+      "notBlocked" : [ {
+        "input" : "OR 2 between 3 and 1",
+        "response" : "{\"reason\":\"Item does not exist.\"}"
+      } ]
+    },
+    "description" : {
+      "blocked" : "36/39",
+      "notBlocked" : [ {
+        "input" : "1 UNION SELECT 1, @@version limit 1, 1",
+        "response" : "{\"reason\":\"Item does not exist.\"}"
+      }, {
+        "input" : "1 UNION ALL SELECT table,1,1 FROM otherTable",
+        "response" : "{\"reason\":\"Item does not exist.\"}"
+      }, {
+        "input" : "OR 2 between 3 and 1",
+        "response" : "{\"reason\":\"Item does not exist.\"}"
+      } ]
+    },
+    "price" : {
+      "blocked" : "39/39",
+      "notBlocked" : [ ]
+    },
+    "supply" : {
+      "blocked" : "39/39",
+      "notBlocked" : [ ]
+    },
+    "seller" : {
+      "blocked" : "39/39",
+      "notBlocked" : [ ]
+    }
+  },
+  "getItemRequest" : {
+    "id" : {
+      "blocked" : "39/39",
+      "notBlocked" : [ ]
+    }
+  },
+  "purchaseItemRequest" : {
+    "itemId" : {
+      "blocked" : "39/39",
+      "notBlocked" : [ ]
+    },
+    "quantity" : {
+      "blocked" : "39/39",
+      "notBlocked" : [ ]
+    },
+    "buyerId" : {
+      "blocked" : "39/39",
+      "notBlocked" : [ ]
+    }
+  },
+  "searchItemRequest" : {
+    "id" : {
+      "blocked" : "39/39",
+      "notBlocked" : [ ]
+    }
+  }
+}
