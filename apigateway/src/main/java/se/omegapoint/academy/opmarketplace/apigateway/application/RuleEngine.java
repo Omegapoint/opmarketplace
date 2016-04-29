@@ -19,6 +19,7 @@ public class RuleEngine {
 
     private HashSet<String> allowedUsers;
     private LocalDateTime filterUsersUntil;
+    private boolean onlyImportantUsers;
 
     private HashMap<String, LocalDateTime> lastRequests;
     private LocalDateTime rateLimitUsersUntil;
@@ -42,7 +43,11 @@ public class RuleEngine {
     }
 
     public boolean shouldAllowUser(String email) {
-        return LocalDateTime.now().isAfter(filterUsersUntil) || email != null && allowedUsers.contains(email);
+        if (onlyImportantUsers) {
+            return LocalDateTime.now().isAfter(filterUsersUntil) || email != null && allowedUsers.contains(email);
+        } else {
+            return LocalDateTime.now().isAfter(filterUsersUntil) || email != null;
+        }
     }
 
     public Optional<ItemDTO> getDefaultSearchResult() {
@@ -76,10 +81,11 @@ public class RuleEngine {
         System.out.printf("Disabled %s events until %s%n", eventName, LocalDateTime.now().plusSeconds(noSeconds));
     }
     
-    public void allowUsers(List<String> users, int noSeconds) {
-        notNull(users); notNull(noSeconds);
+    public void allowUsers(List<String> users, int noSeconds, boolean onlyImportantUsers) {
+        notNull(users); notNull(noSeconds); notNull(onlyImportantUsers);
         allowedUsers.addAll(users);
         filterUsersUntil = LocalDateTime.now().plusSeconds(noSeconds);
+        this.onlyImportantUsers = onlyImportantUsers;
         System.out.printf("Filtering users until %s%n", filterUsersUntil);
     }
 

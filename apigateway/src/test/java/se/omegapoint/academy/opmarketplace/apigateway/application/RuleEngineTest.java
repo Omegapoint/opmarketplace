@@ -41,14 +41,14 @@ public class RuleEngineTest {
     @Test
     public void should_allow_user_who_is_on_the_list() throws Exception {
         String email = "test@email.com";
-        ruleEngine.allowUsers(Arrays.asList(email), 1);
+        ruleEngine.allowUsers(Arrays.asList(email), 1, true);
         assertTrue(ruleEngine.shouldAllowUser(email));
     }
 
     @Test
     public void should_deny_user_who_is_not_on_the_list() throws Exception {
         String email = "test@email.com";
-        ruleEngine.allowUsers(Arrays.asList(email), 1);
+        ruleEngine.allowUsers(Arrays.asList(email), 1, true);
         assertFalse(ruleEngine.shouldAllowUser("not_test@email.com"));
     }
 

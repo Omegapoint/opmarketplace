@@ -11,6 +11,7 @@ import se.omegapoint.accademy.opmarketplace.eventanalyzer.domain.data_adapters.U
 import se.omegapoint.accademy.opmarketplace.eventanalyzer.infrastructure.json_representations.ItemDTO;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
     private HashMap<String, SlidingWindow> eventWindows;
     private UserAdapter userAdapter;
     private ItemAdapter itemAdapter;
+    private LocalTime timeAtFirstUserValidation;
 
     public Analyzer(EventBus eventBus, UserAdapter userAdapter, ItemAdapter itemAdapter) {
         this.eventBus = eventBus;
@@ -84,8 +86,15 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
             case "ItemRequested":
                 System.out.printf("DEBUG: Too many %s events.%n", eventType);
                 List<String> importantUsers = userAdapter.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_MEMBER_FOR), IMPORTANT_USER_MIN_SPEND);
+                boolean onlyImportantUsers = false;
+                if (timeAtFirstUserValidation != null && timeAtFirstUserValidation.plusSeconds(DISABLE_DURATION/2).isBefore(LocalTime.now())) {
+                    onlyImportantUsers = true;
+                    //create stronger validation
+                } else if (timeAtFirstUserValidation == null){
+                    timeAtFirstUserValidation = LocalTime.now();
+                }
                 dispatchCommands(
-                        new ValidateUsersDTO(DISABLE_DURATION, importantUsers),
+                        new ValidateUsersDTO(DISABLE_DURATION, importantUsers, onlyImportantUsers),
                         new RateLimitFeatureDTO(RATE_LIMIT_INTERVAL, DISABLE_DURATION));
                 break;
             case "ItemSearchRequested":

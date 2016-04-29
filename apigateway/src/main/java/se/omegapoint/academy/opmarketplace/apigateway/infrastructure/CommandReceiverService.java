@@ -40,7 +40,7 @@ public class CommandReceiverService {
                 case ValidateUsersDTO.TYPE:
                     ValidateUsersDTO validateUsersCommand = mapper.readValue(data, ValidateUsersDTO.class);
                     System.out.println(Arrays.toString(validateUsersCommand.users.toArray()));
-                    ruleEngine.allowUsers(validateUsersCommand.users, validateUsersCommand.noSeconds);
+                    ruleEngine.allowUsers(validateUsersCommand.users, validateUsersCommand.noSeconds, validateUsersCommand.onlyImportantUsers);
                     break;
                 case RateLimitFeatureDTO.TYPE:
                     RateLimitFeatureDTO rateLimitFeatureCommand = mapper.readValue(data, RateLimitFeatureDTO.class);

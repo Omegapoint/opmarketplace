@@ -11,10 +11,12 @@ public class ValidateUsersDTO implements Command {
 
     public final int noSeconds;
     public final List<String> users;
+    public final boolean onlyImportantUsers;
 
-    public ValidateUsersDTO(int noSeconds, List<String> users) {
+    public ValidateUsersDTO(int noSeconds, List<String> users, boolean onlyImportantUsers) {
         this.noSeconds = notNull(noSeconds);
         this.users = notNull(users);
+        this.onlyImportantUsers = notNull(onlyImportantUsers);
     }
 
     @Override

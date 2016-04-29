@@ -1,5 +1,6 @@
 ---
 inherit: ../base-manifest.yml
+memory: 2048M
 applications:
 - name: apigateway
   host: apigateway-opm
