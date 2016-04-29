@@ -18,6 +18,9 @@ public class UserService {
     @Autowired
     UserDataShortcut userDataShortcut;
 
+    @Autowired
+    ImportantUsers importantUsers;
+
     @RequestMapping(value = "/users", method = GET)
     public List<String> getUsers (
             @RequestParam("member_since") String memberSince,
@@ -28,5 +31,10 @@ public class UserService {
 
         List<String> users = userDataShortcut.getMembersSince(timestamp);
         return userDataShortcut.filterOnPurchases(users, minSpend);
+    }
+
+    @RequestMapping(value = "/important_users", method = GET)
+    public ImportantUsers getImportantUsers() {
+        return importantUsers;
     }
 }
