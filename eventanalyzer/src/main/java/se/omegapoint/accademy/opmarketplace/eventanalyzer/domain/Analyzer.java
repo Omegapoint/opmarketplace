@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Analyzer implements Consumer<Event<RemoteEvent>> {
 
@@ -37,6 +39,8 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
     private UserAdapter userAdapter;
     private ItemAdapter itemAdapter;
     private LocalTime timeAtFirstUserValidation;
+
+    private Timer timer = new Timer();
 
     public Analyzer(EventBus eventBus, UserAdapter userAdapter, ItemAdapter itemAdapter) {
         this.eventBus = eventBus;
@@ -92,6 +96,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
                     //create stronger validation
                 } else if (timeAtFirstUserValidation == null){
                     timeAtFirstUserValidation = LocalTime.now();
+                    timer.schedule(new TimerReset(), DISABLE_DURATION/2);
                 }
                 dispatchCommands(
                         new ValidateUsersDTO(DISABLE_DURATION, importantUsers, onlyImportantUsers),
@@ -111,6 +116,14 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
     private void dispatchCommands(Command... commands) {
         for (Command command : commands) {
             eventBus.notify("command", Event.wrap(command));
+        }
+    }
+
+    private class TimerReset extends TimerTask {
+
+        @Override
+        public void run() {
+            Analyzer.this.timeAtFirstUserValidation = null;
         }
     }
 }
