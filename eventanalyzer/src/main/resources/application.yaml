@@ -11,7 +11,7 @@ url:
   customer:
     users: http://localhost:8001/users
   marketplace:
-    items: http://localhost:8003//most_popular_item
+    items: http://localhost:8003/most_popular_item
 
 event:
   receiver:
