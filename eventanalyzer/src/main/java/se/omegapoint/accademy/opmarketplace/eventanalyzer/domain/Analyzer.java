@@ -88,7 +88,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
             case "ItemRequested":
                 System.out.printf("DEBUG: Too many %s events.%n", eventType);
                 boolean onlyImportantUsers = false;
-                if (timeAtFirstUserValidation != null && timeAtFirstUserValidation.plusSeconds(1).isBefore(LocalTime.now())) {
+                if (timeAtFirstUserValidation != null && timeAtFirstUserValidation.plusSeconds(2).isBefore(LocalTime.now())) {
                     List<String> importantUsers = userAdapter.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_MEMBER_FOR), IMPORTANT_USER_MIN_SPEND);
                     System.out.println("DEBUG (importantUsers) " + Arrays.toString(importantUsers.toArray()));
                     onlyImportantUsers = true;
@@ -101,6 +101,7 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
                     List<String> importantUsers = userAdapter.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_MEMBER_FOR), IMPORTANT_USER_MIN_SPEND);
                     System.out.println("DEBUG " + Arrays.toString(importantUsers.toArray()));
                     timeAtFirstUserValidation = LocalTime.now();
+                    eventWindows.put(eventType, new SlidingWindow(THRESHOLD_WINDOW_SIZE, THRESHOLD_WINDOW_TIME));
                     timer.schedule(new TimerReset(), TimeUnit.SECONDS.toMillis(DISABLE_DURATION/2));
                     dispatchCommands(
                             new ValidateUsersDTO(DISABLE_DURATION, importantUsers, onlyImportantUsers),

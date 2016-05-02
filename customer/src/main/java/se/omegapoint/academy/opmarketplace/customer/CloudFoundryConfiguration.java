@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreated;
+import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreditDeposited;
 import se.omegapoint.academy.opmarketplace.customer.domain.events.persistable.AccountCreditWithdrawn;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Credit;
 import se.omegapoint.academy.opmarketplace.customer.domain.value_objects.Email;
@@ -57,6 +58,7 @@ public class CloudFoundryConfiguration {
         // Leia - important
         eventStore.append(new AccountCreated(new Email("leia@alderaan.com"), new User("firstName", "lastName"),
                 Timestamp.valueOf(LocalDateTime.now().minusHours(720*2))));
+        eventStore.append(new AccountCreditDeposited(new Email("leia@alderaan.com"), new Credit(10)));
         eventStore.append(new AccountCreditWithdrawn(new Email("leia@alderaan.com"), new Credit(10)));
 
         // Create important users
