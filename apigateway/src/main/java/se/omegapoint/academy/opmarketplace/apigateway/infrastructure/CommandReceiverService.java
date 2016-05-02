@@ -44,6 +44,7 @@ public class CommandReceiverService {
                 case RateLimitFeatureDTO.TYPE:
                     RateLimitFeatureDTO rateLimitFeatureCommand = mapper.readValue(data, RateLimitFeatureDTO.class);
                     ruleEngine.addRateLimiting(rateLimitFeatureCommand.interval, rateLimitFeatureCommand.noSeconds);
+                    break;
                 case DefaultSearchResultDTO.TYPE:
                     DefaultSearchResultDTO defaultSearchResultCommand = mapper.readValue(data, DefaultSearchResultDTO.class);
                     ruleEngine.setDefaultSearchResult(defaultSearchResultCommand.item, defaultSearchResultCommand.noSeconds);
