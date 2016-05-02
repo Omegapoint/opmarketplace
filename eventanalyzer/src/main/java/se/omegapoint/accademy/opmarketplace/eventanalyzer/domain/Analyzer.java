@@ -12,10 +12,7 @@ import se.omegapoint.accademy.opmarketplace.eventanalyzer.infrastructure.json_re
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Analyzer implements Consumer<Event<RemoteEvent>> {
@@ -90,18 +87,26 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
                 break;
             case "ItemRequested":
                 System.out.printf("DEBUG: Too many %s events.%n", eventType);
-                List<String> importantUsers = userAdapter.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_MEMBER_FOR), IMPORTANT_USER_MIN_SPEND);
                 boolean onlyImportantUsers = false;
-                if (timeAtFirstUserValidation != null && timeAtFirstUserValidation.plusSeconds(5).isBefore(LocalTime.now())) {
+                if (timeAtFirstUserValidation != null && timeAtFirstUserValidation.plusSeconds(1).isBefore(LocalTime.now())) {
+                    List<String> importantUsers = userAdapter.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_MEMBER_FOR), IMPORTANT_USER_MIN_SPEND);
+                    System.out.println("DEBUG (importantUsers) " + Arrays.toString(importantUsers.toArray()));
                     onlyImportantUsers = true;
                     //create stronger validation
+                    dispatchCommands(
+                            new ValidateUsersDTO(DISABLE_DURATION, importantUsers, onlyImportantUsers),
+                            new RateLimitFeatureDTO(RATE_LIMIT_INTERVAL, DISABLE_DURATION));
+
                 } else if (timeAtFirstUserValidation == null){
+                    List<String> importantUsers = userAdapter.fetchList(LocalDateTime.now().minusSeconds(IMPORTANT_USER_MEMBER_FOR), IMPORTANT_USER_MIN_SPEND);
+                    System.out.println("DEBUG " + Arrays.toString(importantUsers.toArray()));
                     timeAtFirstUserValidation = LocalTime.now();
                     timer.schedule(new TimerReset(), TimeUnit.SECONDS.toMillis(DISABLE_DURATION/2));
+                    dispatchCommands(
+                            new ValidateUsersDTO(DISABLE_DURATION, importantUsers, onlyImportantUsers),
+                            new RateLimitFeatureDTO(RATE_LIMIT_INTERVAL, DISABLE_DURATION));
+
                 }
-                dispatchCommands(
-                        new ValidateUsersDTO(DISABLE_DURATION, importantUsers, onlyImportantUsers),
-                        new RateLimitFeatureDTO(RATE_LIMIT_INTERVAL, DISABLE_DURATION));
                 break;
             case "ItemSearchRequested":
                 System.out.println("DEBUG: Initiating default search response");
