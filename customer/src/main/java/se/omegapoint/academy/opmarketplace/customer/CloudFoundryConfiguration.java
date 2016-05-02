@@ -51,11 +51,13 @@ public class CloudFoundryConfiguration {
                 creditDepositRepository,
                 creditWithdrawnRepository);
 
-        // Create a couple of users
-        String[] users = {"luke@tatooine.com", "leia@alderaan.com"};
-        for (String email: users) {
-            eventStore.append(new AccountCreated(new Email(email), new User("firstName", "lastName")));
-        }
+        // Luke - non important
+        eventStore.append(new AccountCreated(new Email("luke@tatooine.com"), new User("firstName", "lastName")));
+
+        // Leia - important
+        eventStore.append(new AccountCreated(new Email("leia@alderaan.com"), new User("firstName", "lastName"),
+                Timestamp.valueOf(LocalDateTime.now().minusHours(720*2))));
+        eventStore.append(new AccountCreditWithdrawn(new Email("leia@alderaan.com"), new Credit(10)));
 
         // Create important users
         for (String[] array: importantUsers.values) {
