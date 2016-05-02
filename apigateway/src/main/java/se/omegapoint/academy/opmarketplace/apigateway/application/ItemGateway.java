@@ -57,9 +57,14 @@ public class ItemGateway {
     @RequestMapping(method = GET, produces = APPLICATION_JSON_VALUE)
     public DeferredResult<ResponseEntity<String>> item(
             @RequestParam("id") final ItemRequestedDTO request,
-            @RequestParam(value = "email", required = false) final String email) {
+            @RequestParam(value = "email", required = false) String email) {
         notNull(request);
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
+
+        // TODO: 02/05/16 Workaround due to Loader.io
+        if (email != null && email.contains(",")) {
+            email = email.split(",")[0];
+        }
 
         if (!ruleEngine.shouldAllowUser(email) || !ruleEngine.shouldAllowRequestRate(email, ItemRequestedDTO.TYPE)) {
             result.setResult(new ResponseEntity<>(HttpStatus.FORBIDDEN));
