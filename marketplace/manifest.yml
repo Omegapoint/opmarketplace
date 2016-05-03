@@ -1,5 +1,6 @@
 ---
 inherit: ../base-manifest.yml
+memory: 2048M
 applications:
 - name: marketplace
   host: marketplace-opm
