@@ -112,8 +112,11 @@ public class Analyzer implements Consumer<Event<RemoteEvent>> {
             case "ItemSearchRequested":
                 System.out.println("DEBUG: Initiating default search response");
                 ItemDTO mostImportantItem = itemAdapter.fetchMostImportantItemSince(LocalDateTime.now().minusDays(IMPORTANT_ITEM_DURATION));
-                dispatchCommands(
-                        new DefaultSearchResultDTO(DISABLE_DURATION, mostImportantItem));
+                System.out.println("DEBUG: MOST IMPORTANT ITEM " + mostImportantItem);
+                if (mostImportantItem != null) {
+                    dispatchCommands(
+                            new DefaultSearchResultDTO(DISABLE_DURATION, mostImportantItem));
+                }
                 break;
             default:
                 throw new IllegalStateException("Unknown event received.");

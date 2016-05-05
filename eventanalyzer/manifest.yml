@@ -9,9 +9,9 @@ applications:
     URL_APIGATEWAY_COMMAND: http://apigateway-opm.cfapps.io/command
     EVENT_RECEIVER_URL: http://eventanalyzer-opm.cfapps.io/event
     URL_CUSTOMER_USERS: http://customer-opm.cfapps.io/users
-    URL_MARKETPLACE_ITEMS: http://marketplace-opm.cfapps.io/users
+    URL_MARKETPLACE_ITEMS: http://marketplace-opm.cfapps.io/most_popular_item
     ### Mitigation properties ###
-    MITIGATION_THRESHOLD_WINDOW_SIZE: 1000
+    MITIGATION_THRESHOLD_WINDOW_SIZE: 300
     MITIGATION_THRESHOLD_WINDOW_TIME: 10000       # ms
     MITIGATION_DISABLE_DURATION: 20               # s
     MITIGATION_RATELIMIT_INTERVAL: 500            # ms

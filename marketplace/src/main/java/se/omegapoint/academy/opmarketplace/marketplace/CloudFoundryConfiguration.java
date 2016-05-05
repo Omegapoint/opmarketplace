@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Profile;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrdered;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.event_publish_receive.EventRemotePublisherService;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.event_publish_receive.SubscriberInitializer;
@@ -54,7 +55,13 @@ public class CloudFoundryConfiguration {
                 new Quantity(1000000),
                 new Email("luke@tatooine.com"))));
 
-        for (int i = 0; i < 50; i++) {
+        eventStore.append(new ItemOrdered(new Order(new Id("e161e16b-4295-4213-9c6e-8943003e5479"),
+                new Email("luke@tatooine.com"),
+                new Quantity(1),
+                new Credit(10),
+                new Email("leia@alderaan.com"))));
+
+        for (int i = 0; i < 30; i++) {
             StringBuilder stringBuilder = new StringBuilder();
             for (int j = 0; j < 70; j++) {
                 stringBuilder.append(RandomStringUtils.randomAlphabetic(5));
