@@ -2,7 +2,7 @@ server:
   port: 8003
 spring:
   profiles:
-    active: dev
+    active: fakeitem
 subscription:
   url: http://localhost:8000/subscribe
   channels: Item
