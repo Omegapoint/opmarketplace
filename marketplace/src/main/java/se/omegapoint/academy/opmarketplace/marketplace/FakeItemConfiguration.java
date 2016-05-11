@@ -15,9 +15,12 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemCreatedJPARepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemOrderJPARepository;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemOrderReverseJPARepository;
+import se.omegapoint.academy.opmarketplace.marketplace.mitigation.FakeItemAnalyzer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Scanner;
 
 @Configuration
@@ -26,7 +29,7 @@ public class FakeItemConfiguration {
 
     @Bean
     boolean isVALIDATION(){
-        MainConfiguration.VALIDATION = true;
+        MainConfiguration.VALIDATION = false;
         return MainConfiguration.VALIDATION;
     }
 
@@ -41,32 +44,31 @@ public class FakeItemConfiguration {
     public ItemEventStore itemRepository(ItemCreatedJPARepository itemCreatedRepository,
                                          ItemChangedJPARepository itemChangedRepository,
                                          ItemOrderJPARepository itemOrderRepository,
-                                         ItemOrderReverseJPARepository itemOrderReverseRepository) throws FileNotFoundException {
+                                         ItemOrderReverseJPARepository itemOrderReverseRepository,
+                                         boolean isValidation) throws FileNotFoundException {
 
-        MainConfiguration.VALIDATION = false;
-
-        ItemEventStore eventStore = new ItemEventStore(itemCreatedRepository,
+        return new ItemEventStore(itemCreatedRepository,
                 itemChangedRepository,
                 itemOrderRepository,
                 itemOrderReverseRepository);
 
-        System.out.println("Working directory = " + System.getProperty("user.dir"));
-        Scanner scanner = new Scanner(new File("src/main/resources/blocket_items.txt"));
-
-        while (scanner.hasNextLine()) {
-            eventStore.append(new ItemCreated(new Item(new Id(),
-                    new Title(scanner.nextLine()),
-                    new Description(scanner.nextLine()),
-                    new Credit(10),
-                    new Quantity(1),
-                    new Email("luke@tatooine.com"))));
-
-            scanner.nextLine();
-        }
-
-        System.out.println("----- FINISHED ADDING DUMMY DATA -----");
-
-        return eventStore;
+//        System.out.println("Working directory = " + System.getProperty("user.dir"));
+//        Scanner scanner = new Scanner(new File("src/main/resources/blocket_items.txt"));
+//
+//        while (scanner.hasNextLine()) {
+//            eventStore.append(new ItemCreated(new Item(new Id(),
+//                    new Title(scanner.nextLine()),
+//                    new Description(scanner.nextLine()),
+//                    new Credit(10),
+//                    new Quantity(1),
+//                    new Email("luke@tatooine.com"))));
+//
+//            scanner.nextLine();
+//        }
+//
+//        System.out.println("----- FINISHED ADDING DUMMY DATA -----");
+//
+//        return eventStore;
     }
 
     @Bean
