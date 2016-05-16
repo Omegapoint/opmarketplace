@@ -29,8 +29,9 @@ public class DomainInjectionQuantityConfiguration {
                                          ItemChangedJPARepository itemChangedRepository,
                                          ItemOrderJPARepository itemOrderRepository,
                                          ItemOrderReverseJPARepository itemOrderReverseRepository,
+                                         ItemReservedJPARepository itemReservedRepository,
                                          Boolean isVALIDATION){
-        ItemEventStore eventStore = new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository, itemOrderReverseRepository);
+        ItemEventStore eventStore = new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository, itemOrderReverseRepository, itemReservedRepository);
 
         eventStore.append(
                 new ItemCreated(

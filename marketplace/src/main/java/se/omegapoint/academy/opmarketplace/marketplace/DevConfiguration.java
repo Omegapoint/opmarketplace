@@ -36,8 +36,9 @@ public class DevConfiguration {
     public ItemEventStore itemRepository(ItemCreatedJPARepository itemCreatedRepository,
                                          ItemChangedJPARepository itemChangedRepository,
                                          ItemOrderJPARepository itemOrderRepository,
-                                         ItemOrderReverseJPARepository itemOrderReverseRepository){
-        return new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository, itemOrderReverseRepository);
+                                         ItemOrderReverseJPARepository itemOrderReverseRepository,
+                                         ItemReservedJPARepository itemReservedRepository){
+        return new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository, itemOrderReverseRepository, itemReservedRepository);
     }
 
     @Bean

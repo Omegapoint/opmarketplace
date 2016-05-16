@@ -2,8 +2,10 @@ package se.omegapoint.academy.opmarketplace.marketplace.domain.entities;
 
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemChangeRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemPurchaseRequested;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemReservationRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrdered;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemReserved;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
@@ -85,5 +87,14 @@ public final class Item {
                 request.quantity(),
                 new Credit(price().amount() * request.quantity().amount()),
                 request.buyer()));
+    }
+
+    public ItemReserved handle(ItemReservationRequested request) {
+        isTrue(notNull(request).itemId().equals(id));
+        if (request.quantity().amount() <= supply.amount()) {
+            return new ItemReserved(id, request.quantity(), request.reserver());
+        } else {
+            throw new IllegalArgumentException("Insufficient supply.");
+        }
     }
 }

@@ -4,6 +4,7 @@ import reactor.fn.Consumer;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.DomainEvent;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemPaymentNotCompleted;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemReservationRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrderReversed;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.EventPublisher;
@@ -38,6 +39,8 @@ public class ItemService implements Consumer<reactor.bus.Event<Event>> {
             handle((ItemPurchaseRequestedDTO) dto);
         } else if (dto instanceof ItemPaymentNotCompletedDTO) {
             handle((ItemPaymentNotCompletedDTO) dto);
+        } else if (dto instanceof ItemReservationRequestedDTO) {
+            handle((ItemReservationRequestedDTO) dto);
         } else {
             System.err.println("ItemService: Did not recognize event received from reactor bus.");
         }
@@ -97,5 +100,21 @@ public class ItemService implements Consumer<reactor.bus.Event<Event>> {
                             itemOrdered.order().id(),
                             itemOrdered.order().itemId(),
                             itemOrdered.order().quantity()))));
+    }
+
+    private void handle(ItemReservationRequestedDTO dto) {
+        DomainEvent event = DomainObjectResult.of(ItemReservationRequestedDTO::domainObject, notNull(dto))
+                .map(request -> repository.item(request.itemId()))
+                .orElseReason(ItemNotReserved::new);
+
+        if (event instanceof ItemObtained) {
+            event = DomainObjectResult.of(item -> item.handle(dto.domainObject()), ((ItemObtained) event).item())
+                    .map(repository::append)
+                    .orElseReason(ItemNotReserved::new);
+        } else if (event instanceof ItemNotObtained) {
+            event = new ItemNotReserved(((ItemNotObtained) event).reason());
+        }
+
+        publisher.publish(event, dto.requestId());
     }
 }

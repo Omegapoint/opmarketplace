@@ -13,6 +13,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrdered;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemReserved;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.EventPublisher;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.Event;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.dto.internal_events.*;
@@ -62,6 +63,10 @@ public class EventRemotePublisherService implements EventPublisher {
             dispatch(new ItemOrderedDTO((ItemOrdered) event, requestId), "Account");
         } else if (event instanceof ItemNotOrdered) {
             dispatch(new ItemNotOrderedDTO((ItemNotOrdered) event, requestId));
+        } else if (event instanceof ItemReserved) {
+            dispatch(new ItemReservedDTO((ItemReserved) event, requestId));
+        } else if (event instanceof ItemNotReserved) {
+            dispatch(new ItemNotReservedDTO((ItemNotReserved) event, requestId));
         } else {
             throw new IllegalStateException("Domain Event not recognized.");
         }

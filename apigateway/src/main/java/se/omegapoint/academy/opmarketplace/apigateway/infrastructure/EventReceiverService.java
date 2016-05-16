@@ -105,6 +105,12 @@ public class EventReceiverService {
                 case ItemNotOrderedDTO.TYPE:
                     router.publish(json.readValue(event.data, ItemNotOrderedDTO.class));
                     break;
+                case ItemReservedDTO.TYPE:
+                    router.publish(json.readValue(event.data, ItemReservedDTO.class));
+                    break;
+                case ItemNotReservedDTO.TYPE:
+                    router.publish(json.readValue(event.data, ItemNotReservedDTO.class));
+                    break;
                 default:
                     if (!internalEvents.contains(event.type)) {
                         System.err.println("Received unknown event: " + event.type);
@@ -130,6 +136,7 @@ public class EventReceiverService {
         internalEvents.add(ItemPurchaseRequestedDTO.TYPE);
         internalEvents.add(ItemSearchRequestedDTO.TYPE);
         internalEvents.add(ItemChangeRequestedDTO.TYPE);
+        internalEvents.add(ItemReservationRequestedDTO.TYPE);
         this.json = new ObjectMapper();
     }
 }

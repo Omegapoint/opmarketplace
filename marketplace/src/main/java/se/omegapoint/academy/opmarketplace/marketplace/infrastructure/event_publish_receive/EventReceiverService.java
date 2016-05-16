@@ -51,6 +51,8 @@ public class EventReceiverService {
                 case ItemPaymentNotCompletedDTO.TYPE:
                     eventBus.notify(channel, Event.wrap(json.readValue(event.data, ItemPaymentNotCompletedDTO.class)));
                     break;
+                case ItemReservationRequestedDTO.TYPE:
+                    eventBus.notify(channel, Event.wrap(json.readValue(event.data, ItemReservationRequestedDTO.class)));
                 default:
                     System.err.printf("Received unknown event; %s%n", event.type);
             }

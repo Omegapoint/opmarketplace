@@ -14,10 +14,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.event_publish_receive.EventRemotePublisherService;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.event_publish_receive.SubscriberInitializer;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.ItemEventStore;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemChangedJPARepository;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemCreatedJPARepository;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemOrderJPARepository;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemOrderReverseJPARepository;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.*;
 
 @Configuration
 @Profile("cloudfoundry")
@@ -40,12 +37,14 @@ public class CloudFoundryConfiguration {
     public ItemEventStore itemRepository(ItemCreatedJPARepository itemCreatedRepository,
                                          ItemChangedJPARepository itemChangedRepository,
                                          ItemOrderJPARepository itemOrderRepository,
-                                         ItemOrderReverseJPARepository itemOrderReverseRepository){
+                                         ItemOrderReverseJPARepository itemOrderReverseRepository,
+                                         ItemReservedJPARepository itemReservedRepository){
 
         ItemEventStore eventStore = new ItemEventStore(itemCreatedRepository,
                 itemChangedRepository,
                 itemOrderRepository,
-                itemOrderReverseRepository);
+                itemOrderReverseRepository,
+                itemReservedRepository);
 
 
         eventStore.append(new ItemCreated(new Item(new Id("e161e16b-4295-4213-9c6e-8943003e5479"),

@@ -29,8 +29,9 @@ public class DomainInjectionItemNoLimitConfiguration {
                                          ItemChangedJPARepository itemChangedRepository,
                                          ItemOrderJPARepository itemOrderRepository,
                                          ItemOrderReverseJPARepository itemOrderReverseRepository,
+                                         ItemReservedJPARepository itemReservedRepository,
                                          Boolean isVALIDATION){
-        ItemEventStore eventStore = new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository, itemOrderReverseRepository);
+        ItemEventStore eventStore = new ItemEventStore(itemCreatedRepository, itemChangedRepository, itemOrderRepository, itemOrderReverseRepository, itemReservedRepository);
 
         ArrayList<String> dictionary = new ArrayList<>(1000);
         try {

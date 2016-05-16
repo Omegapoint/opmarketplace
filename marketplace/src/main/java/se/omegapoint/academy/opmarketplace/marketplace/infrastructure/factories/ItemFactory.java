@@ -3,6 +3,7 @@ package se.omegapoint.academy.opmarketplace.marketplace.infrastructure.factories
 import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import static se.sawano.java.commons.lang.validate.Validate.notEmpty;
@@ -25,6 +26,8 @@ public class ItemFactory {
                 mutate((ItemOrdered)e);
             } else if (e instanceof ItemOrderReversed){
                 mutate((ItemOrderReversed)e);
+            } else if (e instanceof ItemReserved) {
+                mutate((ItemReserved) e);
             }
         }
         return item;
@@ -64,5 +67,16 @@ public class ItemFactory {
                 itemChanged.item().price(),
                 itemChanged.item().supply(),
                 itemChanged.item().seller());
+    }
+
+    private static void mutate(ItemReserved itemReserved) {
+        if (itemReserved.reservedUntil().after(new Timestamp(System.currentTimeMillis()))) {
+            item = new Item(item.id(),
+                    item.title(),
+                    item.description(),
+                    item.price(),
+                    item.supply().remove(itemReserved.quantity()),
+                    item.seller());
+        }
     }
 }

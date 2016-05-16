@@ -11,10 +11,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.event_publish_receive.EventRemotePublisherService;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.event_publish_receive.SubscriberInitializer;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.ItemEventStore;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemChangedJPARepository;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemCreatedJPARepository;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemOrderJPARepository;
-import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemOrderReverseJPARepository;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.*;
 import se.omegapoint.academy.opmarketplace.marketplace.mitigation.FakeItemAnalyzer;
 
 import java.io.File;
@@ -45,12 +42,14 @@ public class FakeItemConfiguration {
                                          ItemChangedJPARepository itemChangedRepository,
                                          ItemOrderJPARepository itemOrderRepository,
                                          ItemOrderReverseJPARepository itemOrderReverseRepository,
+                                         ItemReservedJPARepository itemReservedRepository,
                                          boolean isValidation) throws FileNotFoundException {
 
         return new ItemEventStore(itemCreatedRepository,
                 itemChangedRepository,
                 itemOrderRepository,
-                itemOrderReverseRepository);
+                itemOrderReverseRepository,
+                itemReservedRepository);
 
 //        System.out.println("Working directory = " + System.getProperty("user.dir"));
 //        Scanner scanner = new Scanner(new File("src/main/resources/blocket_items.txt"));

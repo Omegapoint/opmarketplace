@@ -11,12 +11,11 @@ import org.springframework.web.context.request.async.DeferredResult;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.RemoteEventPublisher;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.Router;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.event_listeners.item.*;
+import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.ItemReservationRequestedDTO;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.OutgoingRemoteEvent;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.events.outgoing.item.*;
 import se.omegapoint.academy.opmarketplace.apigateway.infrastructure.json_representations.objects.item.ItemDTO;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -115,4 +114,13 @@ public class ItemGateway {
         return result;
     }
 
+    @RequestMapping(value = "/reserve", method = POST)
+    public DeferredResult<ResponseEntity<String>> reserveItem(@RequestBody final ItemReservationRequestedDTO itemReservation) {
+        notNull(itemReservation);
+        DeferredResult<ResponseEntity<String>> result = new DeferredResult<>(TIMEOUT, TIMEOUT_RESPONSE);
+        ItemReservationListener listener = new ItemReservationListener(result);
+        router.subscribe(itemReservation.requestId(), listener);
+        publisher.publish(new OutgoingRemoteEvent(itemReservation), "Item");
+        return result;
+    }
 }
