@@ -108,7 +108,7 @@ public class ItemService implements Consumer<reactor.bus.Event<Event>> {
                 .orElseReason(ItemNotReserved::new);
 
         if (event instanceof ItemObtained) {
-            event = DomainObjectResult.of(item -> item.handle(dto.domainObject()), ((ItemObtained) event).item())
+            event = DomainObjectResult.of(item -> item.handle(dto.domainObject(), repository), ((ItemObtained) event).item())
                     .map(repository::append)
                     .orElseReason(ItemNotReserved::new);
         } else if (event instanceof ItemNotObtained) {

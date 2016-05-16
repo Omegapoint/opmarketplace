@@ -7,12 +7,14 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.It
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemSearchCompleted;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.*;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Email;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Id;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Query;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.factories.ItemFactory;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.*;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.*;
 
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -82,6 +84,21 @@ public class ItemEventStore implements ItemRepository {
             add((ItemReserved) event);
         }
         return event;
+    }
+
+    @Override
+    public List<ItemReserved> reservationHistorySince(Email user, Timestamp since) {
+        return itemReservedRepository.findByReserverIdAndTimeGreaterThan(user.address(), since).stream()
+                .map(ItemReservedEntity::domainObject)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<ItemOrdered> lastOrderedItem(Email user) {
+        return itemSupplyDeductedRepository.findByBuyerIdOrderByTimeDesc(user.address()).stream()
+                .findFirst()
+                .map(event -> Optional.of(event.domainObject()))
+                .orElse(Optional.empty());
     }
 
     private boolean itemFilter(Item item, Query query){
