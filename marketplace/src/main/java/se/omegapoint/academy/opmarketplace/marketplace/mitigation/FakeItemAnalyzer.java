@@ -4,12 +4,14 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.ItemObtained;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.Id;
+import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.events.ItemCreatedEntity;
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.ItemCreatedJPARepository;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class FakeItemAnalyzer {
@@ -19,7 +21,7 @@ public class FakeItemAnalyzer {
     public List<Id> getAllItemIds(ItemCreatedJPARepository itemRepository) {
         return itemRepository.findAll()
                 .stream()
-                .map(itemCreatedEntity -> itemCreatedEntity.domainObject().itemId())
+        .map(itemCreatedEntity -> itemCreatedEntity.domainObject().itemId())
                 .collect(Collectors.toList());
     }
 
@@ -63,7 +65,7 @@ public class FakeItemAnalyzer {
                     if (similarity > SIMILARITY_THRESHOLD && !isOriginal) {
                         System.out.println(similarity + " | " + getTitle(possibleDuplicate, repository) + " == " + getTitle(id, repository));
                     }
-                    return similarity > SIMILARITY_THRESHOLD && !isOriginal;
+                    return similarity > SIMILARITY_THRESHOLD && !isOriginal && !getEmail(possibleDuplicate, repository).equals("legit@email.com");
                 }).findAny().isPresent();
     }
 
@@ -85,5 +87,9 @@ public class FakeItemAnalyzer {
 
     private String getTitle(Id id, ItemCreatedJPARepository repository) {
         return repository.findById(id.toString()).get(0).domainObject().item().title().text();
+    }
+
+    private String getEmail(Id id, ItemCreatedJPARepository repository) {
+        return repository.findById(id.toString()).get(0).domainObject().item().seller().address();
     }
 }
