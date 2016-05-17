@@ -15,6 +15,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,6 +48,10 @@ public class ItemEventStore implements ItemRepository {
         List<PersistableEvent> events = eventStream(id);
         if (events.isEmpty()){
             return new ItemNotObtained(ITEM_DOES_NOT_EXIST);
+        }
+        if (itemReservedRepository.findByReservedUntilGreaterThan(new Timestamp(System.currentTimeMillis())).size() > 25) {
+            System.out.println("More than 25!");
+            ItemFactory.disableReservationsUntil(LocalDateTime.now().plusSeconds(60));
         }
         return new ItemObtained(ItemFactory.fromPersistableEvents(events));
     }

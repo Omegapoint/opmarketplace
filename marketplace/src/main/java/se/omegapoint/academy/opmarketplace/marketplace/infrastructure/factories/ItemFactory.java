@@ -4,6 +4,7 @@ import se.omegapoint.academy.opmarketplace.marketplace.domain.entities.Item;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static se.sawano.java.commons.lang.validate.Validate.notEmpty;
@@ -11,6 +12,7 @@ import static se.sawano.java.commons.lang.validate.Validate.notNull;
 
 public class ItemFactory {
     private static Item item;
+    private static LocalDateTime reservationsDisabledUntil = LocalDateTime.MIN;
 
     private ItemFactory() {}
 
@@ -26,11 +28,15 @@ public class ItemFactory {
                 mutate((ItemOrdered)e);
             } else if (e instanceof ItemOrderReversed){
                 mutate((ItemOrderReversed)e);
-            } else if (e instanceof ItemReserved) {
+            } else if (e instanceof ItemReserved && reservationsDisabledUntil.isBefore(LocalDateTime.now())) {
                 mutate((ItemReserved) e);
             }
         }
         return item;
+    }
+
+    public static void disableReservationsUntil(LocalDateTime until) {
+        reservationsDisabledUntil = until;
     }
 
     private static void mutate(ItemOrderReversed itemOrderReversed) {
