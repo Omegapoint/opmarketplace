@@ -25,7 +25,7 @@ public interface ItemRepository {
 
     DomainEvent append(PersistableEvent event);
 
-    List<ItemReserved> reservationHistorySince(Email user, Timestamp since);
+    List<ItemReserved> expiredReservationsSince(Email user, Timestamp since);
 
     Optional<ItemOrdered> lastOrderedItem(Email user);
 }

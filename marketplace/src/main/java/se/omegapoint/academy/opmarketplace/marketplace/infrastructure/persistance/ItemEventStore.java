@@ -96,9 +96,10 @@ public class ItemEventStore implements ItemRepository {
     }
 
     @Override
-    public List<ItemReserved> reservationHistorySince(Email user, Timestamp since) {
+    public List<ItemReserved> expiredReservationsSince(Email user, Timestamp since) {
         return itemReservedRepository.findByReserverIdAndTimeGreaterThan(user.address(), since).stream()
                 .map(ItemReservedEntity::domainObject)
+                .filter(event -> event.reservedUntil().before(new Timestamp(System.currentTimeMillis())))
                 .collect(Collectors.toList());
     }
 

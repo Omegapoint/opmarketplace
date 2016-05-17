@@ -1,20 +1,19 @@
 package se.omegapoint.academy.opmarketplace.marketplace.domain.entities;
 
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemChangeRequested;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemPurchaseRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemReservationRequested;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemChanged;
+import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemOrdered;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemReserved;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.services.ItemRepository;
 import se.omegapoint.academy.opmarketplace.marketplace.domain.value_objects.*;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.external.ItemCreationRequested;
-import se.omegapoint.academy.opmarketplace.marketplace.domain.events.internal.persistable.ItemCreated;
 import se.sawano.java.commons.lang.validate.IllegalArgumentValidationException;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static se.sawano.java.commons.lang.validate.Validate.isTrue;
 import static se.sawano.java.commons.lang.validate.Validate.notNull;
@@ -101,7 +100,7 @@ public final class Item {
                     .map(ItemOrdered::timestamp)
                     .orElse(Timestamp.valueOf(LocalDateTime.now().minusDays(1)));
 
-            boolean tooManyReservations = itemRepository.reservationHistorySince(request.reserver(), lastOrder).size() >= 10;
+            boolean tooManyReservations = itemRepository.expiredReservationsSince(request.reserver(), lastOrder).size() >= 10;
 
             if (tooManyReservations) {
                 throw new IllegalArgumentException("This account has too many reservations without purchase. Please contact customer service");
