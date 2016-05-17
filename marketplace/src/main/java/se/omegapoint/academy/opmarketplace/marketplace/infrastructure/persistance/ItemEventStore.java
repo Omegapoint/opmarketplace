@@ -61,7 +61,11 @@ public class ItemEventStore implements ItemRepository {
         HashSet<Id> match = searchCreatedEvents(query);
         match = searchChangedEvents(query, match);
 
-        List<Item> items = match.stream().map(id -> ItemFactory.fromPersistableEvents(eventStream(id))).collect(Collectors.toList());
+        List<Item> items = match.stream()
+                .map(id -> ItemFactory.fromPersistableEvents(eventStream(id)))
+                .filter(item -> item.supply().amount() > 0)
+                .collect(Collectors.toList());
+
         return new ItemSearchCompleted(items.stream().filter(item -> itemFilter(item, query)).collect(Collectors.toList()));
     }
     @Override
