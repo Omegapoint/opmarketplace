@@ -15,7 +15,6 @@ import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistanc
 import se.omegapoint.academy.opmarketplace.marketplace.infrastructure.persistance.jpa_repositories.*;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,10 +47,6 @@ public class ItemEventStore implements ItemRepository {
         List<PersistableEvent> events = eventStream(id);
         if (events.isEmpty()){
             return new ItemNotObtained(ITEM_DOES_NOT_EXIST);
-        }
-        if (itemReservedRepository.findByReservedUntilGreaterThan(new Timestamp(System.currentTimeMillis())).size() > 25) {
-            System.out.println("More than 25!");
-            ItemFactory.disableReservationsUntil(LocalDateTime.now().plusSeconds(60));
         }
         return new ItemObtained(ItemFactory.fromPersistableEvents(events));
     }
@@ -104,8 +99,24 @@ public class ItemEventStore implements ItemRepository {
     }
 
     @Override
+    public List<ItemReserved> expiredReservationsSince(Id itemId, Timestamp since) {
+        return itemReservedRepository.findByItemIdAndTimeGreaterThan(itemId.toString(), since).stream()
+                .map(ItemReservedEntity::domainObject)
+                .filter(event -> event.reservedUntil().before(new Timestamp(System.currentTimeMillis())))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Optional<ItemOrdered> lastOrderedItem(Email user) {
         return itemSupplyDeductedRepository.findByBuyerIdOrderByTimeDesc(user.address()).stream()
+                .findFirst()
+                .map(event -> Optional.of(event.domainObject()))
+                .orElse(Optional.empty());
+    }
+
+    @Override
+    public Optional<ItemOrdered> lastOrderedItem(Id itemId) {
+        return itemSupplyDeductedRepository.findByIdOrderByTimeDesc(itemId.toString()).stream()
                 .findFirst()
                 .map(event -> Optional.of(event.domainObject()))
                 .orElse(Optional.empty());

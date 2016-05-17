@@ -27,5 +27,9 @@ public interface ItemRepository {
 
     List<ItemReserved> expiredReservationsSince(Email user, Timestamp since);
 
+    List<ItemReserved> expiredReservationsSince(Id itemId, Timestamp since);
+
     Optional<ItemOrdered> lastOrderedItem(Email user);
+
+    Optional<ItemOrdered> lastOrderedItem(Id itemId);
 }

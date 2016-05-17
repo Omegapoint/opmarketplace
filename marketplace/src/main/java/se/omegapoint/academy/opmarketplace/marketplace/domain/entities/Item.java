@@ -96,14 +96,21 @@ public final class Item {
     public ItemReserved handle(ItemReservationRequested request, ItemRepository itemRepository) {
         isTrue(notNull(request).itemId().equals(id));
         if (request.quantity().amount() <= supply.amount()) {
-            Timestamp lastOrder = itemRepository.lastOrderedItem(request.reserver())
+            Timestamp lastOrderByUser = itemRepository.lastOrderedItem(request.reserver())
                     .map(ItemOrdered::timestamp)
                     .orElse(Timestamp.valueOf(LocalDateTime.now().minusDays(1)));
 
-            boolean tooManyReservations = itemRepository.expiredReservationsSince(request.reserver(), lastOrder).size() >= 10;
+            Timestamp lastOrder = itemRepository.lastOrderedItem(request.itemId())
+                    .map(ItemOrdered::timestamp)
+                    .orElse(Timestamp.valueOf(LocalDateTime.now().minusDays(1)));
 
-            if (tooManyReservations) {
+            boolean tooManyReservationsByUser = itemRepository.expiredReservationsSince(request.reserver(), lastOrderByUser).size() >= 10;
+            boolean tooManyReservations = itemRepository.expiredReservationsSince(request.itemId(), lastOrder).size() >= 3;
+
+            if (tooManyReservationsByUser) {
                 throw new IllegalArgumentException("This account has too many reservations without purchase. Please contact customer service");
+            } else if (tooManyReservations) {
+                throw new IllegalArgumentException("This item has had too many reservations in the latest taiiiiim...");
             } else {
                 return new ItemReserved(id, request.quantity(), request.reserver());
             }

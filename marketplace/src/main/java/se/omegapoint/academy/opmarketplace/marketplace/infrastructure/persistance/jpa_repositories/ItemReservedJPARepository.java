@@ -10,5 +10,5 @@ public interface ItemReservedJPARepository extends JpaRepository<ItemReservedEnt
 
     List<ItemReservedEntity> findByItemId(String id);
     List<ItemReservedEntity> findByReserverIdAndTimeGreaterThan(String reserverId, Timestamp time);
-    List<ItemReservedEntity> findByReservedUntilGreaterThan(Timestamp time);
+    List<ItemReservedEntity> findByItemIdAndTimeGreaterThan(String itemId, Timestamp time);
 }

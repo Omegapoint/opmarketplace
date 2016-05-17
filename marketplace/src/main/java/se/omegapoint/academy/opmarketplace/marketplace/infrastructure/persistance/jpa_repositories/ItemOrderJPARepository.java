@@ -10,6 +10,8 @@ public interface ItemOrderJPARepository extends JpaRepository<ItemOrderEntity, S
 
     List<ItemOrderEntity> findById(String id);
 
+    List<ItemOrderEntity> findByIdOrderByTimeDesc(String id);
+
     List<ItemOrderEntity> findByOrderId(String orderId);
 
     List<ItemOrderEntity> findByTimeGreaterThan(Timestamp time);
