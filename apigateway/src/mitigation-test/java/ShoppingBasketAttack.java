@@ -28,7 +28,6 @@ public class ShoppingBasketAttack {
     private WebApplicationContext wac;
 
     private MockMvc mockMvc;
-    private int uuidIndex;
 
     @Before
     public void setUp() throws Exception {
@@ -41,16 +40,18 @@ public class ShoppingBasketAttack {
         timer.schedule(new CheckAvailableObjects(), 0, 1000);
         timer.schedule(new PutInShoppingBasket(), 200, 500);
 
-        Thread.sleep(30000);
+        Thread.sleep(40000);
     }
 
     @Test
     public void reservationAttackWithMultipleUsers() throws Exception {
         Timer timer = new Timer();
         timer.schedule(new CheckAvailableObjects(), 0, 1000);
-        timer.schedule(new PutInShoppingBasketMultipleUsers(), 100, 333);
+        for (int i = 0; i < 10; i++) {
+            timer.schedule(new PutInShoppingBasketMultipleUsers(i), 1000 * i, 11000);
+        }
 
-        Thread.sleep(30000);
+        Thread.sleep(60000);
     }
 
     private class CheckAvailableObjects extends TimerTask {
@@ -62,35 +63,40 @@ public class ShoppingBasketAttack {
         }
     }
 
+    // Doesn't work anymore...
     private class PutInShoppingBasket extends TimerTask {
         @Override
         public void run() {
             RestTemplate template = new RestTemplate();
             try {
-                template.postForEntity("http://localhost:8002/items/reserve", new ItemReservationRequestedDTO(getNextUUID(), 1, "malicious1339@test.com"), String.class);
+                template.postForEntity("http://localhost:8002/items/reserve", new ItemReservationRequestedDTO(getNextUUID(0), 1, "malicious@test.com"), String.class);
             } catch (Exception e) {}
         }
     }
 
     private class PutInShoppingBasketMultipleUsers extends TimerTask {
+
+        int userIndex;
+
+        public PutInShoppingBasketMultipleUsers(int userIndex) {
+            this.userIndex = userIndex;
+        }
+
         @Override
         public void run() {
             RestTemplate template = new RestTemplate();
             try {
-//                System.out.println("malicious" + uuidIndex + "@test.com");
-                String uuid = getNextUUID();
-//                System.out.println(uuid);
-                template.postForEntity("http://localhost:8002/items/reserve", new ItemReservationRequestedDTO(uuid, 1, "malicious" + uuidIndex + "@test.com"), String.class);
+                String uuid = getNextUUID(userIndex);
+                template.postForEntity("http://localhost:8002/items/reserve", new ItemReservationRequestedDTO(uuid, 1, "malicious" + userIndex + "@test.com"), String.class);
             } catch (Exception e) {
 //                e.printStackTrace();
             }
         }
     }
 
-    private String getNextUUID() {
+    private String getNextUUID(int index) {
         String base = "00000000-0000-0000-0000-00000000000";
-        String suffix = Integer.toString(uuidIndex);
-        uuidIndex++;
+        String suffix = Integer.toString(index);
         return base.substring(0, base.length() - suffix.length()) + suffix;
     }
 }
